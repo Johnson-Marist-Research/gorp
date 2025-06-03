@@ -104,4 +104,49 @@
   - Have the agent log everything it does
   - Have a clear amount of time logs must be retained
   - Occasionally review logs
-  - Analyze the logs for gaps. If a gap is found, find the file associated with the gap and run a virus scan to check for suspicious activity. 
+  - Analyze the logs for gaps. If a gap is found, find the file associated with the gap and run a virus scan to check for suspicious activity.
+ 
+## Misc. Notes From Day 2
+- *Network Security*: Any action intended to safeguard the integrity and usefulness of data and the network 
+  - Levels of Network Security:
+    - Physical Network Security: Focuses the data and network
+      - Protects from unauthorized personnel acquiring control over the confidentiality of the network
+    - Technical Network Security: Focuses on protecting the data stored in the network/data involved in transitions through the network
+      - Protects from unauthorized users and malicious activities
+    - Administrative Network Security: Focuses on user behavior such as how permissions are granted and how authorization processes take place
+      - Protects the network through attacks
+  - Types of Network Security:
+    - Email Security
+    - Network Segmentation: Network traffic is divided into several categories that each enforce security regulations
+    - Access Control: Network is not accessible to every user. Endpoint devices that are noncompliant with security policies might have their access restricted or blocked.
+    - Sandboxing: Files are opened or code is performed on a host computer that simulates end-user environments in a secure, isolated environment.
+    - Cloud Network Security: Data protected while on the cloud
+    - Web Security: Restricts access to harmful websites, stops web-based risks, and manages staff internet usage. Web gateway should be safeguarded both locally and in the cloud.
+    - Intrusion Prevention System (IPS): Monitors network or system activities for malicious activity
+    - Antivirus and Anti-Malware Software: Ensures that malicious software does not enter the network and threaten the security of the data
+    - Firewall: A network security device which monitors all incoming and outgoing traffic and, based on a defined set of security rules, rejects or drops specific traffic
+    - Application Security: Security measures used at the application level
+    - Wireless Security: Wireless networks are less secure than wired ones. Need dedicated products to protect it from exploits and unauthorized access 
+
+- *Packet Sniffing*: Act of capturing data packets across the computer network 
+  - Done by using packet sniffers. Can be filtered or unfiltered. 
+    - Filtered: Specific data packets have to be captured
+    - Unfiltered: All packets must be captured
+    - Ex: WireShark, SmartSniff 
+  - How to Prevent: 
+    - Encrypt data you send or receive
+    - Use trusted Wi-Fi networks
+    - Scan network for dangers or issues
+  
+- *Address Resolution Protocol (ARP)*: A communication protocol used for discovering the link layer address, such as a MAC address, given an IP address 
+- *ARP Cache Poisoning Attack*: Attackers fool the victim into accepting forged IP-to-MAC mappings 
+  - Can cause the victim’s packets to be redirected to the computer with the forged MAC address
+
+- *ICMP Redirect*: An error message sent by a router to the sender of an IP packet 
+  - Used when a router believes a packet is being routed incorrectly
+  - Informs the sender that it should use a different router for the subsequent packets sent to the same destination
+  - Can be used by attackers to change a victim’s routing
+
+- DNS translates a hostname to IP address and vice versa through DNS resolution 
+- *DNS Pharming Attack*: Manipulate the resolution with an intent to misdirect users to alternate destinations 
+- Remote DNS Cache Poisoning Attack (aka Kaminsky DNS Attack): More challenging than a local attack since packet sniffing is not possible 
