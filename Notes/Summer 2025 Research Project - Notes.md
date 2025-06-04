@@ -88,6 +88,7 @@
   - Filter DNS requests and block malicious domains
   - Only allow network administrators to access the DNS?
   - If something fishy is detected, close the outgoing port while the agent isolates the issue?
+  - If we are not a DNS server, can have an option for the agent to be in "safe mode" where it parrots the website it got from the DNS query to the user. If the website does not match, the user has the option to not go to it.
 
 **Check for outdated packages**
 - A package is outdated if it no longer receives updates or support from developers 
@@ -107,6 +108,7 @@
   - Have a clear amount of time logs must be retained
   - Occasionally review logs
   - Analyze the logs for gaps. If a gap is found, find the file associated with the gap and run a virus scan to check for suspicious activity.
+  - Have agent analyze their own logs. It makes a note of when it starts and stops. If there is a gap before it stops doing something, then there is a problem.
  
 ## Misc. Notes From Day 2
 - *Network Security*: Any action intended to safeguard the integrity and usefulness of data and the network 
