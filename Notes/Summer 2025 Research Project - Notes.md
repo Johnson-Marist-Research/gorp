@@ -34,6 +34,7 @@
 - Just one of the three types is usually insecure, but two of the three is considered secure (two-factor authentication)
 - *Implementation Ideas*
   - Fairly simple. To begin with, we can use a password to access the agent. If we want to be more secure, we could add two-factor authentication.
+  - Agent could monitor failed login attempts. If it detects multiple failed logins from the same IP address, it can temporarily block the IP address. It can notify an admin, and if the admin doesn't unblock/perminantly block the IP address, the IP address will be re-enabled after a few days.
 
 **Scan and close any ports**
 - Common practice to close unused ports 
