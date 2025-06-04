@@ -61,6 +61,7 @@
 **Check file integrity**
 - Checks a file’s credentials, privileges and security settings, content, core attributes and size, hash values, and configuration variables 
 - Implementation varies (I think), but we just have to check the core components of a file. Maybe delete it if it has an unauthorized change
+- Files usually have read, write, or execute permissions. Check if a file has execute permission when it should not, isolate/delete the file.
 
 **Check ARP table for odd entries (multiple IPs mapping to one MAC)**
 - *Implementation Ideas*
