@@ -16,7 +16,24 @@
 - Research how to put together requirements document
   - Essentials
   - Should have
-  - Would be nice to have, but not very important for this project (Ex: Authentication) 
+  - Would be nice to have, but not very important for this project (Ex: Authentication)
+ 
+## GORP Goals and Associated World States
+**Goals (as stated in the Solution Strategy Document)**
+- Successfully protect a device from cybersecurity threats
+  - Associated World States:
+    - threat_detected
+    - normal_processes
+- Inform users when a threat is present
+  - Associated World States:
+    - is_user_notified
+    - all_threats_have_been_notified
+    - waiting_for_response
+- Perform defensive cybersecurity actions to mitigate the risk of a cyber attack on the device
+  - Associated World States:
+    - threat_detected
+    - ports_temporarily_shut
+    - addresses_temporarily_blocked
 
 ## Possible Focuses
 **Authentication? --> Not included in original email**
