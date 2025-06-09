@@ -18,6 +18,8 @@
   - Should have
   - Would be nice to have, but not very important for this project (Ex: Authentication)
  
+- For now, do not have GORP wait for user response. That is out of scope for the summer.
+ 
 ## GORP Goals and Associated World States
 **Goals (as stated in the Solution Strategy Document)**
 - Successfully protect a device from cybersecurity threats
