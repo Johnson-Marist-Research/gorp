@@ -128,6 +128,41 @@
   - Occasionally review logs
   - Analyze the logs for gaps. If a gap is found, find the file associated with the gap and run a virus scan to check for suspicious activity.
   - Have agent analyze their own logs. It makes a note of when it starts and stops. If there is a gap before it stops doing something, then there is a problem.
+
+ ## Scenario Brainstorming for World States
+ 
+Scan, and potentially close, various ports
+- Initial World State: port_open
+- Target World State: port_closed
+  - Change in World State triggers when unusual traffic is detected from a port. GORP will change the port from open to closed after ending the high-traffic processes traveling through the port.
+  - Not sure if there would be a "port_open"/"port_closed" World State for each individual port
+
+Check ARP table for odd entries
+- Initial World State: no_ARP_anomalies
+- Target World State: ARP_anomaly_quarantined
+  - GORP will scan the ARP table to check for odd entries, such as multiple IP addresses being mapped to a single MAC address. If such an event is detected, actions must be taken to isolated the affected IP addresses.
+
+Monitor for unusual traffic
+- Unsure whether we will keep this one as a separate process from "Scanning ports", so will add World States later if we decide to keep it.
+
+Check permissions of files and notify the user if a file has an unusual or altered permission
+- Initial World State: files_unchanged
+- Target World State: change_detected
+  - If a file is detected to have changed permissions from the last time it was scanned, GORP can make note of the change and decide whether or not to revert the file to its original permissions. Once the file scan is complete, "change_detected" can be reverted back to "files_unchanged".
+
+Check for gaps in its own logs
+- Initial World State: no_gaps
+- Target World State: gap_detected
+  - If a gap in the logs is detected, then GORP must deduce how the gap occurred. While it is fixing this, "gap_detected" is true. Once the issue has either been fixed or GORP has restarted, "gap_detected" will revert back to "no_gaps".
+
+Enter a "safe mode" where it parrots website names back to the user to determine if the DNS address was correctly translated
+- Initial World State: general_mode
+- Target World State: safe_mode
+  - Safe mode could potentially be annoying, so maybe we can allow a feature to turn it off and on.
+- Intitial World State: dns_match
+- Target World State: dns_mismatch
+  - If "dns_mismatch" comes back as true, then the returned DNS address does not match the expected one. While "dns_mismatch", send another DNS request. Scrap the entire process if more than a certain number of requests come back as a mismatch.
+
  
 ## Misc. Notes From Day 2
 - *Network Security*: Any action intended to safeguard the integrity and usefulness of data and the network 
