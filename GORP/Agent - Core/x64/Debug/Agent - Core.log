@@ -1,0 +1,38 @@
+﻿  Blackboard.cpp
+  main.cpp
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Blackboard.h(18,14): warning C4200: nonstandard extension used: zero-sized array in struct/union
+  (compiling source file 'Blackboard.cpp')
+      C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Blackboard.h(18,14):
+      This member will be ignored by a defaulted constructor or copy/move assignment operator
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Blackboard.cpp(3,13): error C2600: 'Blackboard::Blackboard': cannot define a compiler-generated special member function (must be declared in the class first)
+  Planner.cpp
+  Sensor.cpp
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Sensor.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'Sensor.cpp')
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.h(14,14): warning C4200: nonstandard extension used: zero-sized array in struct/union
+  (compiling source file 'Sensor.cpp')
+      C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.h(14,14):
+      This member will be ignored by a defaulted constructor or copy/move assignment operator
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Sensor.cpp(3,9): error C2600: 'Sensor::Sensor': cannot define a compiler-generated special member function (must be declared in the class first)
+  Subsystem.cpp
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Blackboard.h(18,14): warning C4200: nonstandard extension used: zero-sized array in struct/union
+  (compiling source file 'Subsystem.cpp')
+      C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Blackboard.h(18,14):
+      This member will be ignored by a defaulted constructor or copy/move assignment operator
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Subsystem.h(15,6): error C2229: class 'Subsystem' has an illegal zero-sized array
+  (compiling source file 'Subsystem.cpp')
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Subsystem.cpp(3,12): error C2600: 'Subsystem::Subsystem': cannot define a compiler-generated special member function (must be declared in the class first)
+  WorkingMemory.cpp
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.h(14,14): warning C4200: nonstandard extension used: zero-sized array in struct/union
+  (compiling source file 'WorkingMemory.cpp')
+      C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.h(14,14):
+      This member will be ignored by a defaulted constructor or copy/move assignment operator
+  
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.cpp(3,16): error C2600: 'WorkingMemory::WorkingMemory': cannot define a compiler-generated special member function (must be declared in the class first)
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorkingMemory.cpp(17,31): error C2070: 'std::string []': illegal sizeof operand
+  Generating Code...
