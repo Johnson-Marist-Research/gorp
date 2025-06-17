@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 // Need two signals: knowledge_gained and knowledge_lost
 
@@ -10,6 +11,6 @@ public:
 	void forget(int key);
 	std::string recall(int key);
 private:
-	// Once again substituting an array for a dictionary
-	std::string known_facts[];
+	// Once again substituting a map for a dictionary
+	std::map<int, std::string> known_facts{};
 };

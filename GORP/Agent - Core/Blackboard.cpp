@@ -1,10 +1,9 @@
 #include "Blackboard.h"
 
-Blackboard::Blackboard()
+/*Blackboard::Blackboard()
 {
     // Maybe we can set the size of instructions[] here
-    instructions[100];
-}
+}*/
 
 void Blackboard::post(int key, std::string instruction)
 {

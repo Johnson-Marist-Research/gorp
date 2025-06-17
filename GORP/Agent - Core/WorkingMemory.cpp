@@ -1,9 +1,9 @@
 #include "WorkingMemory.h"
 
-WorkingMemory::WorkingMemory()
+/*WorkingMemory::WorkingMemory()
 {
     // Maybe we can set the size of known_facts[] here
-}
+}*/
 
 void WorkingMemory::store(int key, std::string fact)
 {

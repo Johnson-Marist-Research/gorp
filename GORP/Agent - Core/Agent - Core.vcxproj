@@ -142,6 +142,8 @@
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Subsystem.cpp" />
     <ClCompile Include="WorkingMemory.cpp" />
+    <ClCompile Include="WorldProperty.cpp" />
+    <ClCompile Include="WorldState.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
