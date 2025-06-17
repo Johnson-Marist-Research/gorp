@@ -15,5 +15,6 @@ public:
 private:
 	// Leaving the "instructions" as an array of strings for now
 	// This is really rough, so we can alter it later.
+	// Use maps
 	std::string instructions[];
 };

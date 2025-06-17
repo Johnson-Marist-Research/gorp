@@ -132,6 +132,8 @@
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Subsystem.h" />
     <ClInclude Include="WorkingMemory.h" />
+    <ClInclude Include="WorldProperty.h" />
+    <ClInclude Include="WorldState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blackboard.cpp" />

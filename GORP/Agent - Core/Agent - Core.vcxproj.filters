@@ -30,6 +30,12 @@
     <ClInclude Include="Subsystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WorldState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldProperty.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blackboard.cpp">
