@@ -16,6 +16,8 @@ TODO:
 	- Figure out the C++ equivalent of .has (Planner.cpp, distance())
 	- Figure out c++ equivalent of .get_property (Planner.cpp, distance())
 - Finish WorldState.cpp's duplicate(), has(), _to_string(), get_property(), satisfies(), difference(), reduce_by() functions
+- The "procedure" variable in Response.h was a "Callable". Not sure what that is in C++
+	- Because of this, the execute() function in Response.cpp does not work
 - WorldProperty.h: Find C++ equivalent to Node --> Can replace Node with a string name (Node was acting as an identifier)
 	- Could also be a bool depending on the exact object
 	- Can also make a Subject class
@@ -51,6 +53,7 @@ GOALS FOR THIS WEEK:
 - Find specific command to list every open port, then store info in a map
 	- Command is "netstat -lntu"
 - Continue to finish Planner
+	- Create a "Response (aka "Action") file
 */
 
 int main() {

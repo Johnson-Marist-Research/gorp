@@ -36,6 +36,9 @@
     <ClInclude Include="WorldProperty.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Response.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blackboard.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Response.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
