@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Blackboard.h" />
     <ClInclude Include="Planner.h" />
+    <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Response.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Subsystem.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="Blackboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Planner.cpp" />
+    <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Response.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Subsystem.cpp" />

@@ -10,8 +10,8 @@
 void WorldState::_init(WorldProperty props) {
 	// This really isn't right, but I'll leave it as a placeholder for now
 	// As it is, it rewrites the ENTIRITY of properties to be props. That is not right.
-	for (int i = 0; i < sizeof(properties); i++) {
-		this->properties[i] = props;
+	for (int prop = 0; prop < sizeof(properties); prop++) {
+		this->properties[prop] = props;
 	}
 	/*
 	func _init(props:Variant):
@@ -31,19 +31,22 @@ std::string WorldState::_to_string() {
 	}
 }
 
-/*WorldState WorldState::duplicate() {
-	// This doesn't work right now, so come back to it later
-	return WorldState.new(properties.duplicate());
-}*/
+std::map<int, WorldProperty> WorldState::duplicate() {
+	std::map<int, WorldProperty> propDuplicate = properties;
+	return propDuplicate;
+}
 
 int WorldState::size() {
 	return properties.size();
 }
 
 bool WorldState::has(int key) {
-	// This doesn't work right now, so come back to it later
-	// Originally "return properties.has(key)". Don't think this works, but is a quick fix to get the program to RUN in the first place.
-	return true;
+	if (properties.count(key) > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 bool WorldState::insert(WorldProperty prop) {
@@ -70,17 +73,17 @@ void WorldState::drop_property(int key) {
 
 void WorldState::drop_properties(int keys[]) {
 	// map has a built-in erase function
-	// Check if this works later. I think it will, but it pays to be sure.
-	for (int i = 0; i < sizeof(keys); i++) {
-		properties.erase(keys[i]);
+	// Check if this works later. I think it might, but it pays to be sure.
+	for (int key = 0; key < sizeof(keys); key++) {
+		properties.erase(keys[key]);
 	}
 }
 
 // Determine whether all properties of a goal state are present in this state with their required values
 bool WorldState::satisfies(WorldState goal) {
-	for (int i = 0; i < sizeof(goal.properties); i++) {
+	for (int key = 0; key < sizeof(goal.properties); key++) {
 		// Have to check this one over too :/
-		if ((this->has(i) == false) or (this->get_property(i).value != goal.get_property(i).value)) {
+		if ((this->has(key) == false) or (this->get_property(key).value != goal.get_property(key).value)) {
 			return false;
 		}
 	}
@@ -99,52 +102,66 @@ WorldState WorldState::difference(WorldState a, WorldState b) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState c = a.duplicate();
 	WorldState c = a;
-	for (int i = 0; i < sizeof(b.properties); i++) {
+	for (int key = 0; key < sizeof(b.properties); key++) {
 		// Check this later
-		WorldProperty prop = a.get_property(i);
+		WorldProperty prop = a.get_property(key);
 		// Original is having trouble comparing WorldState to a boolean; need to fix this,
 		// But am taking out "prop" in the comparison just to get it running. NEED TO FIX THIS LATER.
 		//if ((prop && prop.value) == b.get_property(i).value) {
-		if ((prop.value) == b.get_property(i).value) {
-			c.drop_property(i);
+		if ((prop.value) == b.get_property(key).value) {
+			c.drop_property(key);
 		}
 	}
 	return c;
 }
 
 // Remove satisfied properties from a goal state, as long as no conflicts exist
-WorldState WorldState::reduce_by(WorldState goal, WorldState effects, bool forbid_conflict = true) {
+void WorldState::reduce_by(WorldState goal, WorldState effects, bool forbid_conflict = true) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
 	WorldState new_goal = goal;
-	for (int i = 0; i < sizeof(goal.properties); i++) {
-		if (effects.has(i)) {
-			if (effects.get_property(i).value == goal.get_property(i).value) {
-				new_goal.drop_property(i);
+	for (int key = 0; key < sizeof(goal.properties); key++) {
+		if (effects.has(key)) {
+			if (effects.get_property(key).value == goal.get_property(key).value) {
+				new_goal.drop_property(key);
 			}
 			else if (forbid_conflict) {
 				// Problem: Need to be able to return null or a WorldState, but it won't let us return both
 				//return nullptr;
-				return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
+				//return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
+				// Making a separate function to return null
+				return_null();
 			}
 		}
 	}
-	return new_goal;
+	//return new_goal;
+	// Making a separate function to return WorldState
+	return_WorldState(new_goal);
 }
 
-WorldState WorldState::expand_by(WorldState goal, WorldState preconditions) {
+void WorldState::expand_by(WorldState goal, WorldState preconditions) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
 	WorldState new_goal = goal;
-	for (int i = 0; i < sizeof(preconditions.properties); i++) {
-		if (goal.has(i) == false) {
-			new_goal.add_property(i, preconditions.get_property(i));
+	for (int key = 0; key < sizeof(preconditions.properties); key++) {
+		if (goal.has(key) == false) {
+			new_goal.add_property(key, preconditions.get_property(key));
 		}
-		else if (goal.get_property(i).value != preconditions.get_property(i).value) {
+		else if (goal.get_property(key).value != preconditions.get_property(key).value) {
 			// Fix this later :(
 			//return nullptr;
-			return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
+			//return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
+			return_null();
 		}
 	}
+	//return new_goal;
+	return_WorldState(new_goal);
+}
+
+WorldState WorldState::return_WorldState(WorldState new_goal) {
 	return new_goal;
+}
+
+void* WorldState::return_null() {
+	return NULL;
 }

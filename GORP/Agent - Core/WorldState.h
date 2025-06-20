@@ -15,7 +15,7 @@ public:
 
 	std::string _to_string();
 
-	WorldState duplicate();
+	std::map<int, WorldProperty> duplicate();
 
 	int size();
 
@@ -31,8 +31,11 @@ public:
 	bool satisfies(WorldState goal);
 
 	WorldState difference(WorldState a, WorldState b);
-	WorldState reduce_by(WorldState goal, WorldState effects, bool forbid_conflicts);
-	WorldState expand_by(WorldState goal, WorldState preconditions);
+	void reduce_by(WorldState goal, WorldState effects, bool forbid_conflicts);
+	void expand_by(WorldState goal, WorldState preconditions);
+
+	WorldState return_WorldState(WorldState new_goal);
+	void* return_null();
 
 private:
 };

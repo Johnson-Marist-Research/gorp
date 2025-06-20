@@ -15,10 +15,11 @@ public:
 	WorldState effects;
 	// This was of type "Callable". Not sure how to transfer that to C++
 	// Going to leave it as string for now
-	std::string procedure;
+	//std::string procedure;
 
 	// "proc" was shorthand for procedure, which is changed to string instead of Callable
-	void _init(std::string name, float cost, WorldState before, WorldState after, std::string proc);
+	//void _init(std::string name, float cost, WorldState before, WorldState after, std::string proc);
+	void _init(std::string name, float cost, WorldState before, WorldState after);
 	// This calls procedure, but again, C++ doesn't have Callables, so we'll have to figure that out
 	void execute();
 };
