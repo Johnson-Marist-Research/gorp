@@ -7,9 +7,9 @@ class Planner {
 public:
 	// Do we need the WorldState header file?
 	float distance(WorldState src, WorldState dst);
-	void unify(Response response, WorldState goal);
+	WorldState unify(Response* response, WorldState goal);
 	// Need to return an array of responses
-	Response devise_plan(WorldState current_state, WorldState goal, Response responses[]);
+	Response devise_plan(WorldState current_state, WorldState goal, Response* responses[]);
 
 	WorldState return_WorldState(WorldState new_goal);
 	void* return_null();

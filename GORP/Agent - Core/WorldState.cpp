@@ -51,7 +51,7 @@ bool WorldState::has(int key) {
 
 bool WorldState::insert(WorldProperty prop) {
 	// Figure out how to write this in C++
-	//properties[prop.to_key()] = prop;
+	properties[prop.to_key()] = prop;
 	return true;
 }
 
@@ -116,7 +116,7 @@ WorldState WorldState::difference(WorldState a, WorldState b) {
 }
 
 // Remove satisfied properties from a goal state, as long as no conflicts exist
-void WorldState::reduce_by(WorldState goal, WorldState effects, bool forbid_conflict = true) {
+WorldState WorldState::reduce_by(WorldState goal, WorldState effects, bool forbid_conflict = true) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
 	WorldState new_goal = goal;
@@ -131,15 +131,17 @@ void WorldState::reduce_by(WorldState goal, WorldState effects, bool forbid_conf
 				//return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
 				// Making a separate function to return null
 				return_null();
+				return;
 			}
 		}
 	}
 	//return new_goal;
 	// Making a separate function to return WorldState
 	return_WorldState(new_goal);
+	return new_goal;
 }
 
-void WorldState::expand_by(WorldState goal, WorldState preconditions) {
+WorldState WorldState::expand_by(WorldState goal, WorldState preconditions) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
 	WorldState new_goal = goal;
@@ -152,10 +154,12 @@ void WorldState::expand_by(WorldState goal, WorldState preconditions) {
 			//return nullptr;
 			//return new_goal; // PLACEHOLDER UNTIL I CAN GET "return nullptr" to work
 			return_null();
+			return;
 		}
 	}
 	//return new_goal;
 	return_WorldState(new_goal);
+	return new_goal;
 }
 
 WorldState WorldState::return_WorldState(WorldState new_goal) {

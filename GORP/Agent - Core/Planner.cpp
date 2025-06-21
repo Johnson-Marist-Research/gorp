@@ -1,8 +1,9 @@
 #include "Planner.h"
+#include "PriorityQueue.h"
 
 
 // Distance between two states
-/*float Planner::distance(WorldState src, WorldState dst) {
+float Planner::distance(WorldState src, WorldState dst) {
 	float d = 0;
 	for (int key = 0; key < sizeof(dst.properties); key++) {
 		if (!src.has(key)) {
@@ -18,31 +19,35 @@
 
 // If the goal state is a possible result of applying the action, then we return a minimal substate of all states in which this
 // action could have been applied to yield the goal state.
-void Planner::unify(Response response, WorldState goal) {
+WorldState Planner::unify(Response* response, WorldState goal) {
 	// Added the * to make it a pointer
 	// Can check if a pointer is null, but not a class
-	WorldState* unsatisfied = WorldState.reduce_by(goal, response.effects);
+	WorldState unsatisfied = unsatisfied.reduce_by(goal, response->effects);
 	if (unsatisfied == NULL) {
 		return_null();
+		return;
 	}
-	WorldState new_goal = WorldState.expand_by(unsatisfied, response.preconditions);
+	WorldState new_goal = new_goal.expand_by(unsatisfied, response->preconditions);
 	if (new_goal == goal) {
 		return_null();
+		return;
 	}
 	return_WorldState(new_goal);
-};
-
-WorldState WorldState::return_WorldState(WorldState new_goal) {
 	return new_goal;
 };
 
-void* WorldState::return_null() {
+WorldState Planner::return_WorldState(WorldState new_goal) {
+	return new_goal;
+};
+
+void* Planner::return_null() {
 	return NULL;
 };
 
-Response Planner::devise_plan(WorldState current_state, WorldState goal, Response responses[]) {
+Response Planner::devise_plan(WorldState current_state, WorldState goal, Response* responses[]) {
 	// Need to initialize plan[] with a specific size, so for now I'm going to add a placeholder of 100
-	Response plan[100] = {};
+	//Response plan[100] = {};
+	Response plan;
 	std::map<int, WorldState> came_from = {};
 	std::map<int, WorldState> cost_so_far = {};
 
@@ -52,8 +57,7 @@ Response Planner::devise_plan(WorldState current_state, WorldState goal, Respons
 	cost_so_far[goal] = 0;
 
 	// Need to implement PriorityQueue class
-	PriorityQueue frontier = PriorityQueue.new();
-	frontier.insert(goal, cost_so_far[goal]);
+	PriorityQueue frontier = frontier.insert(goal, cost_so_far[goal]);
 
 	// Initialized to NULL
 	WorldState start;
@@ -70,7 +74,7 @@ Response Planner::devise_plan(WorldState current_state, WorldState goal, Respons
 			WorldState next = unify(responses[response], current_goal);
 			// if (next == NULL) { continue; }
 
-			next = WorldState.reduce_by(next, current_state, false);
+			next = next.reduce_by(next, current_state, false);
 
 			float g_cost = cost_so_far[current_goal] + response.cost;
 			if ((cost_so_far.count(next) <= 0) || (g_cost < cost_so_far[next])) {
@@ -89,8 +93,8 @@ Response Planner::devise_plan(WorldState current_state, WorldState goal, Respons
 		if (came_from.count(n) <= 0) {
 			break;
 		}
-		plan.append(came_from[n].response);
+		plan->append(came_from[n].response);
 		n = came_from[n].state;
 	}
 	return plan;
-};*/
+};
