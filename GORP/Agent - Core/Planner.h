@@ -3,13 +3,17 @@
 #include "WorldState.h"
 #include "Response.h"
 
+#include <memory>
+#include <forward_list>
+
 class Planner {
 public:
 	// Do we need the WorldState header file?
-	float distance(WorldState src, WorldState dst);
-	WorldState unify(Response* response, WorldState goal);
+	float distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldState> dst);
+	// Using shared pointers so as to prevent data leaks
+	std::shared_ptr<WorldState> unify(std::shared_ptr<Response> response, std::shared_ptr<WorldState> goal);
 	// Need to return an array of responses
-	Response devise_plan(WorldState current_state, WorldState goal, Response* responses[]);
+	std::forward_list<Response> devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::shared_ptr<Response> responses[]);
 
 	WorldState return_WorldState(WorldState new_goal);
 	void* return_null();

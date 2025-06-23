@@ -1,11 +1,6 @@
 #include "WorldProperty.h"
 
-/*WorldProperty::WorldProperty()
-{
-    // Not sure if this is needed, but I'll leave it here just in case
-}*/
-
-void WorldProperty::_init(std::string subject, std::string name, bool value) {
+WorldProperty::WorldProperty(std::string subject, std::string name, bool value) {
 	this->subject = subject;
 	this->name = name;
 	this->value = value;
@@ -24,6 +19,9 @@ std::string WorldProperty::_to_string() {
 	return "<" + subject + "." + name + " = " + valueTrueOrFalse + ">";
 }
 
+// Need to return an int
+// Individual key for each property (enum in WorldProperties.h)
+// Or change the key in properties to a string
 std::string WorldProperty::to_key() {
 	// return subject.name + ": " + name
 	return subject + ": " + name;
