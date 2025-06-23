@@ -12,6 +12,7 @@ Ending Goal: GORP can execute a full planning cycle
 ## Monday:
 
 - Debug Planner
+- Write summaries at top of each code segment to ensure I understand what it is doing
 
 ## Tuesday:
 
