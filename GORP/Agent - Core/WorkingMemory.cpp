@@ -1,16 +1,13 @@
 #include "WorkingMemory.h"
 
-/*WorkingMemory::WorkingMemory()
-{
-    // Maybe we can set the size of known_facts[] here
-}*/
-
+// Store information from sensors in WorkingMemory
 void WorkingMemory::store(int key, std::string fact)
 {
     known_facts[key] = fact;
     // This is where we would have the signal emit a "knowledge_gained.emit(key)" signal
 }
 
+// Remove information from WorkingMemory
 void WorkingMemory::forget(int key)
 {
     // Delete the entry at "key" and shift everything over one
@@ -22,6 +19,7 @@ void WorkingMemory::forget(int key)
     // This is where we would have the signal emit a "knowledge_lost.emit(key)" signal
 }
 
+// Retrieve information already stored in WorkingMemory
 std::string WorkingMemory::recall(int key) {
     return known_facts[key];
 }

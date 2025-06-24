@@ -2,7 +2,7 @@
 // Will probably need to "#include" a few of the files
 #include "WorkingMemory.h"
 #include "Blackboard.h"
-
+#include "Agent.h"
 /*
 Basic Test Idea: Planner closes all open ports
 */
@@ -25,13 +25,18 @@ BUGS:
 - WorkingMemory.cpp --> forget(): Overwriting is weird. Might not overwrite last item in array
 - I haven't specified the size of the various maps in the header files, so that might be a problem at some point.
 - Response.cpp and is not happy that WorldState lacks a default constructor
+- Check if the end of devise_plan() in Planner.cpp actually puts the element in the correct spot in the forward list
+- Might have to change the keys in Blackboard from ints to strings
 */
 
 /*
 GOALS FOR THIS WEEK:
+- IDEA: Wherever there is a signal in GDScript, replace it with a direct call to the signaled function
+- Implement responses and goals (Agent class) --> Agent connects the GORP components
 */
 
 int main() {
+	Agent agent;
 	WorkingMemory memory;
 	Blackboard blackboard;
 
@@ -73,8 +78,10 @@ int main() {
 				std::cout << "\nBlackboard contains nothing";
 			}
 		}
-		else if (input == "c" || input == "C") {
+		else if (input == "a" || input == "A") {
 			std::cout << "\nYou entered " + input;
+			std::cout << "\nNow running Agent...";
+			agent.run_agent();
 		}
 		else if (input == "d" || input == "D") {
 			std::cout << "\nYou entered " + input;

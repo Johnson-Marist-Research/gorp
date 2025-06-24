@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Agent.h" />
     <ClInclude Include="Blackboard.h" />
     <ClInclude Include="Planner.h" />
     <ClInclude Include="PriorityQueue.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="WorldState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Blackboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Planner.cpp" />

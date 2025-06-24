@@ -91,13 +91,6 @@ bool WorldState::satisfies(std::shared_ptr<WorldState> goal) {
 	}
 	return true;
 }
-/*
-func satisfies(goal:WorldState) -> bool:
-	for key in goal.properties:
-		if not self.has(key) or self.get_property(key).value != goal.get_property(key).value:
-			return false
-	return true
-*/
 
 // Return a substate of the first state containing only those properties that are not satisfied (i.e., same in) the second state
 std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b) {
@@ -140,7 +133,7 @@ std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> go
 	}
 	return new_goal;
 }
-
+// Adds a new goal to the list of possible goals
 std::shared_ptr<WorldState> WorldState::expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions) {
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
