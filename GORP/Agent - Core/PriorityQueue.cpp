@@ -2,11 +2,13 @@
 
 #include <limits>
 
+// Initializes the key and value variables
 PriorityQueue::PriorityQueue(std::string k, std::shared_ptr<WorldState> v) {
 	key = k;
 	value = v;
 }
 
+// Checks if the heap is empty
 bool PriorityQueue::is_empty() {
 	if ((heapStart == 0) && (heapEnd == -1)) {
 		return true;
@@ -16,10 +18,12 @@ bool PriorityQueue::is_empty() {
 	}
 };
 
+// Returns the first position in the heap
 std::shared_ptr<PriorityQueue> PriorityQueue::front() {
 	return heap[0];
 };
 
+// Returns the leftmost position of the variables in the heap
 int PriorityQueue::left(int i) {
 	return 2 * (i + 1) - 1;
 };
@@ -28,10 +32,12 @@ int PriorityQueue::parent(int i) {
 	return floor((i - 1) / 2); // floor is redundant here, but retained for clarity of purpose
 };
 
+// Returns the rightmost position of the variables in the heap
 int PriorityQueue::right(int i) {
 	return 2 * (i + 1);
 };
 
+// Inserts a value into heap
 void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	// If this was a simple PriorityQueue* pointer, we would only need PriorityQueue* newElement = new PriorityQueue(priority, x);
 	// However, since it is a shared pointer, we need the std::make_shared
@@ -41,13 +47,7 @@ void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	heapEnd++;
 };
 
-/*
-/*
-func insert(x:Variant, priority:int):
-	heap.push_back(null)
-	update_key(heap.size() - 1, Element.new(priority, x))
-*/
-
+// Takes a value out of heap
 std::shared_ptr<WorldState> PriorityQueue::extract() {
 	if (sizeof(heap) < 1){
 		return nullptr; // error “heap underflow”
@@ -59,6 +59,7 @@ std::shared_ptr<WorldState> PriorityQueue::extract() {
 	return extremum;
 };
 
+// Trims the heap down?
 void PriorityQueue::heapify(int i) {
 	int l = left(i);
 	int r = right(i);
@@ -80,6 +81,7 @@ void PriorityQueue::heapify(int i) {
 	}
 };
 
+// Updates the value of a key in heap
 void PriorityQueue::update_key(int i, std::shared_ptr<PriorityQueue> elem) {
 	// var prev_key = heap[i].key if heap[i] else INF
 	std::string prev_key;

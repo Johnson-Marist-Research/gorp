@@ -8,6 +8,6 @@
 }*/
 
 void Sensor::_ready() {
-    // We fetch an instance of WorkingMemory (declared here as the variable "memory"
+    // We fetch an instance of WorkingMemory (declared here as the variable "memory")
     // Figure out later
 }

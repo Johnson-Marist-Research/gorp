@@ -1,26 +1,37 @@
 #pragma once
-
-#include "WorldState.h"
+#include "Blackboard.h"
+#include "Planner.h"
 #include "Response.h"
+#include "Sensor.h"
+#include "Subsystem.h"
+#include "WorkingMemory.h"
+#include "WorldState.h"
 
 #include <memory>
 #include <forward_list>
 #include <vector>
 
 class Agent {
-	// TODO: Add a timer?
+	// Agent Components
+	Blackboard blackboard;
+	Planner planner;
+	Sensor sensor;
+	Subsystem subsystem;
+	WorkingMemory workingMemory;
+
 
 	// Need to make these vectors so we can iterate through them
 	// Original was "std::vector<Response> const&", but had trouble initializing them
 	// Should they be vectors of shared pointers?
 	// Ask about it later
 	std::vector<Response> responses;
-	std::vector<WorldState> goals;
+	std::vector< std::shared_ptr<WorldState>> goals;
 
 	std::forward_list<Response> current_plan;
 	// Changed this from a shared pointer because I was having trouble with update_knowledge()
 	// Should I change it back and alter update_knowledge()?
-	WorldState knowledge;
+	// This only works if the WorldState class has a zero-argument default constructor
+	std::shared_ptr<WorldState> knowledge;
 
 	// ------------ Preconditions and Postconditions ------------
 	// Ports
@@ -56,12 +67,11 @@ class Agent {
 	void run_agent();
 
 	std::shared_ptr<WorldState> process_sensor();
-	WorldState update_knowledge();
+	std::shared_ptr<WorldState> update_knowledge();
 	void make_plan();
 	void execute_plan();
 
 	void init_responses();
 	void init_goals();
-	void init_knowledge();
 
 };

@@ -12,11 +12,13 @@ public:
 	// Was a dictionary, but will save as a map for now
 	std::map<std::string, std::shared_ptr<WorldProperty>> properties{};
 
-	// _init should be a constructor instead
+	// Zero-Argument Constructor
+	WorldState();
+
 	//WorldState(WorldProperty props);
 	WorldState(std::shared_ptr<WorldProperty> props);
 
-	std::string _to_string();
+	std::string _to_string() const;
 
 	std::map<std::string, std::shared_ptr<WorldProperty>> duplicate();
 

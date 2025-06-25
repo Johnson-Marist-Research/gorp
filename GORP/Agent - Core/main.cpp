@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 // Will probably need to "#include" a few of the files
 #include "WorkingMemory.h"
 #include "Blackboard.h"
@@ -46,6 +48,17 @@ int main() {
 	blackboard.post(0, "Keeping you posted :D");
 
 	std::string input;
+
+	// Tentative Timer (only runs once for now; would need to stick in another while loop to have it run continuously)
+	// For the agent timer (agent runs once every five seconds)
+	// Get the starting time point
+	/*auto start_time = std::chrono::steady_clock::now();
+	// Calculate the end time point
+	auto end_time = start_time + std::chrono::seconds(5);
+
+	while (std::chrono::steady_clock::now() < end_time) {
+		agent.run_agent();
+	}*/
 
 	// Setting up a quick demo to take input
 	// This way we can test the program

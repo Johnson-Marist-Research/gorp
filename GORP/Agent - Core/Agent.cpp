@@ -1,13 +1,19 @@
 #include "Agent.h"
-#include "Planner.h"
 
 #include <iostream>
+
+/* TODO:
+		- Agent Components
+			- Decide if current_plan is needed here and how it differs from the instructions we write to blackboard
+				- Maybe the blackboard can contain current_plan?
+			- Is WorldState knowledge needed, or does the memory make this separate variable unnecessary?
+			- Decide how to convert Sensor input into a WorldState
+		*/
 
 // Runs all the initialization functions once GORP is started
 Agent::Agent() {
 	init_responses();
 	init_goals();
-	init_knowledge();
 }
 
 // Runs the process_sensor() and update_knowledge() functions when called
@@ -33,11 +39,58 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 }
 
 // Updates knowledge about the World States based on information from Sensors
-WorldState Agent::update_knowledge() {
-	for (auto const& key : knowledge.properties) {
-		std::shared_ptr<WorldProperty> prop = knowledge.properties[key];
-		switch (prop.name) {
-			// Add knowledge here (still have to add it to Agent.h)
+std::shared_ptr<WorldState> Agent::update_knowledge() {
+	for (auto const& key : knowledge->properties) {
+		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
+		if (prop->value == true && prop->name == "normal_traffic") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "port_open") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "excess_traffic_detected") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "port_blocked") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "no_ARP_anomalies") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "ARP_anomaly_quarantined") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "files_unchanged") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "change_detected") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "no_gaps") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "gap_detected") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "general_mode") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "safe_mode") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "dns_match") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "dns_mismatch") {
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else {
+			if (prop->value) {
+				std::cout << "The knowledge " << prop->name << " is true and unrecognized." << std::endl;
+			}
+			else {
+				std::cout << "The knowledge " << prop->name << " is false and unrecognized." << std::endl;
+			}
 		}
 	}
 	/*
@@ -75,12 +128,13 @@ void Agent::make_plan() {
 		}
 
 		// For debugging purposes
-		std::cout << "Planning for goal " << goal.properties << std::endl;
+		//std::cout << "Planning for goal " << goal.properties.begin()->first << std::endl;
+		std::cout << "Planning for goal " << goal->_to_string() << std::endl;
 
-		std::forward_list<Response> plan = Planner.devise_plan(current_state, goal, responses);
+		std::forward_list<Response> plan = planner.devise_plan(current_state, goal, responses);
 		if (sizeof(plan) == 0) {
 			// Debugging message
-			std::cout << "Unable to satisfy goal " << goal.properties << std::endl;
+			std::cout << "Unable to satisfy goal " << goal->_to_string() << std::endl;
 			continue;
 		}
 		/*
@@ -113,6 +167,36 @@ void Agent::execute_plan() {
 
 // Initializes the response variables
 void Agent::init_responses() {
+	Response response;
+	/* 
+	- block_port
+	- unblock_port
+	- block_IP_address
+	- unblock_IP_address
+	- revert_file
+	- update_file
+	- close_GORP
+	- switch_to_gen_mode
+	- switch_to_safe_mode
+	- block_dns_response
+	*/
+	
+	// Making this first Response as a test case
+	// Once it is debugged, it can act as a blueprint for the remainder
+	Response block_port((std::string "block_port"), 1,
+		// Preconditions
+		WorldState({
+			WorldProperty(this, "excess_traffic_detected", true),
+			WorldProperty(this, "port_open", true)
+			}),
+		//Effects
+		WorldState({
+			WorldProperty(this, "excess_traffic_detected", false),
+			WorldProperty(this, "port_open", false),
+			WorldProperty(this, "port_blocked", true)
+			})
+		// port_under_attack(); --> ????
+	);
 	/*
 	Action.new("go_to_bush", 1,
 			# Preconditions
@@ -134,6 +218,14 @@ void Agent::init_responses() {
 
 // Initializes the goal variables
 void Agent::init_goals() {
+	WorldState goals[] = {
+		WorldProperty(this, "port_under_attack", false),
+		WorldProperty(this, "ARP_attack", false),
+		WorldProperty(this, "unauthorized_file_change", false),
+		WorldProperty(this, "unusual_log_activity", false),
+		WorldProperty(this, "safe_mode_active", false),
+		WorldProperty(this, "dns_attack", false)
+	};
 	/*
 	goals = [
 		# Top of list is highest priority
@@ -143,9 +235,4 @@ void Agent::init_goals() {
 		WorldState.new([WorldProperty.new(self, "is_lonely", false)])
 	]
 	*/
-}
-
-// Initializes the knowledge variables
-void Agent::init_knowledge() {
-	// knowledge.insert(WorldProperty.new(self, "in_bed", in_bed))
 }

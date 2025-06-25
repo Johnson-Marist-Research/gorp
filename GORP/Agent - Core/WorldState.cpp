@@ -2,6 +2,8 @@
 
 #include <map>
 
+WorldState::WorldState(){}
+
 WorldState::WorldState(std::shared_ptr<WorldProperty> props)
 {
     // Not sure if this is needed, but I'll leave it here just in case
@@ -22,11 +24,11 @@ WorldState::WorldState(std::shared_ptr<WorldProperty> props)
 	*/
 }
 
-std::string WorldState::_to_string() {
-	// Fix later
-	for (int i = 0; i < sizeof(properties); i++) {
-		//return std::to_string(properties[i]);
-		return "_to_string() placeholder";
+// Use a range-based for loop to iterate through all the key value pairs in the map of properties
+// For each property, print the value of the first element in the map, which is the key in the form of a string
+std::string WorldState::_to_string() const {
+	for (auto& const key : properties) {
+		return key.first;
 	}
 }
 
