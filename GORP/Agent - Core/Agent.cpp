@@ -12,6 +12,7 @@
 
 // Runs all the initialization functions once GORP is started
 Agent::Agent() {
+	knowledge = std::make_shared<WorldState>(WorldState());
 	init_responses();
 	init_goals();
 }
@@ -29,18 +30,29 @@ void Agent::run_agent() {
 // If there is a current plan, executes it
 // Will probably need a timer so that this isn't firing off at every opportunity
 std::shared_ptr<WorldState> Agent::process_sensor() {
+	// Placeholder WorldState to return
+	std::shared_ptr<WorldState> placeholder;
+	// Need to figure out how to detect things from the console
+	// Can then turn that result into a WorldState
+	std::cout << "Running Agent.process_sensor()" << std::endl;
 	// if action_timer.is_stopped():
-	if (sizeof(current_plan) == 0) {
+	if (current_plan.empty()) {
 		make_plan();
 	}
 	else {
 		execute_plan();
 	}
+	return placeholder;
 }
 
 // Updates knowledge about the World States based on information from Sensors
+// Does this need to return a WorldState?
 std::shared_ptr<WorldState> Agent::update_knowledge() {
+	// Placeholder WorldState to return
+	std::shared_ptr<WorldState> placeholder;
+	std::cerr << knowledge << std::endl;
 	for (auto const& key : knowledge->properties) {
+		std::cerr << "Made it here" << std::endl;
 		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
 		if (prop->value == true && prop->name == "normal_traffic") {
 			std::cout << prop->name << " is true" << std::endl;
@@ -93,6 +105,8 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			}
 		}
 	}
+	return placeholder;
+
 	/*
 	for key in knowledge.properties:
 		var prop:WorldProperty = knowledge.properties[key]
@@ -120,6 +134,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 // checks if current_state satisfies the current goals,
 // and calls on Planner to create a plan to achieve said goals.
 void Agent::make_plan() {
+	std::cout << "Running Agent.make_plan()" << std::endl;
 	std::shared_ptr<WorldState> current_state = update_knowledge();
 	// For goal in goals
 	for (auto const& goal : goals) {
@@ -154,10 +169,12 @@ void Agent::make_plan() {
 // If there is a current plan, take the first element in current_plan (next_action) and executes it
 // Continues to execute the steps until there are no more remaining.
 void Agent::execute_plan() {
-	if (sizeof(current_plan) == 0) {
+	std::cout << "Running Agent.execute_plan()" << std::endl;
+	if (current_plan.empty()) {
 		return;
 	}
 	// Make current_plan into a vector of shared pointers?
+	//std::cout << "Size of the current plan is: " << std::to_string(sizeof(current_plan)) << std::endl;
 	Response next_action = current_plan.front();
 	// if next_action
 	if (sizeof(next_action) > 0) {
@@ -167,7 +184,7 @@ void Agent::execute_plan() {
 
 // Initializes the response variables
 void Agent::init_responses() {
-	Response response;
+	std::cout << "Running Agent.init_response()" << std::endl;
 	/* 
 	- block_port
 	- unblock_port
@@ -175,64 +192,217 @@ void Agent::init_responses() {
 	- unblock_IP_address
 	- revert_file
 	- update_file
-	- close_GORP
 	- switch_to_gen_mode
 	- switch_to_safe_mode
 	- block_dns_response
+
+	Potential addition: close_GORP
 	*/
-	
-	// Making this first Response as a test case
-	// Once it is debugged, it can act as a blueprint for the remainder
-	Response block_port((std::string "block_port"), 1,
+	// Block a port on the device
+	Response block_port(std::string("block_port"), 1,
 		// Preconditions
 		WorldState({
-			WorldProperty(this, "excess_traffic_detected", true),
-			WorldProperty(this, "port_open", true)
+			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+			//WorldProperty(this, "excess_traffic_detected", true)
 			}),
 		//Effects
 		WorldState({
-			WorldProperty(this, "excess_traffic_detected", false),
-			WorldProperty(this, "port_open", false),
-			WorldProperty(this, "port_blocked", true)
+			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			//WorldProperty(this, "excess_traffic_detected", false),
+			//WorldProperty(this, "port_blocked", true)
 			})
-		// port_under_attack(); --> ????
 	);
-	/*
-	Action.new("go_to_bush", 1,
-			# Preconditions
-			WorldState.new([
-				WorldProperty.new(self, "bush_reachable", true),
-				WorldProperty.new(self, "in_bed", false)
-			]),
-			# Effects
-			WorldState.new([
-				WorldProperty.new(self, "near_bed", false),
-				WorldProperty.new(self, "near_bush", true),
-				WorldProperty.new(self, "near_fire", false),
-				WorldProperty.new(self, "near_friend", false)
-			]),
-			func(): goto("bush")
-		),
-	*/
+	responses.push_back(block_port);
+
+	// Unblock a port on the device
+	Response unblock_port(std::string("unblock_port"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			//WorldProperty(this, "excess_traffic_detected", true)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+			//WorldProperty(this, "excess_traffic_detected", false),
+			//WorldProperty(this, "port_blocked", true)
+			})
+	);
+	responses.push_back(unblock_port);
+
+	// Block an IP address in the ARP table
+	Response block_IP_address(std::string("block_IP_address"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+			})
+	);
+	responses.push_back(block_IP_address);
+
+	// Unblock a previously blocked IP address
+	Response unblock_IP_address(std::string("unblock_IP_address"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+			})
+	);
+	responses.push_back(unblock_IP_address);
+
+	// If a file has been changed, revert it back to its last saved version
+	Response revert_file(std::string("revert_file"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), false)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), true)
+			})
+	);
+	responses.push_back(revert_file);
+
+	// If a file has been changed and we want to keep that change,
+	// update the program's knowledge of the file to include the most recent changes.
+	Response update_file(std::string("update_file"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("change_detected"), true)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("change_detected"), false)
+			})
+	);
+	responses.push_back(update_file);
+
+	// Takes GORP out of the safe mode intended to intercept DNS requests
+	Response switch_to_gen_mode(std::string("switch_to_gen_mode"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("general_mode"), false)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("general_mode"), true)
+			})
+	);
+	responses.push_back(switch_to_gen_mode);
+
+	// Switches GORP into the safe mode intended to intercept DNS requests
+	Response switch_to_safe_mode(std::string("switch_to_safe_mode"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("safe_mode"), false)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("safe_mode"), true)
+			})
+	);
+	responses.push_back(switch_to_safe_mode);
+
+	// Prevents the user from receiving a suspicious DNS response
+	Response block_dns_response(std::string("block_dns_response"), 1,
+		// Preconditions
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), true)
+			}),
+		//Effects
+		WorldState({
+			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), false)
+			})
+	);
+	responses.push_back(block_dns_response);
+
+	// DEBUGGING 
+	std::cout << "Responses: " << std::endl;
+	for (auto const& response : responses) {
+		std::cout << response.name << std::endl;
+	}
 }
 
 // Initializes the goal variables
 void Agent::init_goals() {
-	WorldState goals[] = {
+	std::cout << "Running Agent.init_goals()" << std::endl;
+
+	// Block a port on the device
+	WorldState port_is_blocked({
+			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			//WorldProperty(this, "excess_traffic_detected", false),
+			//WorldProperty(this, "port_blocked", true)
+		});
+	goals.push_back(std::make_shared<WorldState>(port_is_blocked));
+
+	// Unblock a port on the device
+	WorldState port_is_unblocked({
+			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+		});
+	goals.push_back(std::make_shared<WorldState>(port_is_unblocked));
+
+	// Block an IP address in the ARP table
+	WorldState ip_address_blocked({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+		});
+	goals.push_back(std::make_shared<WorldState>(ip_address_blocked));
+
+	// Unblock a previously blocked IP address
+	WorldState ip_address_unblocked({
+			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+		});
+	goals.push_back(std::make_shared<WorldState>(ip_address_unblocked));
+
+	// If a file has been changed, revert it back to its last saved version
+	WorldState revert_file({
+			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), true)
+		});
+	goals.push_back(std::make_shared<WorldState>(revert_file));
+
+	// If a file has been changed and we want to keep that change,
+	// update the program's knowledge of the file to include the most recent changes.
+	WorldState save_file({
+			std::make_shared<WorldProperty>(this, std::string("change_detected"), false)
+		});
+	goals.push_back(std::make_shared<WorldState>(save_file));
+
+	// Takes GORP out of the safe mode intended to intercept DNS requests
+	WorldState switch_to_gen_mode({
+			std::make_shared<WorldProperty>(this, std::string("general_mode"), true)
+		});
+	goals.push_back(std::make_shared<WorldState>(switch_to_gen_mode));
+
+	// Switches GORP into the safe mode intended to intercept DNS requests
+	WorldState switch_to_safe_mode({
+			std::make_shared<WorldProperty>(this, std::string("safe_mode"), true)
+		});
+	goals.push_back(std::make_shared<WorldState>(switch_to_safe_mode));
+
+	// Prevents the user from receiving a suspicious DNS response
+	WorldState block_dns_response({
+			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), false)
+		});
+	goals.push_back(std::make_shared<WorldState>(block_dns_response));
+
+	// DEBUGGING
+	std::cout << "Goals: " << std::endl;
+	for (auto const& goal : goals) {
+		std::cout << goal << std::endl;
+	}
+
+
+	/*WorldState goals[] = {
 		WorldProperty(this, "port_under_attack", false),
 		WorldProperty(this, "ARP_attack", false),
 		WorldProperty(this, "unauthorized_file_change", false),
 		WorldProperty(this, "unusual_log_activity", false),
 		WorldProperty(this, "safe_mode_active", false),
 		WorldProperty(this, "dns_attack", false)
-	};
-	/*
-	goals = [
-		# Top of list is highest priority
-		WorldState.new([WorldProperty.new(self, "is_cold", false)]),
-		WorldState.new([WorldProperty.new(self, "is_hungry", false)]),
-		WorldState.new([WorldProperty.new(self, "is_sleepy", false)]),
-		WorldState.new([WorldProperty.new(self, "is_lonely", false)])
-	]
-	*/
+	};*/
 }

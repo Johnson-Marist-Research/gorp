@@ -29,6 +29,7 @@ BUGS:
 - Response.cpp and is not happy that WorldState lacks a default constructor
 - Check if the end of devise_plan() in Planner.cpp actually puts the element in the correct spot in the forward list
 - Might have to change the keys in Blackboard from ints to strings
+- MAJOR: I think that Agent.init_goals() doesn't like trying to use an Agent (this) in a WorldProperty
 */
 
 /*

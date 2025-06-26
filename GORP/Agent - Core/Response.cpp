@@ -1,7 +1,7 @@
 #include "Response.h"
 
 // Initialize the Response variables
-Response::Response(std::string name, float cost, WorldState before, std::shared_ptr<WorldState> after) {
+Response::Response(std::string name, float cost, WorldState before, WorldState after) {
 	this->name = name;
 	this->cost = cost;
 	this->preconditions = before;

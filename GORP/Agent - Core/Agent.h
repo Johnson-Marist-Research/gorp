@@ -12,6 +12,7 @@
 #include <vector>
 
 class Agent {
+public:
 	// Agent Components
 	Blackboard blackboard;
 	Planner planner;
@@ -25,7 +26,7 @@ class Agent {
 	// Should they be vectors of shared pointers?
 	// Ask about it later
 	std::vector<Response> responses;
-	std::vector< std::shared_ptr<WorldState>> goals;
+	std::vector<std::shared_ptr<WorldState>> goals;
 
 	std::forward_list<Response> current_plan;
 	// Changed this from a shared pointer because I was having trouble with update_knowledge()
@@ -73,5 +74,4 @@ class Agent {
 
 	void init_responses();
 	void init_goals();
-
 };

@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <forward_list>
+#include <vector>
 
 class Planner {
 public:

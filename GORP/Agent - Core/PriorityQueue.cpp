@@ -41,8 +41,8 @@ int PriorityQueue::right(int i) {
 void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	// If this was a simple PriorityQueue* pointer, we would only need PriorityQueue* newElement = new PriorityQueue(priority, x);
 	// However, since it is a shared pointer, we need the std::make_shared
-	std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(priority, x);
-	PriorityQueue newElement(std::to_string(priority), x);
+	std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(std::to_string(priority), x);
+	//PriorityQueue newElement(std::to_string(priority), x);
 	update_key(sizeof(heap) - 1, newElement);
 	heapEnd++;
 };

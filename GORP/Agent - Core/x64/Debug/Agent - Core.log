@@ -1,2 +1,105 @@
-﻿  main.cpp
-  Agent - Core.vcxproj -> C:\Users\pennd\Documents\GitHub\gorp\GORP\x64\Debug\Agent - Core.exe
+﻿  Agent.cpp
+C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Sensor.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'Agent.cpp')
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,61): error C2665: 'WorldProperty::WorldProperty': no overloaded function could convert all the argument types
+  (compiling source file 'Agent.cpp')
+      C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\WorldProperty.h(12,2):
+      could be 'WorldProperty::WorldProperty(std::string,std::string,bool)'
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,61):
+          'WorldProperty::WorldProperty(std::string,std::string,bool)': cannot convert argument 1 from '_Ty' to 'std::string'
+          with
+          [
+              _Ty=Agent *
+          ]
+              C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+              'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string': no overloaded function could convert all the argument types
+                  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xstring(749,5):
+                  could be 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string(const _Elem *const )'
+          with
+          [
+              _Elem=char
+          ]
+                      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+                      'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string(const _Elem *const )': cannot convert argument 1 from '_Ty' to 'const _Elem *const '
+          with
+          [
+              _Elem=char
+          ]
+          and
+          [
+              _Ty=Agent *
+          ]
+          and
+          [
+              _Elem=char
+          ]
+                          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+                          Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+                  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xstring(1327,5):
+                  or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string(std::initializer_list<_Elem>,const _Alloc &)'
+          with
+          [
+              _Elem=char,
+              _Alloc=std::allocator<char>
+          ]
+                      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+                      'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string(std::initializer_list<_Elem>,const _Alloc &)': cannot convert argument 1 from '_Ty' to 'std::initializer_list<_Elem>'
+          with
+          [
+              _Elem=char,
+              _Alloc=std::allocator<char>
+          ]
+          and
+          [
+              _Ty=Agent *
+          ]
+          and
+          [
+              _Elem=char
+          ]
+                          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+                          Conversion requires a second user-defined-conversion operator or constructor
+                  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xstring(779,5):
+                  or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string(_Iter,_Iter,const _Alloc &)'
+          with
+          [
+              _Alloc=std::allocator<char>
+          ]
+                  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,82):
+                  while trying to match the argument list '(_Ty)'
+          with
+          [
+              _Ty=Agent *
+          ]
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,61):
+      while trying to match the argument list '(_Ty, _Ty, _Ty)'
+          with
+          [
+              _Ty=Agent *
+          ]
+          and
+          [
+              _Ty=std::string
+          ]
+          and
+          [
+              _Ty=bool
+          ]
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xutility(406,61):
+      the template instantiation context (the oldest one first) is
+          C:\Users\pennd\Documents\GitHub\gorp\GORP\Agent - Core\Agent.cpp(205,9):
+          see reference to function template instantiation 'std::shared_ptr<WorldProperty> std::make_shared<WorldProperty,Agent*,std::string,bool>(Agent *&&,std::string &&,bool &&)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\memory(2906,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<WorldProperty>::_Ref_count_obj2<_Ty,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,bool>(_Ty &&,std::basic_string<char,std::char_traits<char>,std::allocator<char>> &&,bool &&)' being compiled
+          with
+          [
+              _Ty=Agent *
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\memory(2095,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,Agent*,std::basic_string<char,std::char_traits<char>,std::allocator<char>>,bool>(_Ty &,Agent *&&,std::basic_string<char,std::char_traits<char>,std::allocator<char>> &&,bool &&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=WorldProperty
+          ]
+  

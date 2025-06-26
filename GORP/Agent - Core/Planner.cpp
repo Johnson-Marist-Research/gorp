@@ -1,6 +1,7 @@
 #include "Planner.h"
 #include "PriorityQueue.h"
 
+#include <iostream>
 #include <vector>
 
 // Calculates the distance between two states by iterating through each entry in properties.
@@ -27,10 +28,11 @@ float Planner::distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldSt
 // If the goal state is a possible result of applying the action, then we return a minimal substate of all states in which this
 // action could have been applied to yield the goal state.
 std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared_ptr<WorldState> goal) {
+	std::cout << "Running Planner.unify()" << std::endl;
 	// Can check if a pointer is null, but not a class
 	std::shared_ptr<WorldState> unsatisfied;
 	// Remove satisfied properties from a goal state, as long as no conflicts exist
-	unsatisfied->reduce_by(goal, response.effects, true);
+	unsatisfied->reduce_by(goal, std::make_shared<WorldState>(response.effects), true);
 	if (unsatisfied == NULL) {
 		return nullptr;
 	}
