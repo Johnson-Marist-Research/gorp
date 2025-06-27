@@ -43,6 +43,7 @@ public:
 	bool port_blocked;
 
 	// ARP Table
+	bool ip_address_blocked;
 	bool no_ARP_anomalies;
 	bool ARP_anomaly_quarantined;
 

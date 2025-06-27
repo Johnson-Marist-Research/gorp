@@ -26,16 +26,38 @@ TODO:
 BUGS:
 - WorkingMemory.cpp --> forget(): Overwriting is weird. Might not overwrite last item in array
 - I haven't specified the size of the various maps in the header files, so that might be a problem at some point.
-- Response.cpp and is not happy that WorldState lacks a default constructor
 - Check if the end of devise_plan() in Planner.cpp actually puts the element in the correct spot in the forward list
 - Might have to change the keys in Blackboard from ints to strings
-- MAJOR: I think that Agent.init_goals() doesn't like trying to use an Agent (this) in a WorldProperty
+- Problem with Agent.responses only changing a single WorldProperty:
+	- Start with an empty WorldState constructor, then create an addProperty function to add as many WorldProperties as you want
+	- WorldState();
+	- void insert(WorldProperty prop)
+
+	- WorldState block_port_preconditions;
+	- block_port_preconditions.insert(....);
+	- block_port_preconditions.insert(....);
+	- WorldState block_port_effects;
+	- block_port_effects.insert(....);
+	- block_port_effects.insert(....);
+	- block_port_effects.insert(....);
+*/
+
+/*
+Options for returning nothing (that isn't a shared pointer):
+- Return -1 (indicates failure, but not sure it will work outside of int return types)
+	- Sentinel: Unusual value used to denote failure to return object (Ex: nullptr or -1)
+- Have a const* return type (int const* functionName()) to return a pointer to the element instead of the index
+	- Could return nullptr with this one
+- std::optional<std::string> functionName(): Gives the option of returning the string or not
+	- Need to use more recent version of C++
+	- return {}; to indicate returning nothing
+	- When checking the return value, use std::nullopt (Ex: if (value == std::nullopt){})
 */
 
 /*
 GOALS FOR THIS WEEK:
-- IDEA: Wherever there is a signal in GDScript, replace it with a direct call to the signaled function
-- Implement responses and goals (Agent class) --> Agent connects the GORP components
+- Create test case
+- Update Agent.responses and Agent.goals to have multiple WorldProperties
 */
 
 int main() {
@@ -96,9 +118,6 @@ int main() {
 			std::cout << "\nYou entered " + input;
 			std::cout << "\nNow running Agent...";
 			agent.run_agent();
-		}
-		else if (input == "d" || input == "D") {
-			std::cout << "\nYou entered " + input;
 		}
 		else {
 			std::cout << "\nInput not recognized";

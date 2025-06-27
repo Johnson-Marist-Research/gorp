@@ -10,6 +10,7 @@
 // then we add one to the distance, as one property needs to be changed.
 // Once the calculations are complete, we return the distance (d).
 float Planner::distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldState> dst) {
+	std::cout << "Running Planner.distance()" << std::endl;
 	float d = 0;
 	//for (int key = 0; key < sizeof(dst.properties); key++) {
 	// Iterate through each entry in dst.properties
@@ -46,6 +47,7 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 
 // We devise a plan to address the current goal.
 std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
+	std::cout << "Running Planner.devise_plan()" << std::endl;
 	std::forward_list<Response> plan;
 	// First, we take note of where we came from and the current cost to get from there (goal) to here (came from).
 	std::map<std::shared_ptr<WorldState>, std::shared_ptr<std::pair<std::shared_ptr<WorldState>, Response>>> came_from = {};

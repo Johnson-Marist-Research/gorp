@@ -1,5 +1,7 @@
 #include "Subsystem.h"
 
+#include <iostream>
+
 /*Subsystem::Subsystem()
 {
     // This can be the base class of sensor.
@@ -8,6 +10,7 @@
 }*/
 
 void Subsystem::_ready() {
+    std::cout << "Running Subsystem.ready()" << std::endl;
     // We fetch an instance of subject (finish later)
 
     // We fetch an instance of blackboard (figure out later)
@@ -16,5 +19,6 @@ void Subsystem::_ready() {
 }
 
 void Subsystem::_on_posted(int key) {
+    std::cout << "Running Subsystem._on_posted()" << std::endl;
     // This is related to timing. Have to figure that out first.
 }

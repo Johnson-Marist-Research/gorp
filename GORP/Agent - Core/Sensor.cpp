@@ -1,5 +1,7 @@
 #include "Sensor.h"
 
+#include <iostream>
+
 /*Sensor::Sensor()
 {
     // This can be the base class of sensor.
@@ -8,6 +10,7 @@
 }*/
 
 void Sensor::_ready() {
+    std::cout << "Running Sensor.ready()" << std::endl;
     // We fetch an instance of WorkingMemory (declared here as the variable "memory")
     // Figure out later
 }

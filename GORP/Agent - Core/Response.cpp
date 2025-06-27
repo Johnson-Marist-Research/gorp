@@ -1,5 +1,7 @@
 #include "Response.h"
 
+#include <iostream>
+
 // Initialize the Response variables
 Response::Response(std::string name, float cost, WorldState before, WorldState after) {
 	this->name = name;
@@ -10,5 +12,6 @@ Response::Response(std::string name, float cost, WorldState before, WorldState a
 };
 
 void Response::execute() {
+	std::cout << "Running Response.execute()" << std::endl;
 	// procedure.call()
 }
