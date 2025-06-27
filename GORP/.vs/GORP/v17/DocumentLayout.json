@@ -11,8 +11,27 @@
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldProperty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\Subsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldProperty.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\PROGRAM FILES\\MICROSOFT VISUAL STUDIO\\2022\\COMMUNITY\\VC\\TOOLS\\MSVC\\14.42.34433\\INCLUDE\\XUTILITY||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Agent.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -27,23 +46,11 @@
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\Planner.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\Response.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xtree||{3B902123-F8A7-4915-9F01-361F908088D0}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorldProperty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorkingMemory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -78,10 +85,6 @@
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\WorkingMemory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\Subsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Sensor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{378F5F5A-503E-4EA2-B00A-621464545F0E}|Agent - Core\\Agent - Core.vcxproj|solutionrelative:Agent - Core\\Sensor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -107,40 +110,14 @@
               "RelativeDocumentMoniker": "Agent - Core\\Agent.cpp",
               "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Agent.cpp",
               "RelativeToolTip": "Agent - Core\\Agent.cpp",
-              "ViewState": "AgIAAHkBAAAAAAAAAAAQwIsBAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAL0AAAAAAAAAAAAjwMgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-24T15:12:15.031Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Response.h",
-              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.h",
-              "RelativeDocumentMoniker": "Agent - Core\\Response.h",
-              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.h",
-              "RelativeToolTip": "Agent - Core\\Response.h",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-18T19:39:59.615Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Response.cpp",
-              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.cpp",
-              "RelativeDocumentMoniker": "Agent - Core\\Response.cpp",
-              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.cpp",
-              "RelativeToolTip": "Agent - Core\\Response.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-18T19:45:28.335Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "WorldState.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.h",
               "RelativeDocumentMoniker": "Agent - Core\\WorldState.h",
@@ -153,20 +130,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "WorldState.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\WorldState.cpp",
               "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldState.cpp",
               "RelativeToolTip": "Agent - Core\\WorldState.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAABsAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-17T17:52:41.344Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "Planner.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Planner.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\Planner.cpp",
@@ -174,18 +151,17 @@
               "RelativeToolTip": "Agent - Core\\Planner.cpp",
               "ViewState": "AgIAABUAAAAAAAAAAAAQwCAAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-16T20:34:48.006Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-16T20:34:48.006Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "WorldProperty.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.h",
               "RelativeDocumentMoniker": "Agent - Core\\WorldProperty.h",
               "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.h",
               "RelativeToolTip": "Agent - Core\\WorldProperty.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-06-17T14:00:57.381Z",
               "EditorCaption": ""
@@ -198,14 +174,14 @@
               "RelativeDocumentMoniker": "Agent - Core\\main.cpp",
               "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\main.cpp",
               "RelativeToolTip": "Agent - Core\\main.cpp",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAB0AAABaAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABoAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-16T21:28:54.771Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Agent.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Agent.h",
               "RelativeDocumentMoniker": "Agent - Core\\Agent.h",
@@ -213,25 +189,74 @@
               "RelativeToolTip": "Agent - Core\\Agent.h",
               "ViewState": "AgIAADkAAAAAAAAAAAAAABwAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T15:12:06.682Z",
+              "WhenOpened": "2025-06-24T15:12:06.682Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Subsystem.h",
+              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h",
+              "RelativeDocumentMoniker": "Agent - Core\\Subsystem.h",
+              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h",
+              "RelativeToolTip": "Agent - Core\\Subsystem.h",
+              "ViewState": "AgIAAAUAAAAAAAAAAAApwBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-16T17:41:34.323Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 2,
               "Title": "WorldProperty.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\WorldProperty.cpp",
               "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorldProperty.cpp",
               "RelativeToolTip": "Agent - Core\\WorldProperty.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-17T17:52:31.5Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 11,
+              "Title": "Response.cpp",
+              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.cpp",
+              "RelativeDocumentMoniker": "Agent - Core\\Response.cpp",
+              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.cpp",
+              "RelativeToolTip": "Agent - Core\\Response.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-18T19:45:28.335Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "xutility",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xutility",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xutility",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xutility",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xutility",
+              "ViewState": "AgIAAIgBAAAAAAAAAAApwJUBAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-06-27T14:15:09.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Response.h",
+              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.h",
+              "RelativeDocumentMoniker": "Agent - Core\\Response.h",
+              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Response.h",
+              "RelativeToolTip": "Agent - Core\\Response.h",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-18T19:39:59.615Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "Blackboard.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Blackboard.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\Blackboard.cpp",
@@ -239,12 +264,11 @@
               "RelativeToolTip": "Agent - Core\\Blackboard.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-16T20:34:38.185Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-16T20:34:38.185Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "PriorityQueue.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\PriorityQueue.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\PriorityQueue.cpp",
@@ -252,12 +276,11 @@
               "RelativeToolTip": "Agent - Core\\PriorityQueue.cpp",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABYAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-20T18:23:57.224Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-20T18:23:57.224Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "xtree",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xtree",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xtree",
@@ -265,12 +288,11 @@
               "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\include\\xtree",
               "ViewState": "AgIAAHIEAAAAAAAAAAAjwH0EAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-06-26T19:16:32.452Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T19:16:32.452Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "Planner.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Planner.h",
               "RelativeDocumentMoniker": "Agent - Core\\Planner.h",
@@ -278,12 +300,11 @@
               "RelativeToolTip": "Agent - Core\\Planner.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-16T17:41:04.805Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-16T17:41:04.805Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "WorkingMemory.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorkingMemory.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\WorkingMemory.cpp",
@@ -291,12 +312,11 @@
               "RelativeToolTip": "Agent - Core\\WorkingMemory.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-16T20:35:24.141Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-16T20:35:24.141Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "Sensor.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Sensor.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\Sensor.cpp",
@@ -308,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "Blackboard.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Blackboard.h",
               "RelativeDocumentMoniker": "Agent - Core\\Blackboard.h",
@@ -320,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "PriorityQueue.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\PriorityQueue.h",
               "RelativeDocumentMoniker": "Agent - Core\\PriorityQueue.h",
@@ -332,7 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "WorkingMemory.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\WorkingMemory.h",
               "RelativeDocumentMoniker": "Agent - Core\\WorkingMemory.h",
@@ -344,19 +364,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Subsystem.h",
-              "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h",
-              "RelativeDocumentMoniker": "Agent - Core\\Subsystem.h",
-              "ToolTip": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.h",
-              "RelativeToolTip": "Agent - Core\\Subsystem.h",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAgwA0AAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-16T17:41:34.323Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "Sensor.h",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Sensor.h",
               "RelativeDocumentMoniker": "Agent - Core\\Sensor.h",
@@ -368,7 +376,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Subsystem.cpp",
               "DocumentMoniker": "C:\\Users\\pennd\\Documents\\GitHub\\gorp\\GORP\\Agent - Core\\Subsystem.cpp",
               "RelativeDocumentMoniker": "Agent - Core\\Subsystem.cpp",

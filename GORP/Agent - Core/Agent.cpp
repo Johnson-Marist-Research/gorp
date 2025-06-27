@@ -202,12 +202,12 @@ void Agent::init_responses() {
 	Response block_port(std::string("block_port"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true)
 			//WorldProperty(this, "excess_traffic_detected", true)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false)
 			//WorldProperty(this, "excess_traffic_detected", false),
 			//WorldProperty(this, "port_blocked", true)
 			})
@@ -218,12 +218,12 @@ void Agent::init_responses() {
 	Response unblock_port(std::string("unblock_port"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false)
 			//WorldProperty(this, "excess_traffic_detected", true)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true)
 			//WorldProperty(this, "excess_traffic_detected", false),
 			//WorldProperty(this, "port_blocked", true)
 			})
@@ -234,11 +234,11 @@ void Agent::init_responses() {
 	Response block_IP_address(std::string("block_IP_address"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true)
 			})
 	);
 	responses.push_back(block_IP_address);
@@ -247,11 +247,11 @@ void Agent::init_responses() {
 	Response unblock_IP_address(std::string("unblock_IP_address"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false)
 			})
 	);
 	responses.push_back(unblock_IP_address);
@@ -260,11 +260,11 @@ void Agent::init_responses() {
 	Response revert_file(std::string("revert_file"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), false)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true)
 			})
 	);
 	responses.push_back(revert_file);
@@ -274,11 +274,11 @@ void Agent::init_responses() {
 	Response update_file(std::string("update_file"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("change_detected"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), true)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("change_detected"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false)
 			})
 	);
 	responses.push_back(update_file);
@@ -287,11 +287,11 @@ void Agent::init_responses() {
 	Response switch_to_gen_mode(std::string("switch_to_gen_mode"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("general_mode"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), false)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("general_mode"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true)
 			})
 	);
 	responses.push_back(switch_to_gen_mode);
@@ -300,11 +300,11 @@ void Agent::init_responses() {
 	Response switch_to_safe_mode(std::string("switch_to_safe_mode"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("safe_mode"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("safe_mode"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true)
 			})
 	);
 	responses.push_back(switch_to_safe_mode);
@@ -313,11 +313,11 @@ void Agent::init_responses() {
 	Response block_dns_response(std::string("block_dns_response"), 1,
 		// Preconditions
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true)
 			}),
 		//Effects
 		WorldState({
-			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false)
 			})
 	);
 	responses.push_back(block_dns_response);
@@ -335,7 +335,7 @@ void Agent::init_goals() {
 
 	// Block a port on the device
 	WorldState port_is_blocked({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false)
 			//WorldProperty(this, "excess_traffic_detected", false),
 			//WorldProperty(this, "port_blocked", true)
 		});
@@ -343,50 +343,50 @@ void Agent::init_goals() {
 
 	// Unblock a port on the device
 	WorldState port_is_unblocked({
-			std::make_shared<WorldProperty>(this, std::string("port_open"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true)
 		});
 	goals.push_back(std::make_shared<WorldState>(port_is_unblocked));
 
 	// Block an IP address in the ARP table
 	WorldState ip_address_blocked({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true)
 		});
 	goals.push_back(std::make_shared<WorldState>(ip_address_blocked));
 
 	// Unblock a previously blocked IP address
 	WorldState ip_address_unblocked({
-			std::make_shared<WorldProperty>(this, std::string("ARP_anomaly_quarantined"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false)
 		});
 	goals.push_back(std::make_shared<WorldState>(ip_address_unblocked));
 
 	// If a file has been changed, revert it back to its last saved version
 	WorldState revert_file({
-			std::make_shared<WorldProperty>(this, std::string("files_unchanged"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true)
 		});
 	goals.push_back(std::make_shared<WorldState>(revert_file));
 
 	// If a file has been changed and we want to keep that change,
 	// update the program's knowledge of the file to include the most recent changes.
 	WorldState save_file({
-			std::make_shared<WorldProperty>(this, std::string("change_detected"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false)
 		});
 	goals.push_back(std::make_shared<WorldState>(save_file));
 
 	// Takes GORP out of the safe mode intended to intercept DNS requests
 	WorldState switch_to_gen_mode({
-			std::make_shared<WorldProperty>(this, std::string("general_mode"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true)
 		});
 	goals.push_back(std::make_shared<WorldState>(switch_to_gen_mode));
 
 	// Switches GORP into the safe mode intended to intercept DNS requests
 	WorldState switch_to_safe_mode({
-			std::make_shared<WorldProperty>(this, std::string("safe_mode"), true)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true)
 		});
 	goals.push_back(std::make_shared<WorldState>(switch_to_safe_mode));
 
 	// Prevents the user from receiving a suspicious DNS response
 	WorldState block_dns_response({
-			std::make_shared<WorldProperty>(this, std::string("dns_mismatch"), false)
+			std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false)
 		});
 	goals.push_back(std::make_shared<WorldState>(block_dns_response));
 
