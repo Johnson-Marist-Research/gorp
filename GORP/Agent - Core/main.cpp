@@ -169,7 +169,7 @@ std::string const* findValueIn2(std::string val, std::vector<std::string> const&
 	return nullptr;
 }
 
-std::optional<std::string const&> findValueIn3(std::string val, std::vector<std::string> const& vec) {
+std::optional<std::string> findValueIn3(std::string val, std::vector<std::string> const& vec) {
 	for (auto& x : vec) {
 		if (x == val) {
 			return x;
@@ -197,6 +197,3 @@ void testFind() {
 		std::cout << targetWord << " not found!\n";
 	}
 }
-
-
-
