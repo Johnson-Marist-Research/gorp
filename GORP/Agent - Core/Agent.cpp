@@ -198,20 +198,18 @@ void Agent::init_responses() {
 
 	Potential addition: close_GORP
 	*/
+
+	WorldState block_port_preconds;
+	block_port_preconds.insert(std::make_shared<WorldProperty>("Agent", std::string("port_open"), true));
+	block_port_preconds.insert(std::make_shared<WorldProperty>("Agent", "excess_traffic_detected", true));
+
+	WorldState block_port_effects;
+	block_port_effects.insert(std::make_shared<WorldProperty>("Agent", std::string("port_open"), false));
+	block_port_effects.insert(std::make_shared<WorldProperty>("Agent", "excess_traffic_detected", false));
+	block_port_effects.insert(std::make_shared<WorldProperty>("Agent", "port_blocked", true));
+
 	// Block a port on the device
-	Response block_port(std::string("block_port"), 1,
-		// Preconditions
-		WorldState({
-			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true)
-			//WorldProperty(this, "excess_traffic_detected", true)
-			}),
-		//Effects
-		WorldState({
-			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false)
-			//WorldProperty(this, "excess_traffic_detected", false),
-			//WorldProperty(this, "port_blocked", true)
-			})
-	);
+	Response block_port(std::string("block_port"), 1, block_port_preconds, block_port_effects);
 	responses.push_back(block_port);
 
 	// Unblock a port on the device
