@@ -138,3 +138,65 @@ func _on_knowledge_gained(key:StringName):
 	if key == &"targetpos":
 		blackboard.post(&"angle", self.position.angle_to_point(memory.recall(key)))
 */
+
+//======== EXAMPLE CODE FOR USING STD::OPTIONAL ========//
+#include <optional>
+
+/// <summary>
+/// Returns the index of the target value in the vector, if it is found.
+/// </summary>
+/// <param name="val"></param>
+/// <param name="vec"></param>
+/// <returns></returns>
+int findValueIn(std::string val, std::vector<std::string> const& vec)
+{
+	for (int i = 0; i < vec.size(); i++) {
+		std::string x = vec[i];
+		if (x == val) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+std::string const* findValueIn2(std::string val, std::vector<std::string> const& vec)
+{
+	for (auto& x : vec) {
+		if (x == val) {
+			return &x;
+		}
+	}
+	return nullptr;
+}
+
+std::optional<std::string const&> findValueIn3(std::string val, std::vector<std::string> const& vec) {
+	for (auto& x : vec) {
+		if (x == val) {
+			return x;
+		}
+	}
+	return {};
+}
+
+void testFind() {
+	std::vector<std::string> words{ "apple", "basket", "cello" };
+	std::string targetWord = "desk";
+
+	int i = findValueIn(targetWord, words);
+	if (i == -1) {
+		std::cout << targetWord << " not found!\n";
+	}
+
+	auto p = findValueIn2(targetWord, words);
+	if (p == nullptr) {
+		std::cout << targetWord << " not found!\n";
+	}
+
+	auto w = findValueIn3(targetWord, words);
+	if (w == std::nullopt) {
+		std::cout << targetWord << " not found!\n";
+	}
+}
+
+
+
