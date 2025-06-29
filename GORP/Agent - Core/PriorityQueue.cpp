@@ -12,10 +12,14 @@ PriorityQueue::PriorityQueue() {};
 	value = v;
 }*/
 
+int PriorityQueue::size() {
+	return heapSize;
+}
+
 // Checks if the heap is empty
 bool PriorityQueue::is_empty() {
 	std::cout << "Running PriorityQueue.is_empty()" << std::endl;
-	if ((heapStart == 0) && (heapEnd == -1)) {
+	if (heapSize == 0) {
 		return true;
 	}
 	else {
@@ -49,6 +53,10 @@ int PriorityQueue::right(int i) {
 // Inserts a value into heap
 void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	std::cout << "Running PriorityQueue.insert()" << std::endl;
+	if (heapSize == heap.size()) {
+		std::cerr << "No more room in the heap!" << std::endl;
+		return;
+	}
 	// If this was a simple PriorityQueue* pointer, we would only need PriorityQueue* newElement = new PriorityQueue(priority, x);
 	// However, since it is a shared pointer, we need the std::make_shared
 	//std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(std::to_string(priority), x);
@@ -58,19 +66,19 @@ void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	newElement.value = x;
 	//std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(Element.first, Element.second);
 	//update_key(sizeof(heap) - 1, newElement);
-	update_key(heap.size() - 1, newElement);
-	heapEnd++;
+	update_key(heapSize, newElement);
+	heapSize++;
 };
 
 // Takes a value out of heap
 std::shared_ptr<WorldState> PriorityQueue::extract() {
 	std::cout << "Running PriorityQueue.extract()" << std::endl;
-	if (heap.size() < 1){
+	if (heapSize < 1){
 		return nullptr; // error “heap underflow”
 	}
 	std::shared_ptr<WorldState> extremum = heap[0].value;
-	heap[0] = heap[heapEnd];
-	heapEnd--;
+	heap[0] = heap[heapSize - 1];
+	heapSize--;
 	heapify(0);
 	return extremum;
 };
@@ -81,13 +89,13 @@ void PriorityQueue::heapify(int i) {
 	int l = left(i);
 	int r = right(i);
 	int extremum;
-	if ((l < sizeof(heap)) && (heap[l].key < heap[i].key)) {
+	if ((l < heapSize) && (heap[l].key < heap[i].key)) {
 		extremum = l;
 	}
 	else {
 		extremum = i;
 	}
-	if ((r < sizeof(heap)) && (heap[r].key < heap[extremum].key)) {
+	if ((r < heapSize) && (heap[r].key < heap[extremum].key)) {
 		extremum = r;
 	}
 	if (extremum != i) {
@@ -96,7 +104,7 @@ void PriorityQueue::heapify(int i) {
 		heap[extremum] = tmp;
 		heapify(extremum);
 	}
-	std::cout << "Extremum: " << extremum << std::endl;
+	//std::cout << "Extremum: " << extremum << std::endl;
 };
 
 // Updates the value of a key in heap
@@ -104,7 +112,7 @@ void PriorityQueue::update_key(int i, Element elem) {
 	std::cout << "Running PriorityQueue.update_key()" << std::endl;
 	// var prev_key = heap[i].key if heap[i] else INF
 	int prev_key;
-	if (heapEnd > 0) {
+	if (0 <= i && i < heapSize) {
 		prev_key = heap[i].key;
 	}
 	else {

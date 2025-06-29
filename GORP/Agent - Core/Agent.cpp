@@ -145,7 +145,7 @@ void Agent::make_plan() {
 		std::cout << "Planning for goal " << goal->_to_string() << std::endl;
 
 		std::forward_list<Response> plan = planner.devise_plan(current_state, goal, responses);
-		if (sizeof(plan) == 0) {
+		if (plan.empty()) {
 			// Debugging message
 			std::cout << "Unable to satisfy goal " << goal->_to_string() << std::endl;
 			continue;
@@ -175,9 +175,7 @@ void Agent::execute_plan() {
 	//std::cout << "Size of the current plan is: " << std::to_string(sizeof(current_plan)) << std::endl;
 	Response next_action = current_plan.front();
 	// if next_action
-	if (sizeof(next_action) > 0) {
-		next_action.execute();
-	}
+	next_action.execute();
 }
 
 // Initializes the response variables

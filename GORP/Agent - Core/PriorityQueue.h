@@ -35,14 +35,15 @@ public:
 	// For keeping track of if the array is empty
 	// Setting heapEnd as -1; this is due to the fact that the first element in the array will be at position 0
 	// Therefore, if the heap is empty, then the end will be less than one
-	int heapStart = 0;
-	int heapEnd = -1;
+	//int heapStart = 0;
+	int heapSize = 0;
 
 	// Default Constructor
 	PriorityQueue();
 	
 	//PriorityQueue(std::string k, std::shared_ptr<WorldState> v);
 	// Observers
+	int size();
 	bool is_empty();
 	Element front();
 

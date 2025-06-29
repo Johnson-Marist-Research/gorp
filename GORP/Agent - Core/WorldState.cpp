@@ -5,12 +5,15 @@
 
 WorldState::WorldState(){}
 
+// TODO: Change parameter type to map<std::string, std::shared_ptr<WorldProperty>>
 WorldState::WorldState(std::shared_ptr<WorldProperty> props)
 {
     // Not sure if this is needed, but I'll leave it here just in case
 	// This really isn't right, but I'll leave it as a placeholder for now
 	// As it is, it rewrites the ENTIRITY of properties to be props. That is not right.
 	//for (int prop = 0; prop < sizeof(properties); prop++) {
+	// TODO: Replace for loop with simple assignment statement 
+		// - Assign parameter to prperties
 	for (const auto& entry : properties) {
 		std::string key = entry.first;
 		this->properties[key] = props;
@@ -34,9 +37,11 @@ std::string WorldState::_to_string() const {
 	}
 }
 
+// TODO: Change to return a shared pointer to WorldState
 std::map<std::string, std::shared_ptr<WorldProperty>> WorldState::duplicate() {
 	std::cout << "Running WorldState.duplicate()" << std::endl;
 	std::map<std::string, std::shared_ptr<WorldProperty>> propDuplicate = properties;
+	// TODO: Make a shared pointer to a new WorldState initialized with propDuplicate
 	return propDuplicate;
 }
 
@@ -51,7 +56,7 @@ bool WorldState::has(std::string key) {
 		std::cout << "properties is empty" << std::endl;
 	}
 	else {
-		std::cout << "propertiesis not empty" << std::endl;
+		std::cout << "properties is not empty" << std::endl;
 	}
 	for (auto const& entry : properties) {
 		std::cout << entry.first << std::endl;
@@ -98,14 +103,14 @@ void WorldState::drop_property(std::string key) {
 	properties.erase(key);
 }
 
-void WorldState::drop_properties(std::string keys[]) {
+/*void WorldState::drop_properties(std::string keys[]) {
 	std::cout << "Running WorldState.drop_properties()" << std::endl;
 	// map has a built-in erase function
 	// Check if this works later. I think it might, but it pays to be sure.
 	for (int key = 0; key < sizeof(keys); key++) {
 		properties.erase(keys[key]);
 	}
-}
+}*/
 
 // Determine whether all properties of a goal state are present in this state with their required values
 bool WorldState::satisfies(std::shared_ptr<WorldState> goal) {
