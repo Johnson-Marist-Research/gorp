@@ -32,14 +32,6 @@ BUGS:
 	- Start with an empty WorldState constructor, then create an addProperty function to add as many WorldProperties as you want
 	- WorldState();
 	- void insert(WorldProperty prop)
-
-	- WorldState block_port_preconditions;
-	- block_port_preconditions.insert(....);
-	- block_port_preconditions.insert(....);
-	- WorldState block_port_effects;
-	- block_port_effects.insert(....);
-	- block_port_effects.insert(....);
-	- block_port_effects.insert(....);
 */
 
 /*
@@ -59,6 +51,38 @@ GOALS FOR THIS WEEK:
 - Create test case
 - Update Agent.responses and Agent.goals to have multiple WorldProperties
 */
+
+
+/*
+Ideas for how to make a test case:
+- Create a map of ports (Port number and the amount of traffic running through it)
+- Tie map to "port_open", "normal_traffic", "excess_traffic_detected", and "port_blocked"
+- Declare a variable as an average of expected traffic
+- If the traffic on a port is greater than 50% above the average traffic, shut it down
+	- Shutting down: 
+		- port_open = false;
+		- normal_traffic = false
+		- excess_traffic_detected = true
+		- port_blocked = true
+		- Traffic = 0
+			- Maybe reset "excess_traffic_detected" to false after this 
+- Save the port number in a queue to keep track of attacked ports.
+- Set a timer once an attacked port is added to the queue
+- Unblock the first port in the queue after the timer runs out
+	- Randomly generate a number for the port's traffic
+- Immediately scan the port again after unblocking it. If traffic is too high, block it again.
+
+
+Once that is working:
+- Create a function that randomizes the amount of traffic (tie to a timer or button press so things don't go crazy)
+- Have GORP check traffic in between each randomization
+- There is a low chance that the randomization function will return a value that is significantly higher than the 
+average traffic amount.
+- When this abnormality is detected, block the port and continue with the previously established steps.
+
+*/
+
+/// Change heap to std::array<100, Element>
 
 int main() {
 	Agent agent;
@@ -216,3 +240,6 @@ void testFind() {
 		std::cout << targetWord << " not found!\n";
 	}
 }
+
+
+

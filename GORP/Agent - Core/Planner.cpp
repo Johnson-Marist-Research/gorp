@@ -10,7 +10,7 @@
 // then we add one to the distance, as one property needs to be changed.
 // Once the calculations are complete, we return the distance (d).
 float Planner::distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldState> dst) {
-	std::cout << "Running Planner.distance()" << std::endl;
+	std::cerr << "Running Planner.distance()" << std::endl;
 	float d = 0;
 	//for (int key = 0; key < sizeof(dst.properties); key++) {
 	// Iterate through each entry in dst.properties
@@ -29,7 +29,7 @@ float Planner::distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldSt
 // If the goal state is a possible result of applying the action, then we return a minimal substate of all states in which this
 // action could have been applied to yield the goal state.
 std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared_ptr<WorldState> goal) {
-	std::cout << "Running Planner.unify()" << std::endl;
+	std::cerr << "Running Planner.unify()" << std::endl;
 	// Can check if a pointer is null, but not a class
 	std::shared_ptr<WorldState> unsatisfied;
 	// Remove satisfied properties from a goal state, as long as no conflicts exist
@@ -47,7 +47,7 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 
 // We devise a plan to address the current goal.
 std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
-	std::cout << "Running Planner.devise_plan()" << std::endl;
+	std::cerr << "Running Planner.devise_plan()" << std::endl;
 	std::forward_list<Response> plan;
 	// First, we take note of where we came from and the current cost to get from there (goal) to here (came from).
 	std::map<std::shared_ptr<WorldState>, std::shared_ptr<std::pair<std::shared_ptr<WorldState>, Response>>> came_from = {};
@@ -63,10 +63,10 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	cost_so_far[goal] = 0;
 
 	// Need to implement PriorityQueue class
-	std::shared_ptr<PriorityQueue> frontier;
+	PriorityQueue frontier;
 	// Use insert() from the PriorityQueue class to set the initial value of the frontier PriorityQueue
 	// The second argument was originally listed as an integer in the first version of insert()
-	frontier->insert(goal, cost_so_far[goal]);
+	frontier.insert(goal, cost_so_far[goal]);
 
 	// Here, we set the value of the "start" WorldState.
 	// We will go from start to goal, but since we need to figure out where start is, we will initalize it with no value for now.
@@ -74,11 +74,11 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 
 	// We need to iterate through each entry in frontier.
 	// This will allow us to trace the entire path from goal to start.
-	while (!sizeof(frontier) <= 0) {
+	while (!frontier.is_empty()) {
 		// Out ultimate goal is not the same as the current goal. The current_goal is the next "node" in the graph
 		// that we are tracing to make it back to start.
 		// As such, we are determining the next sub-goal by extracting the next entry in frontier.
-		std::shared_ptr<WorldState> current_goal = frontier->extract();
+		std::shared_ptr<WorldState> current_goal = frontier.extract();
 
 		// If the current_goal is the same as the current_state, then we have reached our starting state.
 		// Since A* Search works backwards from the goal, this means that we have found a path from the goal to the start.
@@ -96,7 +96,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 			std::shared_ptr<WorldState> next = unify(response, current_goal);
 
 			// If a path is not found, just continue. We'll address that later.
-			if (next == NULL) { continue; }
+			if (next == nullptr) { continue; }
 
 			// Remove satisfied properties from a goal state, as long as no conflicts exist
 			next = next->reduce_by(next, current_state, false);
@@ -108,7 +108,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 				cost_so_far[next] = g_cost;
 				float h_cost = distance(next, current_state);
 				float priority = g_cost + h_cost;
-				frontier->insert(next, priority);
+				frontier.insert(next, priority);
 				// could have came_from[next] = std::make_pair
 				// Use .first and .second to access
 				came_from[next] = std::make_shared<std::pair<std::shared_ptr<WorldState>, Response>>(std::make_pair(current_goal, response));

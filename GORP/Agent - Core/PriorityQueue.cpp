@@ -3,11 +3,14 @@
 #include <iostream>
 #include <limits>
 
+// Default Constructor
+PriorityQueue::PriorityQueue() {};
+
 // Initializes the key and value variables
-PriorityQueue::PriorityQueue(std::string k, std::shared_ptr<WorldState> v) {
+/*PriorityQueue::PriorityQueue(std::string k, std::shared_ptr<WorldState> v) {
 	key = k;
 	value = v;
-}
+}*/
 
 // Checks if the heap is empty
 bool PriorityQueue::is_empty() {
@@ -21,7 +24,7 @@ bool PriorityQueue::is_empty() {
 };
 
 // Returns the first position in the heap
-std::shared_ptr<PriorityQueue> PriorityQueue::front() {
+Element PriorityQueue::front() {
 	std::cout << "Running PriorityQueue.front()" << std::endl;
 	return heap[0];
 };
@@ -48,19 +51,24 @@ void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	std::cout << "Running PriorityQueue.insert()" << std::endl;
 	// If this was a simple PriorityQueue* pointer, we would only need PriorityQueue* newElement = new PriorityQueue(priority, x);
 	// However, since it is a shared pointer, we need the std::make_shared
-	std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(std::to_string(priority), x);
-	//PriorityQueue newElement(std::to_string(priority), x);
-	update_key(sizeof(heap) - 1, newElement);
+	//std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(std::to_string(priority), x);
+	// std::pair<int, WorldState>
+	Element newElement;
+	newElement.key = priority;
+	newElement.value = x;
+	//std::shared_ptr<PriorityQueue> newElement = std::make_shared<PriorityQueue>(Element.first, Element.second);
+	//update_key(sizeof(heap) - 1, newElement);
+	update_key(heap.size() - 1, newElement);
 	heapEnd++;
 };
 
 // Takes a value out of heap
 std::shared_ptr<WorldState> PriorityQueue::extract() {
 	std::cout << "Running PriorityQueue.extract()" << std::endl;
-	if (sizeof(heap) < 1){
+	if (heap.size() < 1){
 		return nullptr; // error “heap underflow”
 	}
-	std::shared_ptr<WorldState> extremum = heap[0]->value;
+	std::shared_ptr<WorldState> extremum = heap[0].value;
 	heap[0] = heap[heapEnd];
 	heapEnd--;
 	heapify(0);
@@ -73,43 +81,45 @@ void PriorityQueue::heapify(int i) {
 	int l = left(i);
 	int r = right(i);
 	int extremum;
-	if ((l < sizeof(heap)) && (heap[l]->key < heap[i]->key)) {
+	if ((l < sizeof(heap)) && (heap[l].key < heap[i].key)) {
 		extremum = l;
 	}
 	else {
 		extremum = i;
 	}
-	if ((r < sizeof(heap)) && (heap[r]->key < heap[extremum]->key)) {
+	if ((r < sizeof(heap)) && (heap[r].key < heap[extremum].key)) {
 		extremum = r;
 	}
 	if (extremum != i) {
-		std::shared_ptr<PriorityQueue> tmp = heap[i];
+		Element tmp = heap[i];
 		heap[i] = heap[extremum];
 		heap[extremum] = tmp;
 		heapify(extremum);
 	}
+	std::cout << "Extremum: " << extremum << std::endl;
 };
 
 // Updates the value of a key in heap
-void PriorityQueue::update_key(int i, std::shared_ptr<PriorityQueue> elem) {
+void PriorityQueue::update_key(int i, Element elem) {
 	std::cout << "Running PriorityQueue.update_key()" << std::endl;
 	// var prev_key = heap[i].key if heap[i] else INF
-	std::string prev_key;
+	int prev_key;
 	if (heapEnd > 0) {
-		prev_key = heap[i]->key;
+		prev_key = heap[i].key;
 	}
 	else {
 		// This should be the C++ code corresponding to infinity...
 		prev_key = std::numeric_limits<int>::max();
 	}
+	std::cout << i << std::endl;
 	heap[i] = elem;
-	if (prev_key < elem->key) {
+	if (prev_key < elem.key) {
 		heapify(i);
 		return;
 	}
 	int j = parent(i);
-	while ((i > 0) && (heap[i]->key < heap[j]->key)) {
-		std::shared_ptr<PriorityQueue> tmp = heap[i];
+	while ((i > 0) && (heap[i].key < heap[j].key)) {
+		Element tmp = heap[i];
 		heap[i] = heap[j];
 		heap[j] = tmp;
 		i = j;

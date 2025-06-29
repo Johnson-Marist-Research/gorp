@@ -50,7 +50,6 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 std::shared_ptr<WorldState> Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
 	// Placeholder WorldState to return
-	std::shared_ptr<WorldState> placeholder;
 	for (auto const& key : knowledge->properties) {
 		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
 		if (prop->value == true && prop->name == "normal_traffic") {
@@ -104,7 +103,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			}
 		}
 	}
-	return placeholder;
+	return knowledge;
 
 	/*
 	for key in knowledge.properties:
