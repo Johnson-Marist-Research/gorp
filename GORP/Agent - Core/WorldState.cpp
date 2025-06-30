@@ -5,19 +5,17 @@
 
 WorldState::WorldState(){}
 
-// TODO: Change parameter type to map<std::string, std::shared_ptr<WorldProperty>>
-WorldState::WorldState(std::shared_ptr<WorldProperty> props)
+WorldState::WorldState(std::map<std::string, std::shared_ptr<WorldProperty>> props)
 {
     // Not sure if this is needed, but I'll leave it here just in case
 	// This really isn't right, but I'll leave it as a placeholder for now
 	// As it is, it rewrites the ENTIRITY of properties to be props. That is not right.
 	//for (int prop = 0; prop < sizeof(properties); prop++) {
-	// TODO: Replace for loop with simple assignment statement 
-		// - Assign parameter to prperties
-	for (const auto& entry : properties) {
+	this->properties = props;
+	/*for (const auto& entry : properties) {
 		std::string key = entry.first;
 		this->properties[key] = props;
-	}
+	}*/
 	/*
 	func _init(props:Variant):
 		if props is Dictionary:
@@ -31,35 +29,34 @@ WorldState::WorldState(std::shared_ptr<WorldProperty> props)
 // Use a range-based for loop to iterate through all the key value pairs in the map of properties
 // For each property, print the value of the first element in the map, which is the key in the form of a string
 std::string WorldState::_to_string() const {
-	std::cout << "Running WorldState._to_string()" << std::endl;
+	std::cerr << "Running WorldState._to_string()" << std::endl;
 	for (auto& const key : properties) {
 		return key.first;
 	}
 }
 
-// TODO: Change to return a shared pointer to WorldState
-std::map<std::string, std::shared_ptr<WorldProperty>> WorldState::duplicate() {
-	std::cout << "Running WorldState.duplicate()" << std::endl;
-	std::map<std::string, std::shared_ptr<WorldProperty>> propDuplicate = properties;
-	// TODO: Make a shared pointer to a new WorldState initialized with propDuplicate
-	return propDuplicate;
+std::shared_ptr<WorldState> WorldState::duplicate() {
+	std::cerr << "Running WorldState.duplicate()" << std::endl;
+	WorldState propDuplicate = properties;
+	std::shared_ptr<WorldState> newState = std::make_shared<WorldState>(propDuplicate);
+	return newState;
 }
 
 int WorldState::size() {
-	std::cout << "Running WorldState.size()" << std::endl;
+	std::cerr << "Running WorldState.size()" << std::endl;
 	return properties.size();
 }
 
 bool WorldState::has(std::string key) {
-	std::cout << "Running WorldState.has()" << std::endl;
+	std::cerr << "Running WorldState.has()" << std::endl;
 	if (properties.empty()) {
-		std::cout << "properties is empty" << std::endl;
+		std::cerr << "properties is empty" << std::endl;
 	}
 	else {
-		std::cout << "properties is not empty" << std::endl;
+		std::cerr << "properties is not empty" << std::endl;
 	}
 	for (auto const& entry : properties) {
-		std::cout << entry.first << std::endl;
+		std::cerr << entry.first << std::endl;
 	}
 
 	if (properties.count(key) > 0) {
@@ -80,27 +77,40 @@ bool WorldState::has(std::string key) {
 }
 
 bool WorldState::insert(std::shared_ptr<WorldProperty> prop) {
-	std::cout << "Running WorldState.insert()" << std::endl;
+	//std::cerr << "Running WorldState.insert()" << std::endl;
 	properties[prop->to_key()] = prop;
 	return true;
 }
 
 // Adds a property to this world state or overwrites it if already present
 bool WorldState::add_property(std::string key, std::shared_ptr<WorldProperty> prop) {
-	std::cout << "Running WorldState.add_property()" << std::endl;
+	std::cerr << "Running WorldState.add_property()" << std::endl;
 	properties[key] = prop;
 	return true;
 }
 
 std::shared_ptr<WorldProperty> WorldState::get_property(std::string key) {
-	std::cout << "Running WorldState.get_property()" << std::endl;
+	std::cerr << "Running WorldState.get_property()" << std::endl;
 	return properties[key];
 }
 
 void WorldState::drop_property(std::string key) {
-	std::cout << "Running WorldState.drop_property()" << std::endl;
+	std::cerr << "Running WorldState.drop_property()" << std::endl;
 	// map has a built-in erase function
+	std::cerr << "Key in drop_property() is " << key << std::endl;
+	std::cerr << "\nEntries in Properties: " << std::endl;
+	int i = 0;
+	for (const auto& entry : properties) {
+		std::cerr << i << ". " << entry.first << std::endl;
+		i++;
+	}
 	properties.erase(key);
+	i = 0;
+	std::cerr << "\nAfter erasing the key: " << std::endl;
+	for (const auto& entry : properties) {
+		std::cerr << i << ". " << entry.first << std::endl;
+		i++;
+	}
 }
 
 /*void WorldState::drop_properties(std::string keys[]) {
@@ -153,10 +163,11 @@ std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a
 std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflict = true) {
 	std::cout << "Running WorldState.reduce_by()" << std::endl;
 	// Duplicate doesn't work so I'm ignoring it for now
-	//WorldState new_goal = goal.duplicate();
-	std::shared_ptr<WorldState> new_goal = goal;
+	std::shared_ptr<WorldState> new_goal = goal->duplicate();
+	//std::shared_ptr<WorldState> new_goal = goal;
 	//for (int key = 0; key < sizeof(goal->properties); key++) {
 	// Iterate through each entry in goal->properties
+	// BUG: I think it loops through, deletes something, then has trouble finding where it left off
 	for (const auto& entry : goal->properties){
 		std::string key = entry.first;
 		if (effects->has(key)) {

@@ -26,7 +26,7 @@ std::string WorldProperty::_to_string() {
 // Individual key for each property (enum in WorldProperties.h)
 // Or change the key in properties to a string
 std::string WorldProperty::to_key() {
-	std::cout << "Running WorldProperty.to_key()" << std::endl;
+	//std::cout << "Running WorldProperty.to_key()" << std::endl;
 	// return subject.name + ": " + name
 	return subject + ": " + name;
 }

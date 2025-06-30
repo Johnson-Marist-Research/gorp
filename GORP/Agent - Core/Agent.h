@@ -20,7 +20,6 @@ public:
 	Subsystem subsystem;
 	WorkingMemory workingMemory;
 
-
 	// Need to make these vectors so we can iterate through them
 	// Original was "std::vector<Response> const&", but had trouble initializing them
 	// Should they be vectors of shared pointers?

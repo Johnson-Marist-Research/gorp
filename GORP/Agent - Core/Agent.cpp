@@ -36,11 +36,20 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 	// Can then turn that result into a WorldState
 	std::cout << "Running Agent.process_sensor()" << std::endl;
 	// if action_timer.is_stopped():
-	if (current_plan.empty()) {
-		make_plan();
-	}
-	else {
-		execute_plan();
+	for (auto const& port : sensor.ports) {
+		if (port.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
+			// Oh no! Unusual amounts of traffic!
+			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
+			if (current_plan.empty()) {
+				make_plan();
+			}
+			else {
+				execute_plan();
+			}
+		}
+		else {
+			std::cerr << "Port " << port.first << " contains the expected amount of traffic" << std::endl;
+		}
 	}
 	return placeholder;
 }
@@ -180,7 +189,7 @@ void Agent::execute_plan() {
 
 // Initializes the response variables
 void Agent::init_responses() {
-	std::cout << "Running Agent.init_response()" << std::endl;
+	std::cout << "\nRunning Agent.init_response()" << std::endl;
 	/* 
 	- block_port
 	- unblock_port
@@ -438,4 +447,9 @@ void Agent::init_goals() {
 		std::cout << goal << std::endl;
 	}
 	std::cout << std::endl;
+}
+
+
+void scan_ports() {
+
 }

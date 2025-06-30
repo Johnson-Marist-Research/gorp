@@ -16,11 +16,11 @@ public:
 	WorldState();
 
 	//WorldState(WorldProperty props);
-	WorldState(std::shared_ptr<WorldProperty> props);
+	WorldState(std::map<std::string, std::shared_ptr<WorldProperty>> props);
 
 	std::string _to_string() const;
 
-	std::map<std::string, std::shared_ptr<WorldProperty>> duplicate();
+	std::shared_ptr<WorldState> duplicate();
 
 	int size();
 
@@ -31,11 +31,11 @@ public:
 	std::shared_ptr<WorldProperty> get_property(std::string key);
 
 	void drop_property(std::string key);
-	void drop_properties(std::string keys[]);
+	//void drop_properties(std::string keys[]);
 
 	bool satisfies(std::shared_ptr<WorldState> goal);
 
-	std::shared_ptr<WorldState> difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b);
-	std::shared_ptr<WorldState> reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflicts);
-	std::shared_ptr<WorldState> expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions);
+	static std::shared_ptr<WorldState> difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b);
+	static std::shared_ptr<WorldState> reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflicts);
+	static std::shared_ptr<WorldState> expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions);
 };

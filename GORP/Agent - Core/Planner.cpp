@@ -33,12 +33,14 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 	// Can check if a pointer is null, but not a class
 	std::shared_ptr<WorldState> unsatisfied;
 	// Remove satisfied properties from a goal state, as long as no conflicts exist
-	unsatisfied->reduce_by(goal, std::make_shared<WorldState>(response.effects), true);
-	if (unsatisfied == NULL) {
+	// :: is how you call a STATIC function in C++
+	// TODO: turn expand_by() and difference() into static
+	unsatisfied = WorldState::reduce_by(goal, std::make_shared<WorldState>(response.effects), true);
+	if (unsatisfied == nullptr) {
 		return nullptr;
 	}
 	std::shared_ptr<WorldState> new_goal;
-	new_goal->expand_by(unsatisfied, response.preconditions);
+	new_goal = WorldState::expand_by(unsatisfied, response.preconditions);
 	if (new_goal == goal) {
 		return nullptr;
 	}
@@ -55,7 +57,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 
 	// Calculate the distance (difference()) between the goal and the current_state
 	// Original is "goal = WorldState.difference(goal, current_state)", so I'm just guessing with this :(
-	goal->difference(goal, current_state); // Only need to satisfy the unsatisfied
+	goal = WorldState::difference(goal, current_state); // Only need to satisfy the unsatisfied
 
 	// Since goal is the start, it does not "come from" anything. Therefore, goal's came_from is null.
 	came_from[goal] = nullptr;

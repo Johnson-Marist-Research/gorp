@@ -55,7 +55,9 @@ void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	std::cout << "Running PriorityQueue.insert()" << std::endl;
 	if (heapSize == heap.size()) {
 		std::cerr << "No more room in the heap!" << std::endl;
-		return;
+		// Kill the program for now
+		exit(0);
+		//return;
 	}
 	// If this was a simple PriorityQueue* pointer, we would only need PriorityQueue* newElement = new PriorityQueue(priority, x);
 	// However, since it is a shared pointer, we need the std::make_shared
@@ -119,7 +121,6 @@ void PriorityQueue::update_key(int i, Element elem) {
 		// This should be the C++ code corresponding to infinity...
 		prev_key = std::numeric_limits<int>::max();
 	}
-	std::cout << i << std::endl;
 	heap[i] = elem;
 	if (prev_key < elem.key) {
 		heapify(i);
