@@ -51,6 +51,7 @@ bool WorldState::has(std::string key) {
 	std::cerr << "Running WorldState.has()" << std::endl;
 	if (properties.empty()) {
 		std::cerr << "properties is empty" << std::endl;
+		return false;
 	}
 	else {
 		std::cerr << "properties is not empty" << std::endl;

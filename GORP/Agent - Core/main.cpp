@@ -49,8 +49,6 @@ Options for returning nothing (that isn't a shared pointer):
 /*
 GOALS FOR THIS WEEK:
 - Create test case
-- Update Agent.responses and Agent.goals to have multiple WorldProperties
-- See TODOs in WorldState
 */
 
 

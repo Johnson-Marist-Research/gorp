@@ -215,6 +215,13 @@ void Agent::init_responses() {
 	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
 	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
 	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
+	/*
+	Commands to return:
+		- findstr :<PORT NUMBER> - Locate process ID of process occurring on the port
+		- taskkill /PID /F - End the process
+		- netsh advfirewall firewall add rule name="<NAME>" dir=in action=allow protocol=TCP localport=<PORT NUMBER> - Create firewall to block access to the port
+
+	*/
 
 	// Add to responses
 	Response block_port(std::string("block_port"), 1, block_port_preconds, block_port_effects);
@@ -235,6 +242,10 @@ void Agent::init_responses() {
 	// Add to responses
 	Response unblock_port(std::string("unblock_port"), 1, unblock_port_preconds, unblock_port_effects);
 	responses.push_back(unblock_port);
+	/*
+	Command to return:
+		- firewall-cmd --zone=<ZONE NAME> --remove-port=<PORT NUMBER>/<protocol - Remove the firewall on a port
+	*/
 
 
 	// ------------------- Block an IP address in the ARP table -------------------
@@ -251,6 +262,11 @@ void Agent::init_responses() {
 	// Add to responses
 	Response block_IP_address(std::string("block_IP_address"), 1, block_IP_address_preconds, block_IP_address_effects);
 	responses.push_back(block_IP_address);
+	/*
+	Commands to return:
+		- arp -a - Pull up the ARP table
+		- arp -d - Delete affected IP addresses
+	*/
 
 
 	// ------------------- Unblock a previously blocked IP address -------------------
@@ -267,6 +283,11 @@ void Agent::init_responses() {
 	// Add to responses
 	Response unblock_IP_address(std::string("unblock_IP_address"), 1, unblock_IP_address_preconds, unblock_IP_address_effects);
 	responses.push_back(unblock_IP_address);
+	/*
+	Command to return:
+		- arp -a - Pull up the ARP table
+		- Maybe have a list of previously deleted IP addresses that we can reinstate
+	*/
 
 
 	// ------------------- If a file has been changed, revert it back to its last saved version -------------------
@@ -282,6 +303,13 @@ void Agent::init_responses() {
 	// Add to responses
 	Response revert_file(std::string("revert_file"), 1, revert_file_preconds, revert_file_effects);
 	responses.push_back(revert_file);
+	/*
+	Commands to return:
+		- icacls - Check permissions of a file
+		- Options from there:
+			- icacls "path_to_file" /grant "user_or_group:(permissions)" - Revert file permissions to old version
+			- del "path/to/file" - Delete file
+	*/
 
 
 	// ------------------- If a file has been changed and we want to keep that change, -------------------
@@ -297,7 +325,10 @@ void Agent::init_responses() {
 	// Add to responses
 	Response update_file(std::string("update_file"), 1, update_file_preconds, update_file_effects);
 	responses.push_back(update_file);
-
+	/*
+	Command to return:
+		- icacls - Check permissions of a file
+	*/
 
 	// ------------------- Takes GORP out of the safe mode intended to intercept DNS requests -------------------
 	WorldState gen_mode_preconds;
@@ -338,6 +369,11 @@ void Agent::init_responses() {
 	// Add to responses
 	Response block_dns_response(std::string("block_dns_response"), 1, block_dns_preconds, block_dns_effects);
 	responses.push_back(block_dns_response);
+	/*
+	Commands to return:
+		- Intercept the DNS response on the way back. Consult Professor Chodziutko on the best way to do this
+		- nslookup - Get the expected DNS response so we can check it against the one we actually received
+	*/
 
 
 	// DEBUGGING 
@@ -447,9 +483,4 @@ void Agent::init_goals() {
 		std::cout << goal << std::endl;
 	}
 	std::cout << std::endl;
-}
-
-
-void scan_ports() {
-
 }
