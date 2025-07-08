@@ -10,7 +10,7 @@
 // then we add one to the distance, as one property needs to be changed.
 // Once the calculations are complete, we return the distance (d).
 float Planner::distance(std::shared_ptr<WorldState> src, std::shared_ptr<WorldState> dst) {
-	std::cerr << "Running Planner.distance()" << std::endl;
+	//std::cerr << "Running Planner.distance()" << std::endl;
 	float d = 0;
 	//for (int key = 0; key < sizeof(dst.properties); key++) {
 	// Iterate through each entry in dst.properties
@@ -77,6 +77,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	// We need to iterate through each entry in frontier.
 	// This will allow us to trace the entire path from goal to start.
 	while (!frontier.is_empty()) {
+		std::cerr << "frontier size: " << frontier.size() << std::endl;
 		// Out ultimate goal is not the same as the current goal. The current_goal is the next "node" in the graph
 		// that we are tracing to make it back to start.
 		// As such, we are determining the next sub-goal by extracting the next entry in frontier.
@@ -93,12 +94,16 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		//for (int response = 0; response < sizeof(responses); response++) {
 		// If the current_state is not the same as current_goal, we need to calculate a possible path from here to there.
 		// As such, we will run through every possible response to determine the best solution.
+		std::string rep = "{";
 		for (const auto& response : responses){
 			// Creating a path by using response to connect us to current_goal
 			std::shared_ptr<WorldState> next = unify(response, current_goal);
 
 			// If a path is not found, just continue. We'll address that later.
 			if (next == nullptr) { continue; }
+
+			rep += next->_to_string();
+			rep += ", ";
 
 			// Remove satisfied properties from a goal state, as long as no conflicts exist
 			next = next->reduce_by(next, current_state, false);
@@ -116,11 +121,20 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 				came_from[next] = std::make_shared<std::pair<std::shared_ptr<WorldState>, Response>>(std::make_pair(current_goal, response));
 			}
 		}
+
+		rep += "}";
+		std::cerr  << "\nFinal Calculated Path of Responses (rep): \n" << rep << std::endl;
+		std::cerr << std::endl;
+
+		std::cerr << "\n------ LOOP BACK TO START OF 'while (!frontier.is_empty())' IN 'Planner.devise_plan()' ------\n\n " << std::endl;
 	}
+
+	std::cerr << "\n\n\n ******************************** DID WE MAKE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
 
 	// Construct a plan from the start state to the goal state, if possible
 	std::shared_ptr<WorldState> n = start;
 	while (n != goal) {
+		std::cerr << "n in Planner.devise_plan() is " << n->_to_string() << std::endl;
 		if (came_from.count(n) <= 0) {
 			break;
 		}
@@ -137,5 +151,6 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		// Access state
 		n = came_from[n]->first;
 	}
+	std::cerr << "\nReached the end of Planner.devise_plan()\n" << std::endl;
 	return plan;
 };

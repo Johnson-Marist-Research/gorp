@@ -9,7 +9,7 @@ WorldProperty::WorldProperty(std::string subject, std::string name, bool value) 
 }
 
 std::string WorldProperty::_to_string() {
-	std::cout << "Running WorldProperty._to_string()" << std::endl;
+	//std::cout << "Running WorldProperty._to_string()" << std::endl;
 	// Printing value as true or false
 	std::string valueTrueOrFalse = "";
 	if (value) {
