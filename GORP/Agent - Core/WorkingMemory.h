@@ -35,11 +35,9 @@ public:
 	bool dns_mismatch;
 	*/
 
-	void store(int key, std::string fact);
+	std::map<int, int> known_facts{};
+
+	void store(int key, int fact);
 	void forget(int key);
 	std::string recall(int key);
-private:
-	// Once again substituting a map for a dictionary
-	// Map string to bool, not int to string
-	std::map<int, std::string> known_facts{};
 };

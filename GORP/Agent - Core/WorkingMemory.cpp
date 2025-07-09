@@ -3,7 +3,7 @@
 #include <iostream>
 
 // Store information from sensors in WorkingMemory
-void WorkingMemory::store(int key, std::string fact) {
+void WorkingMemory::store(int key, int fact) {
     std::cout << "Running WorkingMemory.store()" << std::endl;
     known_facts[key] = fact;
     // This is where we would have the signal emit a "knowledge_gained.emit(key)" signal

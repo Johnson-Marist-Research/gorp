@@ -32,11 +32,37 @@ void Agent::run_agent() {
 std::shared_ptr<WorldState> Agent::process_sensor() {
 	// Placeholder WorldState to return
 	std::shared_ptr<WorldState> placeholder;
+
+	std::cout << "Running Agent.process_sensor()" << std::endl;
+
+	// Store sensor.ports in WorkingMemory
+	for (auto const& port : sensor.ports) {
+		// why
+		workingMemory.known_facts[port.first].first = port.first;
+		workingMemory.known_facts[port.first].second = port.second;
+	}
+
+	// What is the proper way to marry the declared WorldState in this function
+	// with the WorldStates that serve as goals and responses?
+	for (auto const& known_fact : workingMemory.known_facts) {
+		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
+			// Oh no! Unusual amounts of traffic!
+			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
+			if (current_plan.empty()) {
+				make_plan();
+			}
+			else {
+				execute_plan();
+			}
+		}
+		else {
+			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
+		}
+	}
 	// Need to figure out how to detect things from the console
 	// Can then turn that result into a WorldState
-	std::cout << "Running Agent.process_sensor()" << std::endl;
 	// if action_timer.is_stopped():
-	for (auto const& port : sensor.ports) {
+	/*for (auto const& port : sensor.ports) {
 		if (port.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
@@ -50,7 +76,7 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 		else {
 			std::cerr << "Port " << port.first << " contains the expected amount of traffic" << std::endl;
 		}
-	}
+	}*/
 	return placeholder;
 }
 
@@ -58,6 +84,12 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 // Does this need to return a WorldState?
 std::shared_ptr<WorldState> Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
+	/* TODO: 
+		- Sensor obtains data from host system (done)
+		- Store data in WorkingMemory
+		- When making plan, Agent creates a WorldState from the memory
+		- Said state becomes the current_state for Planner
+	*/
 	// Placeholder WorldState to return
 	for (auto const& key : knowledge->properties) {
 		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];

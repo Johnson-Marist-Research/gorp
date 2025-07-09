@@ -50,7 +50,16 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 // We devise a plan to address the current goal.
 std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
 	std::cerr << "Running Planner.devise_plan()" << std::endl;
+
+
 	std::forward_list<Response> plan;
+
+	// Only run the rest of devise_plan() if current_state is not empty
+	if (current_state->size() <= 0) {
+		std::cerr << "\nplan is empty\n" << std::endl;
+		return plan;
+	}
+
 	// First, we take note of where we came from and the current cost to get from there (goal) to here (came from).
 	std::map<std::shared_ptr<WorldState>, std::shared_ptr<std::pair<std::shared_ptr<WorldState>, Response>>> came_from = {};
 	std::map<std::shared_ptr<WorldState>, float> cost_so_far = {};
