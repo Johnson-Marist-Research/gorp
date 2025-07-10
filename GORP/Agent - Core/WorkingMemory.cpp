@@ -23,7 +23,7 @@ void WorkingMemory::forget(int key) {
 }
 
 // Retrieve information already stored in WorkingMemory
-std::string WorkingMemory::recall(int key) {
+int WorkingMemory::recall(int key) {
     std::cout << "Running WorkingMemory.recall()" << std::endl;
     return known_facts[key];
 }

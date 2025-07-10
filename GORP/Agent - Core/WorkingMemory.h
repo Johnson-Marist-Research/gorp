@@ -39,5 +39,5 @@ public:
 
 	void store(int key, int fact);
 	void forget(int key);
-	std::string recall(int key);
+	int recall(int key);
 };
