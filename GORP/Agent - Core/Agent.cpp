@@ -24,6 +24,23 @@ void Agent::run_agent() {
 	// Following two are covered in process_sensor() for now
 	//make_plan();
 	//execute_plan();
+
+	for (auto const& known_fact : workingMemory.known_facts) {
+		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
+			// Oh no! Unusual amounts of traffic!
+			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
+			if (current_plan.empty()) {
+				make_plan();
+			}
+			else {
+				execute_plan();
+			}
+		}
+		else {
+			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
+		}
+	}
 }
 
 // Creates a new plan if there is not a current one
@@ -42,7 +59,7 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 
 	// What is the proper way to marry the declared WorldState in this function
 	// with the WorldStates that serve as goals and responses?
-	for (auto const& known_fact : workingMemory.known_facts) {
+	/*for (auto const& known_fact : workingMemory.known_facts) {
 		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
@@ -56,7 +73,7 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 		else {
 			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
 		}
-	}
+	}*/
 	// Need to figure out how to detect things from the console
 	// Can then turn that result into a WorldState
 	// if action_timer.is_stopped():
@@ -92,68 +109,70 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	for (auto const& key : knowledge->properties) {
 		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
 		if (prop->value == true && prop->name == "normal_traffic") {
-			WorldState port_is_unblocked;
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+			//WorldState port_is_unblocked;
+			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
-			knowledge = (std::make_shared<WorldState>(port_is_unblocked));
+			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "port_open") {
-			WorldState port_is_unblocked;
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+			//WorldState port_is_unblocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
-			knowledge = (std::make_shared<WorldState>(port_is_unblocked));
+			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "excess_traffic_detected") {
-			WorldState port_is_unblocked;
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+			//WorldState port_is_unblocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
-			knowledge = (std::make_shared<WorldState>(port_is_unblocked));
+			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "port_blocked") {
-			WorldState port_is_blocked;
-			port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
-			port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
-			port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
+			//WorldState port_is_blocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
 
-			knowledge = (std::make_shared<WorldState>(port_is_blocked));
+			//knowledge = (std::make_shared<WorldState>(port_is_blocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "no_ARP_anomalies") {
-			WorldState ip_address_is_unblocked;
-			ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
-			ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+			//WorldState ip_address_is_unblocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
-			knowledge = (std::make_shared<WorldState>(ip_address_is_unblocked));
+			//knowledge = (std::make_shared<WorldState>(ip_address_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "ARP_anomaly_quarantined") {
-			WorldState ip_address_is_blocked;
-			ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
-			ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+			//WorldState ip_address_is_blocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
-			knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
+			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "files_unchanged") {
-			WorldState save_file;
-			save_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
-			save_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
+			//WorldState save_file;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
 
-			knowledge = (std::make_shared<WorldState>(save_file));
+			//knowledge = (std::make_shared<WorldState>(save_file));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "change_detected") {
-			WorldState revert_file;
-			revert_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
-			revert_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
+			//WorldState revert_file;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
 
-			knowledge = (std::make_shared<WorldState>(revert_file));
+			//knowledge = (std::make_shared<WorldState>(revert_file));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "no_gaps") {
@@ -163,33 +182,33 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "general_mode") {
-			WorldState gen_mode;
-			gen_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
-			gen_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
+			//WorldState gen_mode;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
 
-			knowledge = (std::make_shared<WorldState>(gen_mode));
+			//knowledge = (std::make_shared<WorldState>(gen_mode));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "safe_mode") {
-			WorldState safe_mode;
-			safe_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true));
-			safe_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), false));
+			//WorldState safe_mode;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), false));
 
-			knowledge = (std::make_shared<WorldState>(safe_mode));
+			//knowledge = (std::make_shared<WorldState>(safe_mode));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "dns_match") {
-			WorldState good_dns_response;
-			good_dns_response.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
+			//WorldState good_dns_response;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
 
-			knowledge = (std::make_shared<WorldState>(good_dns_response));
+			//knowledge = (std::make_shared<WorldState>(good_dns_response));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "dns_mismatch") {
-			WorldState block_dns_response;
-			block_dns_response.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true));
+			//WorldState block_dns_response;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true));
 
-			knowledge = (std::make_shared<WorldState>(block_dns_response));
+			//knowledge = (std::make_shared<WorldState>(block_dns_response));
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else {

@@ -134,16 +134,31 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		rep += "}";
 		std::cerr  << "\nFinal Calculated Path of Responses (rep): \n" << rep << std::endl;
 		std::cerr << std::endl;
-
-		std::cerr << "\n------ LOOP BACK TO START OF 'while (!frontier.is_empty())' IN 'Planner.devise_plan()' ------\n\n " << std::endl;
 	}
 
-	std::cerr << "\n\n\n ******************************** DID WE MAKE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
+	std::cerr << "\n\n\n ******************************** MADE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
 
 	// Construct a plan from the start state to the goal state, if possible
 	std::shared_ptr<WorldState> n = start;
+	int i = 0;
+	// TODO: Fix problems in this while loop
+	// One problem is trying to decrement an empty WorldState (n)
+	// I added the check at the start as a temporary patch
+	// However, since we do not have a plan, when we jump back up to Agent.make_plan(),
+	// there is no plan to build off of when we loop around again. At least, I think that is why it's failing. 
+	// Has something to do with a nullptr and line 264 in Agent
 	while (n != goal) {
-		std::cerr << "n in Planner.devise_plan() is " << n->_to_string() << std::endl;
+		// Problem: The program crashes if we try to decrement n when it is empty
+		// We need to decrement n to create a plan
+		// So there is probably a wrong path somewhere
+		if (n->size() <= 0) {
+			std::cerr << "\nn is empty; cannot complete the while loop\n" << std::endl;
+			break;
+		}
+
+		i++;
+		std::cerr << "Loop: " << i << std::endl;
+		//std::cerr << "n in Planner.devise_plan() is " << n->_to_string() << std::endl;
 		if (came_from.count(n) <= 0) {
 			break;
 		}

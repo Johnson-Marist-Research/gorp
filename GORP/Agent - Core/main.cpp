@@ -48,8 +48,7 @@ Options for returning nothing (that isn't a shared pointer):
 
 /*
 GOALS FOR THIS WEEK:
-- Create test case
-- Agent should have a way to ask the Sensors to "take a measurement"
+- Debug
 */
 
 
