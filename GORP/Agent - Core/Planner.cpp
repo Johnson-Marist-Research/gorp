@@ -34,7 +34,6 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 	std::shared_ptr<WorldState> unsatisfied;
 	// Remove satisfied properties from a goal state, as long as no conflicts exist
 	// :: is how you call a STATIC function in C++
-	// TODO: turn expand_by() and difference() into static
 	unsatisfied = WorldState::reduce_by(goal, std::make_shared<WorldState>(response.effects), true);
 	if (unsatisfied == nullptr) {
 		return nullptr;
@@ -50,6 +49,13 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 // We devise a plan to address the current goal.
 std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
 	std::cerr << "Running Planner.devise_plan()" << std::endl;
+
+	if (current_state->size() <= 0) {
+		std::cerr << "\n\ncurrent_state is empty\n\n" << std::endl;
+	}
+	else {
+		std::cerr << "\n\ncurrent_state is not empty\n\n" << std::endl;
+	}
 
 
 	std::forward_list<Response> plan;
@@ -81,7 +87,12 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 
 	// Here, we set the value of the "start" WorldState.
 	// We will go from start to goal, but since we need to figure out where start is, we will initalize it with no value for now.
-	std::shared_ptr<WorldState> start;
+	// * dereferences the pointer, so we can use start as a plain WorldState
+	std::shared_ptr<WorldState> start = current_state;
+
+	// Print current state
+	std::cerr << "current_state: " << current_state->_to_string() << std::endl;
+	std::cerr << "start: " << start->_to_string() << std::endl;
 
 	// We need to iterate through each entry in frontier.
 	// This will allow us to trace the entire path from goal to start.
@@ -91,12 +102,16 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		// that we are tracing to make it back to start.
 		// As such, we are determining the next sub-goal by extracting the next entry in frontier.
 		std::shared_ptr<WorldState> current_goal = frontier.extract();
+		// Print current goal
+		std::cerr << "current_goal: " << current_goal->_to_string() << std::endl;
 
 		// If the current_goal is the same as the current_state, then we have reached our starting state.
 		// Since A* Search works backwards from the goal, this means that we have found a path from the goal to the start.
 		// We can set the start equal to the current sub-goal, then break the while loop. 
 		if (current_state->satisfies(current_goal)) {
 			start = current_goal;
+			std::cerr << "\tstart is " << start.get() << std::endl;
+			std::cerr << "start (2nd check): " << start->_to_string() << std::endl;
 			break;
 		}
 
@@ -105,6 +120,9 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		// As such, we will run through every possible response to determine the best solution.
 		std::string rep = "{";
 		for (const auto& response : responses){
+			// Print response name
+			std::cerr << "\tResponse name: " << response.name << std::endl;
+
 			// Creating a path by using response to connect us to current_goal
 			std::shared_ptr<WorldState> next = unify(response, current_goal);
 
@@ -115,7 +133,10 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 			rep += ", ";
 
 			// Remove satisfied properties from a goal state, as long as no conflicts exist
-			next = next->reduce_by(next, current_state, false);
+			//next = next->reduce_by(next, current_state, false);
+
+			// Print next state
+			std::cerr << "\t\t'next' state: " << next->_to_string() << std::endl;
 
 			// Calculating the cost to move from starting point to goal point
 			float g_cost = cost_so_far[current_goal] + response.cost;
@@ -125,6 +146,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 				float h_cost = distance(next, current_state);
 				float priority = g_cost + h_cost;
 				frontier.insert(next, priority);
+				std::cerr << "\tInserting " << next.get() << std::endl;
 				// could have came_from[next] = std::make_pair
 				// Use .first and .second to access
 				came_from[next] = std::make_shared<std::pair<std::shared_ptr<WorldState>, Response>>(std::make_pair(current_goal, response));
@@ -139,7 +161,10 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	std::cerr << "\n\n\n ******************************** MADE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
 
 	// Construct a plan from the start state to the goal state, if possible
+	std::cerr << "start (check 3): " << start->_to_string() << std::endl;
+	// Turn from plain WorldState to shared pointer
 	std::shared_ptr<WorldState> n = start;
+	auto last = plan.begin();
 	int i = 0;
 	// TODO: Fix problems in this while loop
 	// One problem is trying to decrement an empty WorldState (n)
@@ -147,6 +172,8 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	// However, since we do not have a plan, when we jump back up to Agent.make_plan(),
 	// there is no plan to build off of when we loop around again. At least, I think that is why it's failing. 
 	// Has something to do with a nullptr and line 264 in Agent
+	// Does the problem have something to do with n being a pointer to a pointer (start)?
+		// Trying to figure that out
 	while (n != goal) {
 		// Problem: The program crashes if we try to decrement n when it is empty
 		// We need to decrement n to create a plan
@@ -159,7 +186,9 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		i++;
 		std::cerr << "Loop: " << i << std::endl;
 		//std::cerr << "n in Planner.devise_plan() is " << n->_to_string() << std::endl;
-		if (came_from.count(n) <= 0) {
+		//if (came_from.count(n) <= 0) {
+		if(!came_from.contains(n)){
+			std::cerr << "Breaking" << std::endl;
 			break;
 		}
 		// Unlike list, forward_list doesn't have a built-in function to add an element to its end
@@ -168,12 +197,13 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		// This is all one big calculation in order to append came_from[n]->second to the end of plan
 		// end() returns one position past the end of the forward list
 		// As such, we need to move back one spot to put the element at the end of the list
-		auto insertPosition = plan.end();
-		advance(insertPosition, -1);
-		plan.insert_after(insertPosition, came_from[n]->second);
+		//auto insertPosition = plan.end();
+		//advance(insertPosition, -1);
+		last = plan.insert_after(last, came_from[n]->second);
 		// Probably has something to do with the fact that I haven't implemented the "procedure" part of Response.h yet
 		// Access state
 		n = came_from[n]->first;
+		std::cerr << "came_from: "<< came_from[n]->second.name << std::endl;
 	}
 	std::cerr << "\nReached the end of Planner.devise_plan()\n" << std::endl;
 	return plan;

@@ -31,9 +31,21 @@ WorldState::WorldState(std::map<std::string, std::shared_ptr<WorldProperty>> pro
 // TODO: Update to look for pattern
 std::string WorldState::_to_string() const {
 	//std::cerr << "Running WorldState._to_string()" << std::endl;
-	for (auto& const key : properties) {
-		return key.first;
+	// Build a string representation of the world state
+	//  start with an empty string
+	std::string rep = "";
+	//  for each property add the string representation of the property to the string
+	//  wrap it in braces (or similar)
+	// return the string
+	for (auto& const prop : properties) {
+		rep.append("{");
+		//rep.append(prop.first);
+		//rep.append(", ");
+		rep.append(prop.second->_to_string());
+		rep.append("}, ");
+		//return prop.first;
 	}
+	return rep;
 }
 
 std::shared_ptr<WorldState> WorldState::duplicate() {
@@ -51,11 +63,11 @@ int WorldState::size() {
 bool WorldState::has(std::string key) {
 	//std::cerr << "Running WorldState.has()" << std::endl;
 	if (properties.empty()) {
-		std::cerr << "properties is empty" << std::endl;
+		//std::cerr << "properties is empty" << std::endl;
 		return false;
 	}
 	else {
-		std::cerr << "properties is not empty" << std::endl;
+		//std::cerr << "properties is not empty" << std::endl;
 	}
 	/*for (auto const& entry : properties) {
 		std::cerr << entry.first << std::endl;
@@ -87,6 +99,7 @@ bool WorldState::insert(std::shared_ptr<WorldProperty> prop) {
 // Adds a property to this world state or overwrites it if already present
 bool WorldState::add_property(std::string key, std::shared_ptr<WorldProperty> prop) {
 	//std::cerr << "Running WorldState.add_property()" << std::endl;
+	std::cerr << "Key in add_property() is " << key << std::endl;
 	properties[key] = prop;
 	return true;
 }
@@ -100,7 +113,7 @@ void WorldState::drop_property(std::string key) {
 	//std::cerr << "Running WorldState.drop_property()" << std::endl;
 	// map has a built-in erase function
 	std::cerr << "Key in drop_property() is " << key << std::endl;
-	std::cerr << "\nEntries in Properties: " << std::endl;
+	//std::cerr << "\nEntries in Properties: " << std::endl;
 	/*int i = 0;
 	for (const auto& entry : properties) {
 		std::cerr << i << ". " << entry.first << std::endl;
@@ -163,7 +176,7 @@ std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a
 
 // Remove satisfied properties from a goal state, as long as no conflicts exist
 std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflict = true) {
-	//std::cout << "Running WorldState.reduce_by()" << std::endl;
+	std::cout << "Running WorldState.reduce_by()" << std::endl;
 	// Duplicate doesn't work so I'm ignoring it for now
 	std::shared_ptr<WorldState> new_goal = goal->duplicate();
 	//std::shared_ptr<WorldState> new_goal = goal;
@@ -185,7 +198,7 @@ std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> go
 }
 // Adds a new goal to the list of possible goals
 std::shared_ptr<WorldState> WorldState::expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions) {
-	//std::cout << "Running WorldState.expand_by()" << std::endl;
+	std::cout << "Running WorldState.expand_by()" << std::endl;
 	// Duplicate doesn't work so I'm ignoring it for now
 	//WorldState new_goal = goal.duplicate();
 	std::shared_ptr<WorldState> new_goal = goal;
