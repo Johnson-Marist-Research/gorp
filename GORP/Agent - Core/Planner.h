@@ -14,5 +14,5 @@ public:
 	// Using shared pointers so as to prevent data leaks
 	std::shared_ptr<WorldState> unify(Response const& response, std::shared_ptr<WorldState> goal);
 	// Need to return an array of responses
-	std::forward_list<Response> devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses);
+	std::vector<Response> devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses);
 };

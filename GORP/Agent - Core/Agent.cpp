@@ -30,16 +30,18 @@ void Agent::run_agent() {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
-			if (current_plan.empty()) {
-				make_plan();
-			}
-			else {
-				execute_plan();
-			}
 		}
 		else {
 			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
 		}
+	}
+
+	std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
+	make_plan();
+
+	if (!current_plan.empty()) {
+		std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
+		execute_plan();
 	}
 }
 
@@ -261,7 +263,7 @@ void Agent::make_plan() {
 		//std::cout << "Planning for goal " << goal.properties.begin()->first << std::endl;
 		std::cout << "Planning for goal " << goal->_to_string() << std::endl;
 
-		std::forward_list<Response> plan = planner.devise_plan(current_state, goal, responses);
+		std::vector<Response> plan = planner.devise_plan(current_state, goal, responses);
 		if (plan.empty()) {
 			// Debugging message
 			std::cout << "Unable to satisfy goal " << goal->_to_string() << std::endl;

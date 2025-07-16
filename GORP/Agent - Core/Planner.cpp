@@ -47,7 +47,7 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 };
 
 // We devise a plan to address the current goal.
-std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
+std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
 	std::cerr << "Running Planner.devise_plan()" << std::endl;
 
 	if (current_state->size() <= 0) {
@@ -58,7 +58,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	}
 
 
-	std::forward_list<Response> plan;
+	std::vector<Response> plan;
 
 	// Only run the rest of devise_plan() if current_state is not empty
 	if (current_state->size() <= 0) {
@@ -70,9 +70,15 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	std::map<std::shared_ptr<WorldState>, std::shared_ptr<std::pair<std::shared_ptr<WorldState>, Response>>> came_from = {};
 	std::map<std::shared_ptr<WorldState>, float> cost_so_far = {};
 
+	std::cerr << "\nCheck 1" << std::endl;
+	std::cerr << "goal: " << goal->_to_string() << std::endl;
+	std::cerr << "current_state: \n" << current_state->_to_string() << std::endl;
+
 	// Calculate the distance (difference()) between the goal and the current_state
 	// Original is "goal = WorldState.difference(goal, current_state)", so I'm just guessing with this :(
 	goal = WorldState::difference(goal, current_state); // Only need to satisfy the unsatisfied
+
+	std::cerr << "\nCheck 2\n" << std::endl;
 
 	// Since goal is the start, it does not "come from" anything. Therefore, goal's came_from is null.
 	came_from[goal] = nullptr;
@@ -164,7 +170,7 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 	std::cerr << "start (check 3): " << start->_to_string() << std::endl;
 	// Turn from plain WorldState to shared pointer
 	std::shared_ptr<WorldState> n = start;
-	auto last = plan.begin();
+	//auto last = plan.begin();
 	int i = 0;
 	// TODO: Fix problems in this while loop
 	// One problem is trying to decrement an empty WorldState (n)
@@ -199,11 +205,28 @@ std::forward_list<Response> Planner::devise_plan(std::shared_ptr<WorldState> cur
 		// As such, we need to move back one spot to put the element at the end of the list
 		//auto insertPosition = plan.end();
 		//advance(insertPosition, -1);
-		last = plan.insert_after(last, came_from[n]->second);
+		std::cerr << "Check 1" << std::endl;
+		//if (last != plan.end())
+			//std::cerr << "    last: " << last->name << std::endl;
+		std::cerr << "    n: " << n->_to_string() << std::endl;
+		std::cerr << "    prev: " << came_from[n]->first->_to_string() << std::endl;
+		std::cerr << "    resp: " << came_from[n]->second.name << std::endl;
+
+		std::cerr << "came_from: " << came_from[n]->second.name << std::endl;
+		std::cerr << "n (check 1): " << n->_to_string() << std::endl;
+		plan.push_back(came_from[n]->second);
+		std::cerr << "Check 2" << std::endl;
 		// Probably has something to do with the fact that I haven't implemented the "procedure" part of Response.h yet
 		// Access state
 		n = came_from[n]->first;
-		std::cerr << "came_from: "<< came_from[n]->second.name << std::endl;
+		std::cerr << "n (check 2): " << n->_to_string() << std::endl;
+		// Problem: as far as I can tell, we are trying to read 16 (0x10) points away from a nullptr
+		// so the program doesn't want to print it
+		//std::cerr << "came_from: " << came_from[n]->second.name << std::endl;
+	}
+	std::cerr << "\nFinal Plan: " << std::endl;
+	for (auto const& entry : plan) {
+		std::cerr << entry.name << std::endl;
 	}
 	std::cerr << "\nReached the end of Planner.devise_plan()\n" << std::endl;
 	return plan;
