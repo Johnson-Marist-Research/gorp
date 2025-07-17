@@ -12,6 +12,7 @@
 
 // Runs all the initialization functions once GORP is started
 Agent::Agent() {
+
 	knowledge = std::make_shared<WorldState>(WorldState());
 	init_responses();
 	init_goals();
@@ -30,6 +31,19 @@ void Agent::run_agent() {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
+			std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
+			make_plan();
+
+			if (!current_plan.empty()) {
+				std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
+				execute_plan();
+			}
+			else {
+				std::cerr << "current_plan is empty; not executing" << std::endl;
+			}
+
+			// Clears current_plan so we can make a new one if necessary
+			current_plan.clear();
 		}
 		else {
 			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
@@ -43,6 +57,12 @@ void Agent::run_agent() {
 		std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
 		execute_plan();
 	}
+	else {
+		std::cerr << "current_plan is empty; not executing" << std::endl;
+	}
+
+	// Clears current_plan so we can make a new one if necessary
+	current_plan.clear();
 }
 
 // Creates a new plan if there is not a current one
@@ -254,7 +274,15 @@ void Agent::make_plan() {
 	std::cout << "Running Agent.make_plan()" << std::endl;
 	std::shared_ptr<WorldState> current_state = update_knowledge();
 	// For goal in goals
+	// Found the problem! This runs through every goal we initialized in init_goals()
 	for (auto const& goal : goals) {
+
+		// Debugging
+		std::cerr << "Goal in goals: ";
+		for (auto const& goal2 : goals) {
+			std::cerr << "<" << goal2->_to_string() << ">, " << std::endl;
+		}
+
 		if (current_state->satisfies(goal)) {
 			continue;
 		}
@@ -269,6 +297,11 @@ void Agent::make_plan() {
 			std::cout << "Unable to satisfy goal " << goal->_to_string() << std::endl;
 			continue;
 		}
+
+		current_plan = plan;
+
+		// DELETE LATER: Going to break out of this after the first loop for now
+		break;
 		/*
 		// Optional diagnostic output
 		var plan_string:String = "Plan for " + str(goal.properties.keys()) + " is..."
@@ -295,6 +328,8 @@ void Agent::execute_plan() {
 	Response next_action = current_plan.front();
 	// if next_action
 	next_action.execute();
+
+	std::cerr << "\n****************** COMPLETED PLAN EXECUTION ******************\n\n" << std::endl;
 }
 
 // Initializes the response variables

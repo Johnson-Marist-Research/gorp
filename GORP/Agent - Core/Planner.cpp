@@ -103,7 +103,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 	// We need to iterate through each entry in frontier.
 	// This will allow us to trace the entire path from goal to start.
 	while (!frontier.is_empty()) {
-		std::cerr << "frontier size: " << frontier.size() << std::endl;
+		//std::cerr << "frontier size: " << frontier.size() << std::endl;
 		// Out ultimate goal is not the same as the current goal. The current_goal is the next "node" in the graph
 		// that we are tracing to make it back to start.
 		// As such, we are determining the next sub-goal by extracting the next entry in frontier.
@@ -164,14 +164,13 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 		std::cerr << std::endl;
 	}
 
-	std::cerr << "\n\n\n ******************************** MADE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
+	//std::cerr << "\n\n\n ******************************** MADE IT OUT OF THE LOOP ******************************** \n\n\n" << std::endl;
 
 	// Construct a plan from the start state to the goal state, if possible
 	std::cerr << "start (check 3): " << start->_to_string() << std::endl;
 	// Turn from plain WorldState to shared pointer
 	std::shared_ptr<WorldState> n = start;
 	//auto last = plan.begin();
-	int i = 0;
 	// TODO: Fix problems in this while loop
 	// One problem is trying to decrement an empty WorldState (n)
 	// I added the check at the start as a temporary patch
@@ -189,8 +188,6 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 			break;
 		}
 
-		i++;
-		std::cerr << "Loop: " << i << std::endl;
 		//std::cerr << "n in Planner.devise_plan() is " << n->_to_string() << std::endl;
 		//if (came_from.count(n) <= 0) {
 		if(!came_from.contains(n)){
@@ -205,21 +202,19 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 		// As such, we need to move back one spot to put the element at the end of the list
 		//auto insertPosition = plan.end();
 		//advance(insertPosition, -1);
-		std::cerr << "Check 1" << std::endl;
 		//if (last != plan.end())
 			//std::cerr << "    last: " << last->name << std::endl;
-		std::cerr << "    n: " << n->_to_string() << std::endl;
-		std::cerr << "    prev: " << came_from[n]->first->_to_string() << std::endl;
-		std::cerr << "    resp: " << came_from[n]->second.name << std::endl;
+		//std::cerr << "    n: " << n->_to_string() << std::endl;
+		//std::cerr << "    prev: " << came_from[n]->first->_to_string() << std::endl;
+		//std::cerr << "    resp: " << came_from[n]->second.name << std::endl;
 
-		std::cerr << "came_from: " << came_from[n]->second.name << std::endl;
-		std::cerr << "n (check 1): " << n->_to_string() << std::endl;
+		//std::cerr << "came_from: " << came_from[n]->second.name << std::endl;
+		//std::cerr << "n (check 1): " << n->_to_string() << std::endl;
 		plan.push_back(came_from[n]->second);
-		std::cerr << "Check 2" << std::endl;
 		// Probably has something to do with the fact that I haven't implemented the "procedure" part of Response.h yet
 		// Access state
 		n = came_from[n]->first;
-		std::cerr << "n (check 2): " << n->_to_string() << std::endl;
+		//std::cerr << "n (check 2): " << n->_to_string() << std::endl;
 		// Problem: as far as I can tell, we are trying to read 16 (0x10) points away from a nullptr
 		// so the program doesn't want to print it
 		//std::cerr << "came_from: " << came_from[n]->second.name << std::endl;

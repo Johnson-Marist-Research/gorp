@@ -27,7 +27,7 @@ public:
 	std::vector<Response> responses;
 	std::vector<std::shared_ptr<WorldState>> goals;
 
-	std::forward_list<Response> current_plan;
+	std::vector<Response> current_plan;
 	// Changed this from a shared pointer because I was having trouble with update_knowledge()
 	// Should I change it back and alter update_knowledge()?
 	// This only works if the WorldState class has a zero-argument default constructor
