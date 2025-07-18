@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-// Will probably need to "#include" a few of the files
+
 #include "WorkingMemory.h"
 #include "Blackboard.h"
 #include "Agent.h"
@@ -12,6 +12,8 @@ Notes on Testing in Sandbox:
 - Select version and press Start
 - Stick with Kali
 TODO:
+	- 
+
 	- Download Visual Studio on Kali
 	- Download all GitHub files
 	- Open GORP in Visual Studio on Kali
@@ -27,14 +29,6 @@ TODO:
 TODO:
 - Add a timer for the sensors to check the system
 - https://cppreference.com/w/cpp/utility/functional/function.html
-- Make array/map for all the ports
-	- Find command that locates all open ports
-	- Each port needs to have a property or two attached to it (Ex: port_open)
-	- There are a lot of ports. List of just open ports?
-- WorkingMemory might store list of all open ports, but Planner is only concerned with the port that has unusual traffic.
-	- As such, WorkingMemory only needs to share the affected port with Planner
-
-	- Idea: Set up main() with certain key prompts. Ping between GORP components when certain keys are pressed.
 */
 
 /*
@@ -42,7 +36,6 @@ BUGS:
 - WorkingMemory.cpp --> forget(): Overwriting is weird. Might not overwrite last item in array
 - I haven't specified the size of the various maps in the header files, so that might be a problem at some point.
 - Check if the end of devise_plan() in Planner.cpp actually puts the element in the correct spot in the forward list
-- Might have to change the keys in Blackboard from ints to strings
 - Problem with Agent.responses only changing a single WorldProperty:
 	- Start with an empty WorldState constructor, then create an addProperty function to add as many WorldProperties as you want
 	- WorldState();
@@ -65,38 +58,6 @@ Options for returning nothing (that isn't a shared pointer):
 GOALS FOR THIS WEEK:
 - Debug
 */
-
-
-/*
-Ideas for how to make a test case:
-- Create a map of ports (Port number and the amount of traffic running through it)
-- Tie map to "port_open", "normal_traffic", "excess_traffic_detected", and "port_blocked"
-- Declare a variable as an average of expected traffic
-- If the traffic on a port is greater than 50% above the average traffic, shut it down
-	- Shutting down: 
-		- port_open = false;
-		- normal_traffic = false
-		- excess_traffic_detected = true
-		- port_blocked = true
-		- Traffic = 0
-			- Maybe reset "excess_traffic_detected" to false after this 
-- Save the port number in a queue to keep track of attacked ports.
-- Set a timer once an attacked port is added to the queue
-- Unblock the first port in the queue after the timer runs out
-	- Randomly generate a number for the port's traffic
-- Immediately scan the port again after unblocking it. If traffic is too high, block it again.
-
-
-Once that is working:
-- Create a function that randomizes the amount of traffic (tie to a timer or button press so things don't go crazy)
-- Have GORP check traffic in between each randomization
-- There is a low chance that the randomization function will return a value that is significantly higher than the 
-average traffic amount.
-- When this abnormality is detected, block the port and continue with the previously established steps.
-
-*/
-
-/// Change heap to std::array<100, Element>
 
 int main() {
 	Agent agent;
