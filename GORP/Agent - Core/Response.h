@@ -21,5 +21,5 @@ public:
 	//void _init(std::string name, float cost, WorldState before, WorldState after, std::string proc);
 	Response(std::string name, float cost, WorldState before, WorldState after);
 	// This calls procedure, but again, C++ doesn't have Callables, so we'll have to figure that out
-	void execute();
+	void execute(Response next_action);
 };

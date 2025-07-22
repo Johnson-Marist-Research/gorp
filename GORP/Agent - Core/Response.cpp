@@ -81,3 +81,33 @@ void Response::execute(Response next_action) {
 		std::cerr << "The name of the desired next action is not recognized" << std::endl;
 	}
 }
+
+/*
+TEST CASES:
+
+
+
+ATTACKS:
+IP/MAC Spoofing
+	- Goal: Have another sandbox send the GORP sandbox several IP addresses registered under the same MAC addresses
+		- Mix it up by having a few legitimate 1:1's in there too
+	- Implementation:
+		- Can have the sandbox register a specific amount of IP addresses (10?)
+		- Randomly generate half that in MAC addresses (so 5 in this example)
+		- Generate a random IP address, then roll a number between 1 and 5.
+			- Assign the IP address to the corresponding MAC (MAC option 1 - 5)
+		- Optionally print out the combinations (so we know what we generated)
+	- This should give us some overlap
+	- If we wanted to check that 1:1's are actually getting through, we could have a static unique IP and MAC address combo
+
+DDOS Attack
+	- Goal: Have one sandbox spam the GORP sandbox with a substantial amount of packets
+	- Implementation:
+		- Randomly generate a certain amount of IP addresses (How many can we get away with? More than 20?)
+		- Have each of them spam GORP with traffic of any kind
+			- Connection requests, information, anything that works in our sandboxes
+			- If we are doing ports, aim at one or two specific ports
+				- This is our "website" port
+	- Might have to have these on a timer so we don't blow up the actual computer this is running on,
+	  but can scale the threshold for "too much traffic" to accommodate
+*/

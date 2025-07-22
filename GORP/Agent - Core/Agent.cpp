@@ -327,7 +327,7 @@ void Agent::execute_plan() {
 	//std::cout << "Size of the current plan is: " << std::to_string(sizeof(current_plan)) << std::endl;
 	Response next_action = current_plan.front();
 	// if next_action
-	next_action.execute();
+	next_action.execute(next_action);
 
 	std::cerr << "\n****************** COMPLETED PLAN EXECUTION ******************\n\n" << std::endl;
 }
