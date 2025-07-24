@@ -50,6 +50,20 @@ void Agent::run_agent() {
 		}
 	}
 
+	// Time to check if there are any duplicate MAC addresses
+	for (const auto& pair : sensor.macAddresses) {
+		if (pair.second > 1) {
+			std::cerr << "Duplicate MAC address found: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+			break;
+		}
+		else {
+			// Just to check our bases
+			std::cerr << "MAC Address: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
+		}
+	}
+
 	std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
 	make_plan();
 
@@ -78,6 +92,8 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 	for (auto const& port : sensor.ports) {
 		workingMemory.known_facts[port.first] = port.second;
 	}
+
+	sensor.checkARPTable();
 
 	// What is the proper way to marry the declared WorldState in this function
 	// with the WorldStates that serve as goals and responses?
@@ -327,7 +343,10 @@ void Agent::execute_plan() {
 	//std::cout << "Size of the current plan is: " << std::to_string(sizeof(current_plan)) << std::endl;
 	Response next_action = current_plan.front();
 	// if next_action
-	next_action.execute(next_action);
+	next_action.execute(next_action, sensor.macAddresses);
+
+	// Clear sensor.macAddresses so that GORP doesn't get confused with outdated information next time
+	sensor.macAddresses.clear();
 
 	std::cerr << "\n****************** COMPLETED PLAN EXECUTION ******************\n\n" << std::endl;
 }

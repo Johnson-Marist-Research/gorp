@@ -13,7 +13,40 @@ Response::Response(std::string name, float cost, WorldState before, WorldState a
 	//this->procedure = proc;
 };
 
-void Response::execute(Response next_action) {
+// Locate IP address with the relevant MAC address
+std::string Response::findIPFromMAC(std::string targetMAC) {
+	// Opens the ARP table as a readable file
+	std::ifstream arpFile("/proc/net/arp");
+
+	// Couldn't locate the ARP table
+	if (!arpFile.is_open()) {
+		std::cerr << "Could not locate /proc/net/arp" << std::endl;
+		return "";
+	}
+
+	// For more information on how these lines of code work, see Sensor.checkARPTable()
+	std::string line;
+	std::getline(arpFile, line);
+
+	while (std::getline(arpFile, line)) {
+		std::stringstream ss(line);
+		std::string ipAddress, hwType, flags, macAddress, mask, device;
+
+		// Parse the line according to the /proc/net/arp format
+		ss >> ipAddress >> hwType >> flags >> macAddress >> mask >> device;
+
+		// Return the IP address if we find the MAC address
+		if (macAddress == targetMAC) {
+			return ipAddress;
+		}
+	}
+
+	// If the MAC address is not found
+	return "";
+}
+
+void Response::execute(Response next_action, std::map<std::string, int> macAddresses) {
+	// macAddresses will do nothing unless this is in relation to ARP Spoofing
 	std::cout << "Running Response.execute()" << std::endl;
 
 	// procedure.call()
@@ -58,6 +91,37 @@ void Response::execute(Response next_action) {
 	}
 	else if (next_action.name == "block_IP_address") {
 		std::cerr << "GORP is going to block an IP address" << std::endl;
+		// This will be a bit more complicated than simply detecting if there are multiple IP addresses mapped to one MAC address
+		// as we need to actually manipulate the ARP table.
+		// First, we remove the offending IP addresses from the table, then we block them.
+
+		std::string ipAddress;
+		std::string command;
+		int macCount;
+
+		// 1. Scan through sensor.macAddresses for > 1 entries
+		for (const auto& pair : macAddresses) {
+			// 2. Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
+			if (pair.second > 1) {
+				// pair.second is not a modifiable value, so I'll use an integer variable for this
+				macCount = pair.second;
+				while (macCount > 1) {
+					// Locate IP address with the relevant MAC address and save it in a string
+					ipAddress = findIPFromMAC(pair.first);
+
+					// Remove that entry from the ARP table 
+					command = "arp -d " + ipAddress;
+					system(command.c_str());
+
+					// Using the string, block the IP address
+					command = "sudo iptables -A INPUT -s " + ipAddress + " -j DROP";
+					system(command.c_str());
+					// Subtract 1 from pair.second
+					macCount--;
+				}
+			}
+		}
+		// QUESTION: Do I need to revert the variables here (like "ARP_anomaly_detected")?
 	}
 	else if (next_action.name == "unblock_IP_address") {
 		std::cerr << "GORP is going to unblock an IP address" << std::endl;

@@ -6,6 +6,11 @@
 #include <vector>
 #include <array>
 
+// For the ARP Table
+#include <fstream>
+#include <string>
+#include <sstream>
+
 class PortVars {
 public:
 	bool port_open;
@@ -18,6 +23,8 @@ class Sensor {
 public:
 	// int = port number, float = traffic (in, idk, let's say megabits per second {mbps})
 	std::map<int, int> ports{};
+	std::map<std::string, int> macAddresses;
+	
 
 	// Check if I should delete these from Agent.h later
 	// Ports
@@ -39,6 +46,8 @@ public:
 	int averageTraffic = 60;
 
 	Sensor();
+	int checkARPTable();
+	std::string getMACAddress(std::string line);
 private:
 	// Creating an instance of WorkingMemory
 	WorkingMemory memory;
