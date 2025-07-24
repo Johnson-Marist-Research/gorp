@@ -99,13 +99,13 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 		std::string command;
 		int macCount;
 
-		// 1. Scan through sensor.macAddresses for > 1 entries
+		// Scan through sensor.macAddresses for > 1 entries
 		for (const auto& pair : macAddresses) {
-			// 2. Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
+			// Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
 			if (pair.second > 1) {
 				// pair.second is not a modifiable value, so I'll use an integer variable for this
 				macCount = pair.second;
-				while (macCount > 1) {
+				while (macCount > 0) {
 					// Locate IP address with the relevant MAC address and save it in a string
 					ipAddress = findIPFromMAC(pair.first);
 
@@ -121,7 +121,6 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 				}
 			}
 		}
-		// QUESTION: Do I need to revert the variables here (like "ARP_anomaly_detected")?
 	}
 	else if (next_action.name == "unblock_IP_address") {
 		std::cerr << "GORP is going to unblock an IP address" << std::endl;

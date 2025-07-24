@@ -78,4 +78,5 @@ int Sensor::checkARPTable() {
     // Done with the file, so we can close it
     // We'll check if there are duplicate MAC addresses when we pivot to Agent.cpp
     arpFile.close();
+    return 0;
 }
