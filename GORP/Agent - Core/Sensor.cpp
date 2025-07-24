@@ -54,7 +54,8 @@ std::string Sensor::getMACAddress(std::string line) {
 int Sensor::checkARPTable() {
     // ARP Table on Linux can be read like a text file by using "/proc/net/arp"
     // We use ifstream to read it
-    std::ifstream arpFile("/proc/net/arp");
+    //std::ifstream arpFile("/proc/net/arp");
+    std::ifstream arpFile("/Documents/ARP_Table.txt");
 
     if (!arpFile.is_open()) {
         std::cerr << "Could not locate /proc/net/arp" << std::endl;

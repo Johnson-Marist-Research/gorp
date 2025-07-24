@@ -12,14 +12,7 @@ Notes on Testing in Sandbox:
 - Select version and press Start
 - Stick with Kali
 TODO:
-	- 
-
-	- Download Visual Studio on Kali
-	- Download all GitHub files
-	- Open GORP in Visual Studio on Kali
-	- Create a script that executes a variety of commands to test
-	- Write attack scripts
-	- Check C++ references on how to execute Linux commands
+	- Make a fake ARP table file
 */
 
 

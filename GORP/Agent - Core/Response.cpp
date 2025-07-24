@@ -16,7 +16,8 @@ Response::Response(std::string name, float cost, WorldState before, WorldState a
 // Locate IP address with the relevant MAC address
 std::string Response::findIPFromMAC(std::string targetMAC) {
 	// Opens the ARP table as a readable file
-	std::ifstream arpFile("/proc/net/arp");
+	//std::ifstream arpFile("/proc/net/arp");
+	std::ifstream arpFile("/Documents/ARP_Table.txt");
 
 	// Couldn't locate the ARP table
 	if (!arpFile.is_open()) {
@@ -37,12 +38,55 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 
 		// Return the IP address if we find the MAC address
 		if (macAddress == targetMAC) {
+			arpFile.close();
 			return ipAddress;
 		}
 	}
 
+	arpFile.close();
 	// If the MAC address is not found
 	return "";
+}
+
+void Response::deleteLineFromFile(std::string target) {
+	// Change this to the location of the file in Documents
+	std::ifstream inFile("/Documents/ARP_Table.txt");
+	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
+	// Instead, we'll need to completely rewrite the file
+	std::ofstream outFile("/Documents/temp.txt");
+
+	// Need to find which line the IP address is on
+	std::string line;
+	int lineNumber = 0;
+
+	while (std::getline(inFile, line)) {
+		// Increment line number for each line read
+		lineNumber++;
+		if (line.find(target) != std::string::npos) {
+			std::cout << "Found \"" << target << "\" on line: " << lineNumber << std::endl;
+			break;
+		}
+	}
+
+	// Found the line number! Now we know which line to delete
+	int currentLineNumber = 0;
+	int lineNumberToDelete = lineNumber;
+
+	// Write to the temporary file, skipping the line to be deleted
+	while (std::getline(inFile, line)) {
+		if (currentLineNumber != lineNumberToDelete) {
+			outFile << line << std::endl;
+		}
+		currentLineNumber++;
+	}
+
+	// Can now close both files
+	inFile.close();
+	outFile.close();
+
+	// Delete the old file and rename the new one
+	std::remove("/Documents/ARP_Table.txt");
+	std::rename("/Documents/temp.txt", "/Documents/ARP_Table.txt");
 }
 
 void Response::execute(Response next_action, std::map<std::string, int> macAddresses) {
@@ -110,8 +154,11 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 					ipAddress = findIPFromMAC(pair.first);
 
 					// Remove that entry from the ARP table 
-					command = "arp -d " + ipAddress;
-					system(command.c_str());
+					//command = "arp -d " + ipAddress;
+					//system(command.c_str());
+
+					// In our current format, we'd delete the line from the fake ARP file
+					deleteLineFromFile(ipAddress);
 
 					// Using the string, block the IP address
 					command = "sudo iptables -A INPUT -s " + ipAddress + " -j DROP";

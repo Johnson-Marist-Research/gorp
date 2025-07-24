@@ -8,17 +8,11 @@
 
 // Need these for the ARP table parts
 #include <fstream>
-#include <string>
 #include <sstream>
 
-// Turns out removing an entry from the ARP table is kinda complicated, so we need a lot of things to make it work
-/*#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <net/if_arp.h>
-#include <sys/ioctl.h>
-#include <stdio.h>
-#include <errno.h>*/
+// For our current fake ARP file simulation
+#include <vector>
+#include <cstdio>
 
 class Response {
 public:
@@ -39,6 +33,8 @@ public:
 	Response(std::string name, float cost, WorldState before, WorldState after);
 	// Used if we need to delete IP addresses from the ARP table
 	std::string findIPFromMAC(std::string targetMAC);
+	// For our current fake ARP file testing method
+	void deleteLineFromFile(std::string target);
 	// This calls procedure, but again, C++ doesn't have Callables, so we'll have to figure that out
 	void execute(Response next_action, std::map<std::string, int> macAddresses);
 };
