@@ -50,10 +50,10 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 
 void Response::deleteLineFromFile(std::string target) {
 	// Change this to the location of the file in Documents
-	std::ifstream inFile("/Documents/ARP_Table.txt");
+	std::ifstream inFile("/home/kali/Documents/ARP_Table.txt");
 	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
 	// Instead, we'll need to completely rewrite the file
-	std::ofstream outFile("/Documents/temp.txt");
+	std::ofstream outFile("/home/kali/Documents/temp.txt");
 
 	// Need to find which line the IP address is on
 	std::string line;
@@ -85,8 +85,8 @@ void Response::deleteLineFromFile(std::string target) {
 	outFile.close();
 
 	// Delete the old file and rename the new one
-	std::remove("/Documents/ARP_Table.txt");
-	std::rename("/Documents/temp.txt", "/Documents/ARP_Table.txt");
+	std::remove("/home/kali/Documents/ARP_Table.txt");
+	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
 void Response::execute(Response next_action, std::map<std::string, int> macAddresses) {
@@ -94,7 +94,7 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 	std::cout << "Running Response.execute()" << std::endl;
 
 	// procedure.call()
-	
+
 	/* Execution Idea :
 		- Use next_action (from Agent) in if/else statements to determine relevent actions
 		- Utilize Linux commands to perform said actions
@@ -116,7 +116,7 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 		// Maybe keep a list of ports to block, then run through the list and block all of them
 		std::cerr << "GORP is going to block a port" << std::endl;
 
-		/* System calls: 
+		/* System calls:
 		// Find processes on the port
 		system(findstr :<PORT_NUMBER>);
 		// End processes
@@ -153,7 +153,7 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 					// Locate IP address with the relevant MAC address and save it in a string
 					ipAddress = findIPFromMAC(pair.first);
 
-					// Remove that entry from the ARP table 
+					// Remove that entry from the ARP table
 					//command = "arp -d " + ipAddress;
 					//system(command.c_str());
 

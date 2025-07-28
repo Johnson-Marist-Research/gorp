@@ -52,10 +52,11 @@ std::string Sensor::getMACAddress(std::string line) {
 
 // ----------------------------- ARP Table -----------------------------
 int Sensor::checkARPTable() {
+    std::cerr << "\n\nChecking ARP Table\n\n" << std::endl;
     // ARP Table on Linux can be read like a text file by using "/proc/net/arp"
     // We use ifstream to read it
     //std::ifstream arpFile("/proc/net/arp");
-    std::ifstream arpFile("/Documents/ARP_Table.txt");
+    std::ifstream arpFile("/home/kali/Documents/ARP_Table.txt");
 
     if (!arpFile.is_open()) {
         std::cerr << "Could not locate /proc/net/arp" << std::endl;
@@ -68,10 +69,12 @@ int Sensor::checkARPTable() {
     std::getline(arpFile, line);
 
     while (std::getline(arpFile, line)) {
+        std::cerr << "While loop" << std::endl;
         std::string mac = getMACAddress(line);
         // 00:00:00:00:00:00 is for broadcast MAC addresses, so they can happen more than once and be fine
         // Other than that, just avoid adding empty/invalid MAC addresses to our list
         if (!mac.empty() && mac != "00:00:00:00:00:00") {
+            //std::cerr << mac << std::endl;
             macAddresses[mac]++;
         }
     }

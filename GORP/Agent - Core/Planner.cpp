@@ -38,11 +38,11 @@ std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared
 	if (unsatisfied == nullptr) {
 		return nullptr;
 	}
-	std::shared_ptr<WorldState> new_goal;
-	new_goal = WorldState::expand_by(unsatisfied, response.preconditions);
-	if (new_goal == goal) {
+	if (unsatisfied->equals(goal)) {
 		return nullptr;
 	}
+	std::shared_ptr<WorldState> new_goal;
+	new_goal = WorldState::expand_by(unsatisfied, response.preconditions);
 	return new_goal;
 };
 
@@ -113,11 +113,11 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 
 		// If the current_goal is the same as the current_state, then we have reached our starting state.
 		// Since A* Search works backwards from the goal, this means that we have found a path from the goal to the start.
-		// We can set the start equal to the current sub-goal, then break the while loop. 
+		// We can set the start equal to the current sub-goal, then break the while loop.
 		if (current_state->satisfies(current_goal)) {
 			start = current_goal;
-			std::cerr << "\tstart is " << start.get() << std::endl;
-			std::cerr << "start (2nd check): " << start->_to_string() << std::endl;
+			//std::cerr << "\tstart is " << start.get() << std::endl;
+			//std::cerr << "start (2nd check): " << start->_to_string() << std::endl;
 			break;
 		}
 
@@ -160,7 +160,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 		}
 
 		rep += "}";
-		std::cerr  << "\nFinal Calculated Path of Responses (rep): \n" << rep << std::endl;
+		std::cerr  << "\Calculated Path of Responses (rep): \n" << rep << std::endl;
 		std::cerr << std::endl;
 	}
 
@@ -175,7 +175,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 	// One problem is trying to decrement an empty WorldState (n)
 	// I added the check at the start as a temporary patch
 	// However, since we do not have a plan, when we jump back up to Agent.make_plan(),
-	// there is no plan to build off of when we loop around again. At least, I think that is why it's failing. 
+	// there is no plan to build off of when we loop around again. At least, I think that is why it's failing.
 	// Has something to do with a nullptr and line 264 in Agent
 	// Does the problem have something to do with n being a pointer to a pointer (start)?
 		// Trying to figure that out

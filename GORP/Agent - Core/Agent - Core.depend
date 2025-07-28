@@ -1,0 +1,119 @@
+# depslib dependency file v1.0
+1753729866 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Agent.cpp
+	"Agent.h"
+	<iostream>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/Agent.h
+	"Blackboard.h"
+	"Planner.h"
+	"Response.h"
+	"Sensor.h"
+	"Subsystem.h"
+	"WorkingMemory.h"
+	"WorldState.h"
+	<memory>
+	<forward_list>
+	<vector>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/Blackboard.h
+	<string>
+	<map>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/Planner.h
+	"WorldState.h"
+	"Response.h"
+	<memory>
+	<forward_list>
+	<vector>
+
+1753730476 /home/kali/Downloads/gorp/GORP/Agent - Core/WorldState.h
+	<string>
+	<map>
+	<memory>
+	"WorldProperty.h"
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/WorldProperty.h
+	<string>
+
+1753384930 /home/kali/Downloads/gorp/GORP/Agent - Core/Response.h
+	"WorldState.h"
+	<string>
+	<cstdlib>
+	<fstream>
+	<sstream>
+	<vector>
+	<cstdio>
+
+1753381556 /home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.h
+	"WorkingMemory.h"
+	<map>
+	<vector>
+	<array>
+	<fstream>
+	<string>
+	<sstream>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/WorkingMemory.h
+	<string>
+	<map>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/Subsystem.h
+	"Blackboard.h"
+
+1752857679 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Blackboard.cpp
+	"Blackboard.h"
+	<iostream>
+
+1753384930 source:/home/kali/Downloads/gorp/GORP/Agent - Core/main.cpp
+	<iostream>
+	<chrono>
+	<thread>
+	"WorkingMemory.h"
+	"Blackboard.h"
+	"Agent.h"
+	<optional>
+
+1753385242 source:/home/kali/Downloads/gorp/GORP/Agent - Core/PriorityQueue.cpp
+	"PriorityQueue.h"
+	<iostream>
+	<limits>
+	<cmath>
+
+1752857679 /home/kali/Downloads/gorp/GORP/Agent - Core/PriorityQueue.h
+	"WorldState.h"
+	<string>
+	<memory>
+	<array>
+
+1753730478 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Planner.cpp
+	"Planner.h"
+	"PriorityQueue.h"
+	<iostream>
+	<vector>
+
+1753385091 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Response.cpp
+	"Response.h"
+	<iostream>
+	<cstdlib>
+
+1753447028 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.cpp
+	"Sensor.h"
+	<iostream>
+
+1752857679 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Subsystem.cpp
+	"Subsystem.h"
+	<iostream>
+
+1752857679 source:/home/kali/Downloads/gorp/GORP/Agent - Core/WorkingMemory.cpp
+	"WorkingMemory.h"
+	<iostream>
+
+1752857679 source:/home/kali/Downloads/gorp/GORP/Agent - Core/WorldProperty.cpp
+	"WorldProperty.h"
+	<iostream>
+
+1753730518 source:/home/kali/Downloads/gorp/GORP/Agent - Core/WorldState.cpp
+	"WorldState.h"
+	<iostream>
+	<map>
+

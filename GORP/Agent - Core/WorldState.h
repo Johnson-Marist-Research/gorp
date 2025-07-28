@@ -20,6 +20,8 @@ public:
 
 	std::string _to_string() const;
 
+    bool equals(std::shared_ptr<WorldState> b);
+
 	std::shared_ptr<WorldState> duplicate();
 
 	int size();

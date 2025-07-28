@@ -37,7 +37,8 @@ std::string WorldState::_to_string() const {
 	//  for each property add the string representation of the property to the string
 	//  wrap it in braces (or similar)
 	// return the string
-	for (auto& const prop : properties) {
+	for (auto& prop : properties) {
+		//std::cerr << "Running properties " << prop.second.get() << std::endl;
 		rep.append("{");
 		//rep.append(prop.first);
 		//rep.append(", ");
@@ -46,6 +47,29 @@ std::string WorldState::_to_string() const {
 		//return prop.first;
 	}
 	return rep;
+}
+
+bool WorldState::equals(std::shared_ptr<WorldState> b){
+    WorldState* a = this;
+    if (a->size() != b->size()){
+        return false;
+    }
+    for (const auto& entry : b->properties){
+		std::string key = entry.first;
+		std::shared_ptr<WorldProperty> prop = a->get_property(key);
+		// Original is having trouble comparing WorldState to a boolean; need to fix this,
+		// But am taking out "prop" in the comparison just to get it running. NEED TO FIX THIS LATER.
+		//if ((prop && prop.value) == b.get_property(i).value) {
+		//std::cerr << "prop->value: " << prop->value << std::endl;
+		//std::cerr << "b->get_property(key)->value: " << b->get_property(key)->value << std::endl;
+		if ((prop) && ((prop->value) == b->get_property(key)->value)) {
+			continue;
+		}
+		else {
+            return false;
+		}
+	}
+	return true;
 }
 
 std::shared_ptr<WorldState> WorldState::duplicate() {
@@ -99,14 +123,19 @@ bool WorldState::insert(std::shared_ptr<WorldProperty> prop) {
 // Adds a property to this world state or overwrites it if already present
 bool WorldState::add_property(std::string key, std::shared_ptr<WorldProperty> prop) {
 	//std::cerr << "Running WorldState.add_property()" << std::endl;
-	std::cerr << "Key in add_property() is " << key << std::endl;
+	//std::cerr << "Key in add_property() is " << key << std::endl;
 	properties[key] = prop;
 	return true;
 }
 
 std::shared_ptr<WorldProperty> WorldState::get_property(std::string key) {
 	//std::cerr << "Running WorldState.get_property()" << std::endl;
-	return properties[key];
+	//return properties[key];
+	auto it = properties.find(key);
+	if(it == properties.end()){
+        return nullptr;
+	}
+	return it->second;
 }
 
 void WorldState::drop_property(std::string key) {
@@ -161,14 +190,19 @@ std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a
 	//for (int key = 0; key < sizeof(b.properties); key++) {
 	// Iterate through each entry in b->properties
 	for (const auto& entry : b->properties){
+        std::cerr << "difference for loop" << std::endl;
+        std::cerr << "Entry: " << entry.first << std::endl;
 		std::string key = entry.first;
-		// Check this later
 		std::shared_ptr<WorldProperty> prop = a->get_property(key);
 		// Original is having trouble comparing WorldState to a boolean; need to fix this,
 		// But am taking out "prop" in the comparison just to get it running. NEED TO FIX THIS LATER.
 		//if ((prop && prop.value) == b.get_property(i).value) {
-		if ((prop->value) == b->get_property(key)->value) {
+		//std::cerr << "prop->value: " << prop->value << std::endl;
+		//std::cerr << "b->get_property(key)->value: " << b->get_property(key)->value << std::endl;
+		if ((prop) && ((prop->value) == b->get_property(key)->value)) {
+            //std::cerr << "Trying to drop a property" << std::endl;
 			c->drop_property(key);
+			//std::cerr << "Dropped a property" << std::endl;
 		}
 	}
 	return c;

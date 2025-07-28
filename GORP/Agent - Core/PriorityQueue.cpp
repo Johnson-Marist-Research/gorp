@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <limits>
+#include <cmath>
 
 // Default Constructor
 PriorityQueue::PriorityQueue() {};

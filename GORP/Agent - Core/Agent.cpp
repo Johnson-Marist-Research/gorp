@@ -3,11 +3,12 @@
 #include <iostream>
 
 /* TODO:
-		- Agent Components
-			- Decide if current_plan is needed here and how it differs from the instructions we write to blackboard
-				- Maybe the blackboard can contain current_plan?
-			- Is WorldState knowledge needed, or does the memory make this separate variable unnecessary?
-			- Decide how to convert Sensor input into a WorldState
+		- make_plan() currently breaks after one loop. Should I keep this?
+		- Rename ARP_anomaly_quarantined to ARP_anomaly
+		- Redo document code so we make a new one and don't delet the original ARP document
+            - Redo ARP document (it was deleted)
+        - In goal initialization, hide goals not related to test functions
+        - Implement duplicate() function
 		*/
 
 // Runs all the initialization functions once GORP is started
@@ -16,6 +17,18 @@ Agent::Agent() {
 	knowledge = std::make_shared<WorldState>(WorldState());
 	init_responses();
 	init_goals();
+
+	// Add our initial states to knowledge
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
 }
 
 // Runs the process_sensor() and update_knowledge() functions when called
@@ -51,6 +64,7 @@ void Agent::run_agent() {
 	}
 
 	// Time to check if there are any duplicate MAC addresses
+	std::cerr << "\n\n\n\n" << std::endl;
 	for (const auto& pair : sensor.macAddresses) {
 		if (pair.second > 1) {
 			std::cerr << "Duplicate MAC address found: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
@@ -63,6 +77,7 @@ void Agent::run_agent() {
 			std::cerr << "MAC Address: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
 		}
 	}
+	std::cerr << "\n\n\n\n" << std::endl;
 
 	std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
 	make_plan();
@@ -137,7 +152,7 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 // Does this need to return a WorldState?
 std::shared_ptr<WorldState> Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
-	/* TODO: 
+	/* TODO:
 		- Sensor obtains data from host system (done)
 		- Store data in WorkingMemory
 		- When making plan, Agent creates a WorldState from the memory
@@ -146,7 +161,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	// Placeholder WorldState to return
 	for (auto const& key : knowledge->properties) {
 		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
-		if (prop->value == true && prop->name == "normal_traffic") {
+		/*if (prop->value == true && prop->name == "normal_traffic") {
 			//WorldState port_is_unblocked;
 			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
 			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
@@ -155,8 +170,8 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 
 			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "port_open") {
+		}*/
+		if (prop->value == true && prop->name == "port_open") {
 			//WorldState port_is_unblocked;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
@@ -181,15 +196,23 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			//knowledge = (std::make_shared<WorldState>(port_is_blocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}
-		else if (prop->value == true && prop->name == "no_ARP_anomalies") {
+		/*else if (prop->value == true && prop->name == "no_ARP_anomalies") {
 			//WorldState ip_address_is_unblocked;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
 			//knowledge = (std::make_shared<WorldState>(ip_address_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
-		}
+		}*/
 		else if (prop->value == true && prop->name == "ARP_anomaly_quarantined") {
+			//WorldState ip_address_is_blocked;
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+
+			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
+			std::cout << prop->name << " is true" << std::endl;
+		}
+		else if (prop->value == true && prop->name == "ip_address_blocked") {
 			//WorldState ip_address_is_blocked;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
@@ -213,12 +236,12 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			//knowledge = (std::make_shared<WorldState>(revert_file));
 			std::cout << prop->name << " is true" << std::endl;
 		}
-		else if (prop->value == true && prop->name == "no_gaps") {
+		/*else if (prop->value == true && prop->name == "no_gaps") {
 			std::cout << prop->name << " is true" << std::endl;
 		}
 		else if (prop->value == true && prop->name == "gap_detected") {
 			std::cout << prop->name << " is true" << std::endl;
-		}
+		}*/
 		else if (prop->value == true && prop->name == "general_mode") {
 			//WorldState gen_mode;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
@@ -235,13 +258,13 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			//knowledge = (std::make_shared<WorldState>(safe_mode));
 			std::cout << prop->name << " is true" << std::endl;
 		}
-		else if (prop->value == true && prop->name == "dns_match") {
+		/*else if (prop->value == true && prop->name == "dns_match") {
 			//WorldState good_dns_response;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
 
 			//knowledge = (std::make_shared<WorldState>(good_dns_response));
 			std::cout << prop->name << " is true" << std::endl;
-		}
+		}*/
 		else if (prop->value == true && prop->name == "dns_mismatch") {
 			//WorldState block_dns_response;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true));
@@ -259,27 +282,6 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 		}
 	}
 	return knowledge;
-
-	/*
-	for key in knowledge.properties:
-		var prop:WorldProperty = knowledge.properties[key]
-		match prop.name:
-			"is_cold": prop.value = chill >= 0.5
-			"is_hungry": prop.value = hunger >= 0.5
-			"is_sleepy": prop.value = sleepiness >= 0.5
-			"is_lonely": prop.value = loneliness >= 0.5
-			"near_bed": prop.value = neighborhood.any(in_group.call("bed"))
-			"near_bush": prop.value = neighborhood.any(in_group.call("bush"))
-			"near_fire": prop.value = neighborhood.any(in_group.call("fire"))
-			"near_friend": prop.value = neighborhood.any(in_group.call("friend"))
-			"in_bed": prop.value = in_bed
-			"has_berries": prop.value = berriesHeld > 0
-			"bed_reachable": prop.value = reachable_locations.has("bed")
-			"bush_reachable": prop.value = reachable_locations.has("bush")
-			"fire_reachable": prop.value = reachable_locations.has("fire")
-			"friend_reachable": prop.value = reachable_locations.has("friend")
-	return knowledge
-	*/
 }
 
 // Retrieves the current state of the World from update_knowledge(),
@@ -325,7 +327,7 @@ void Agent::make_plan() {
 			plan_string += action.name + " -> "
 		# Prints plan_string without final arrow (that points to nothing)
 		print(plan_string.substr(0, plan_string.length() - 4))
-			
+
 		current_plan = plan
 		break
 		*/
@@ -354,7 +356,7 @@ void Agent::execute_plan() {
 // Initializes the response variables
 void Agent::init_responses() {
 	std::cout << "\nRunning Agent.init_response()" << std::endl;
-	/* 
+	/*
 	- block_port
 	- unblock_port
 	- block_IP_address
@@ -540,7 +542,7 @@ void Agent::init_responses() {
 	*/
 
 
-	// DEBUGGING 
+	// DEBUGGING
 	std::cout << "\nResponses: " << std::endl;
 	for (auto const& response : responses) {
 		std::cout << response.name << std::endl;
@@ -551,6 +553,15 @@ void Agent::init_responses() {
 // Initializes the goal variables
 void Agent::init_goals() {
 	std::cout << "Running Agent.init_goals()" << std::endl;
+
+	// ------------------- Block an IP address in the ARP table -------------------
+	WorldState ip_address_is_blocked;
+	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+
+	// Add to goals
+	goals.push_back(std::make_shared<WorldState>(ip_address_is_blocked));
+
 
 	// ------------------- Block a port on the device -------------------
 	WorldState port_is_blocked;
@@ -579,21 +590,21 @@ void Agent::init_goals() {
 
 
 	// ------------------- Block an IP address in the ARP table -------------------
-	WorldState ip_address_is_blocked;
-	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
-	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+	//WorldState ip_address_is_blocked;
+	//ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	//ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(ip_address_is_blocked));
+	//goals.push_back(std::make_shared<WorldState>(ip_address_is_blocked));
 
 
 	// ------------------- Unblock a previously blocked IP address -------------------
-	WorldState ip_address_is_unblocked;
-	ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
-	ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+	//WorldState ip_address_is_unblocked;
+	//ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+	//ip_address_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(ip_address_is_unblocked));
+	//goals.push_back(std::make_shared<WorldState>(ip_address_is_unblocked));
 
 
 	// ------------------- If a file has been changed, revert it back to its last saved version -------------------
