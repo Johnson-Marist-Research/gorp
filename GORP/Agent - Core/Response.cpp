@@ -19,7 +19,7 @@ Response::Response(std::string name, float cost, WorldState before, WorldState a
 std::string Response::findIPFromMAC(std::string targetMAC) {
 	// Opens the ARP table as a readable file
 	//std::ifstream arpFile("/proc/net/arp");
-	std::ifstream arpFile("/Documents/ARP_Table.txt");
+	std::ifstream arpFile("/home/kali/Documents/ARP_Table.txt");
 
 	std::cerr << "\nTarget MAC Address: " << targetMAC << std::endl;
 
@@ -39,13 +39,13 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 
 		// Parse the line according to the /proc/net/arp format
 		ss >> ipAddress >> hwType >> flags >> macAddress >> mask >> device;
-		std::cerr << "\nLine read from file: " << 
-			"\n\t- IP Address: " << ipAddress << 
-			"\n\t- HW Type: " << hwType << 
-			"\n\t- Flags: " << flags << 
-			"\n\t- MAC Address: " << macAddress << 
-			"\n\t- Mask: " << mask << 
-			"\n\t- Device: " << device << "\n" << std::endl;
+		/*std::cerr << "\nLine read from file: " <<
+			"\n\t- IP Address: " << ipAddress <<
+			"\n\t- HW Type: " << hwType <<
+			"\n\t- Flags: " << flags <<
+			"\n\t- MAC Address: " << macAddress <<
+			"\n\t- Mask: " << mask <<
+			"\n\t- Device: " << device << "\n" << std::endl;*/
 
 		// Return the IP address if we find the MAC address
 		if (macAddress == targetMAC) {
@@ -68,7 +68,11 @@ void Response::deleteLineFromFile(std::string target) {
 	if (std::filesystem::exists("/home/kali/Documents/temp.txt")) {
 		std::remove("/home/kali/Documents/temp.txt");
 	}
+
 	std::ofstream outFile("/home/kali/Documents/temp.txt");
+
+	// Adding the first line (header)
+	outFile << "IP Address 	HWType 	Flags 	MAC Address 		Mask 	Device" << std::endl;
 
 	// Need to find which line the IP address is on
 	std::string line;
@@ -104,7 +108,7 @@ void Response::deleteLineFromFile(std::string target) {
 	//std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
-void Response::execute(Response next_action, std::map<std::string, int> macAddresses) {
+void Response::execute(Response next_action, Sensor sensor) {
 	// macAddresses will do nothing unless this is in relation to ARP Spoofing
 	std::cout << "Running Response.execute()" << std::endl;
 
@@ -130,6 +134,24 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 	if (next_action.name == "block_port") {
 		// Maybe keep a list of ports to block, then run through the list and block all of them
 		std::cerr << "GORP is going to block a port" << std::endl;
+
+		/*for (const auto& port : sensor.ports) {
+            if (port.second >= 90){
+                port.second = 0;
+            }
+		}*/
+
+		for (int i = 0; i < sensor.ports.size(); i++) {
+            if(sensor.ports[i] >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)){
+                sensor.ports[i] = 0;
+            }
+        }
+
+        // Debugging
+        std::cerr << "Final Port Traffic: " << std::endl;
+        for (int i = 0; i < sensor.ports.size(); i++) {
+            std::cerr << i + 1 << ") " << sensor.ports[i] << std::endl;
+        }
 
 		/* System calls:
 		// Find processes on the port
@@ -159,8 +181,9 @@ void Response::execute(Response next_action, std::map<std::string, int> macAddre
 		int macCount;
 
 		// Scan through sensor.macAddresses for > 1 entries
-		for (const auto& pair : macAddresses) {
+		for (const auto& pair : sensor.macAddresses) {
 			// Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
+			std::cerr << pair.first << ": " << pair.second << std::endl;
 			if (pair.second > 1) {
 				// pair.second is not a modifiable value, so I'll use an integer variable for this
 				macCount = pair.second;

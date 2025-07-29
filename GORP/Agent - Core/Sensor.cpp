@@ -69,7 +69,6 @@ int Sensor::checkARPTable() {
     std::getline(arpFile, line);
 
     while (std::getline(arpFile, line)) {
-        std::cerr << "While loop" << std::endl;
         std::string mac = getMACAddress(line);
         // 00:00:00:00:00:00 is for broadcast MAC addresses, so they can happen more than once and be fine
         // Other than that, just avoid adding empty/invalid MAC addresses to our list

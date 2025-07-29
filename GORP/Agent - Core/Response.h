@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WorldState.h"
+#include "Sensor.h"
 #include <string>
 
 // For system
@@ -36,5 +37,5 @@ public:
 	// For our current fake ARP file testing method
 	void deleteLineFromFile(std::string target);
 	// This calls procedure, but again, C++ doesn't have Callables, so we'll have to figure that out
-	void execute(Response next_action, std::map<std::string, int> macAddresses);
+	void execute(Response next_action, Sensor sensor);
 };

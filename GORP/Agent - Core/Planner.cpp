@@ -160,7 +160,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 		}
 
 		rep += "}";
-		std::cerr  << "\Calculated Path of Responses (rep): \n" << rep << std::endl;
+		std::cerr  << "\nCalculated Path of Responses (rep): \n" << rep << std::endl;
 		std::cerr << std::endl;
 	}
 
