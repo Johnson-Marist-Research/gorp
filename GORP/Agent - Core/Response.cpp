@@ -3,6 +3,8 @@
 #include <iostream>
 // Needed for using system calls
 #include <cstdlib>
+// Used for checking if a file exists
+#include <filesystem>
 
 // Initialize the Response variables
 Response::Response(std::string name, float cost, WorldState before, WorldState after) {
@@ -18,6 +20,8 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 	// Opens the ARP table as a readable file
 	//std::ifstream arpFile("/proc/net/arp");
 	std::ifstream arpFile("/Documents/ARP_Table.txt");
+
+	std::cerr << "\nTarget MAC Address: " << targetMAC << std::endl;
 
 	// Couldn't locate the ARP table
 	if (!arpFile.is_open()) {
@@ -35,6 +39,13 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 
 		// Parse the line according to the /proc/net/arp format
 		ss >> ipAddress >> hwType >> flags >> macAddress >> mask >> device;
+		std::cerr << "\nLine read from file: " << 
+			"\n\t- IP Address: " << ipAddress << 
+			"\n\t- HW Type: " << hwType << 
+			"\n\t- Flags: " << flags << 
+			"\n\t- MAC Address: " << macAddress << 
+			"\n\t- Mask: " << mask << 
+			"\n\t- Device: " << device << "\n" << std::endl;
 
 		// Return the IP address if we find the MAC address
 		if (macAddress == targetMAC) {
@@ -53,6 +64,10 @@ void Response::deleteLineFromFile(std::string target) {
 	std::ifstream inFile("/home/kali/Documents/ARP_Table.txt");
 	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
 	// Instead, we'll need to completely rewrite the file
+	// Check if the file exists before we make a new one (delete old file if it already exists)
+	if (std::filesystem::exists("/home/kali/Documents/temp.txt")) {
+		std::remove("/home/kali/Documents/temp.txt");
+	}
 	std::ofstream outFile("/home/kali/Documents/temp.txt");
 
 	// Need to find which line the IP address is on
@@ -85,8 +100,8 @@ void Response::deleteLineFromFile(std::string target) {
 	outFile.close();
 
 	// Delete the old file and rename the new one
-	std::remove("/home/kali/Documents/ARP_Table.txt");
-	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
+	//std::remove("/home/kali/Documents/ARP_Table.txt");
+	//std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
 void Response::execute(Response next_action, std::map<std::string, int> macAddresses) {

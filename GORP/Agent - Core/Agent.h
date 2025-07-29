@@ -35,7 +35,7 @@ public:
 
 	// ------------ Preconditions and Postconditions ------------
 	// Ports
-	bool normal_traffic;
+	//bool normal_traffic;
 	bool port_open;
 	// Is this one necessary?
 	bool excess_traffic_detected;
@@ -43,22 +43,22 @@ public:
 
 	// ARP Table
 	bool ip_address_blocked;
-	bool no_ARP_anomalies;
-	bool ARP_anomaly_quarantined;
+	//bool no_ARP_anomalies;
+	bool ARP_anomaly;
 
 	// File Permissions
 	bool files_unchanged;
 	bool change_detected;
 
 	// Log Policing
-	bool no_gaps;
-	bool gap_detected;
+	//bool no_gaps;
+	//bool gap_detected;
 
 	// Safe Mode
 	bool general_mode;
 	bool safe_mode;
 	bool dns_match;
-	bool dns_mismatch;
+	//bool dns_mismatch;
 
 	// ------------ Functions ------------
 	// Runs initialize functions (responses, goals, knowledge)

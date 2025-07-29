@@ -74,8 +74,14 @@ bool WorldState::equals(std::shared_ptr<WorldState> b){
 
 std::shared_ptr<WorldState> WorldState::duplicate() {
 	//std::cerr << "Running WorldState.duplicate()" << std::endl;
-	WorldState propDuplicate = properties;
-	std::shared_ptr<WorldState> newState = std::make_shared<WorldState>(propDuplicate);
+	std::shared_ptr<WorldState> newState = std::make_shared<WorldState>();
+	for (auto& prop : properties) {
+		newState->add_property(prop.first, std::make_shared<WorldProperty>(
+			prop.second->subject,
+			prop.second->name,
+			prop.second->value
+		));
+	}
 	return newState;
 }
 
@@ -184,9 +190,8 @@ bool WorldState::satisfies(std::shared_ptr<WorldState> goal) {
 // Return a substate of the first state containing only those properties that are not satisfied (i.e., same in) the second state
 std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b) {
 	//std::cout << "Running WorldState.difference()" << std::endl;
-	// Duplicate doesn't work so I'm ignoring it for now
-	//WorldState c = a.duplicate();
-	std::shared_ptr<WorldState> c = a;
+	std::shared_ptr<WorldState> c = a->duplicate();
+	//std::shared_ptr<WorldState> c = a;
 	//for (int key = 0; key < sizeof(b.properties); key++) {
 	// Iterate through each entry in b->properties
 	for (const auto& entry : b->properties){
@@ -233,9 +238,8 @@ std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> go
 // Adds a new goal to the list of possible goals
 std::shared_ptr<WorldState> WorldState::expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions) {
 	std::cout << "Running WorldState.expand_by()" << std::endl;
-	// Duplicate doesn't work so I'm ignoring it for now
-	//WorldState new_goal = goal.duplicate();
-	std::shared_ptr<WorldState> new_goal = goal;
+	std::shared_ptr<WorldState> new_goal = goal->duplicate();
+	//std::shared_ptr<WorldState> new_goal = goal;
 	//for (int i = 0; i < sizeof(preconditions.properties); i++) {
 	// Iterate through each entry in preconditions->properties
 	for (const auto& entry : preconditions.properties){

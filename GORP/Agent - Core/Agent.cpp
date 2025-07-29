@@ -4,11 +4,6 @@
 
 /* TODO:
 		- make_plan() currently breaks after one loop. Should I keep this?
-		- Rename ARP_anomaly_quarantined to ARP_anomaly
-		- Redo document code so we make a new one and don't delet the original ARP document
-            - Redo ARP document (it was deleted)
-        - In goal initialization, hide goals not related to test functions
-        - Implement duplicate() function
 		*/
 
 // Runs all the initialization functions once GORP is started
@@ -22,7 +17,7 @@ Agent::Agent() {
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
-	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
@@ -68,7 +63,7 @@ void Agent::run_agent() {
 	for (const auto& pair : sensor.macAddresses) {
 		if (pair.second > 1) {
 			std::cerr << "Duplicate MAC address found: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 			break;
 		}
@@ -204,9 +199,9 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 			//knowledge = (std::make_shared<WorldState>(ip_address_is_unblocked));
 			std::cout << prop->name << " is true" << std::endl;
 		}*/
-		else if (prop->value == true && prop->name == "ARP_anomaly_quarantined") {
+		else if (prop->value == true && prop->name == "ARP_anomaly") {
 			//WorldState ip_address_is_blocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
 			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
@@ -214,7 +209,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 		}
 		else if (prop->value == true && prop->name == "ip_address_blocked") {
 			//WorldState ip_address_is_blocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
 			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
@@ -417,12 +412,12 @@ void Agent::init_responses() {
 	// ------------------- Block an IP address in the ARP table -------------------
 	// Preconditions
 	WorldState block_IP_address_preconds;
-	block_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+	block_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
 	block_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
 	// Effects
 	WorldState block_IP_address_effects;
-	block_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	block_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
 	block_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
 	// Add to responses
@@ -438,12 +433,12 @@ void Agent::init_responses() {
 	// ------------------- Unblock a previously blocked IP address -------------------
 	// Preconditions
 	WorldState unblock_IP_address_preconds;
-	unblock_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	unblock_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
 	unblock_IP_address_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
 	// Effects
 	WorldState unblock_IP_address_effects;
-	unblock_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
+	unblock_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
 	unblock_IP_address_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
 
 	// Add to responses
@@ -556,7 +551,7 @@ void Agent::init_goals() {
 
 	// ------------------- Block an IP address in the ARP table -------------------
 	WorldState ip_address_is_blocked;
-	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), true));
+	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
 	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
 
 	// Add to goals
@@ -581,12 +576,12 @@ void Agent::init_goals() {
 	goals.push_back(std::make_shared<WorldState>(port_is_blocked));*/
 
 	// ------------------- Unblock a port on the device -------------------
-	WorldState port_is_unblocked;
+	/*WorldState port_is_unblocked;
 	port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
 	port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(port_is_unblocked));
+	goals.push_back(std::make_shared<WorldState>(port_is_unblocked));*/
 
 
 	// ------------------- Block an IP address in the ARP table -------------------
@@ -608,54 +603,54 @@ void Agent::init_goals() {
 
 
 	// ------------------- If a file has been changed, revert it back to its last saved version -------------------
-	WorldState revert_file;
+	/*WorldState revert_file;
 	revert_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
 	revert_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(revert_file));
+	goals.push_back(std::make_shared<WorldState>(revert_file));*/
 
 
 	// ------------------- If a file has been changed and we want to keep that change, -------------------
 	// ----------- update the program's knowledge of the file to include the most recent changes. -----------
-	WorldState save_file;
+	/*WorldState save_file;
 	save_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
 	save_file.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(save_file));
+	goals.push_back(std::make_shared<WorldState>(save_file));*/
 
 
 	// ------------------- Takes GORP out of the safe mode intended to intercept DNS requests -------------------
-	WorldState gen_mode;
+	/*WorldState gen_mode;
 	gen_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
 	gen_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(gen_mode));
+	goals.push_back(std::make_shared<WorldState>(gen_mode));*/
 
 
 	// ------------------- Switches GORP into the safe mode intended to intercept DNS requests -------------------
-	WorldState safe_mode;
+	/*WorldState safe_mode;
 	safe_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true));
 	safe_mode.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), false));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(safe_mode));
+	goals.push_back(std::make_shared<WorldState>(safe_mode));*/
 
 
 	// ------------------- Prevents the user from receiving a suspicious DNS response -------------------
-	WorldState block_dns_response;
+	/*WorldState block_dns_response;
 	block_dns_response.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true));
 
 	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(block_dns_response));
+	goals.push_back(std::make_shared<WorldState>(block_dns_response));*/
 
 
 	// DEBUGGING
 	std::cout << "\nGoals: " << std::endl;
 	for (auto const& goal : goals) {
-		std::cout << goal << std::endl;
+		std::cout << goal->_to_string() << std::endl;
 	}
 	std::cout << std::endl;
 }
