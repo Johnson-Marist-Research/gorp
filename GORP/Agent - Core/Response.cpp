@@ -65,31 +65,37 @@ void Response::deleteLineFromFile(std::string target) {
 	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
 	// Instead, we'll need to completely rewrite the file
 	// Check if the file exists before we make a new one (delete old file if it already exists)
-	if (std::filesystem::exists("/home/kali/Documents/temp.txt")) {
+	/*if (std::filesystem::exists("/home/kali/Documents/temp.txt")) {
 		std::remove("/home/kali/Documents/temp.txt");
-	}
+	}*/
 
 	std::ofstream outFile("/home/kali/Documents/temp.txt");
 
-	// Adding the first line (header)
-	outFile << "IP Address 	HWType 	Flags 	MAC Address 		Mask 	Device" << std::endl;
-
 	// Need to find which line the IP address is on
-	std::string line;
+	std::string line = "";
 	int lineNumber = 0;
 
 	while (std::getline(inFile, line)) {
-		// Increment line number for each line read
-		lineNumber++;
 		if (line.find(target) != std::string::npos) {
 			std::cout << "Found \"" << target << "\" on line: " << lineNumber << std::endl;
 			break;
 		}
+		else {
+            // Increment line number for each line read
+            lineNumber++;
+		}
 	}
 
 	// Found the line number! Now we know which line to delete
+	// Starting on line 1 because line 0 is the header
 	int currentLineNumber = 0;
 	int lineNumberToDelete = lineNumber;
+
+	// Need to reset line back to begining of file
+	// Clear any error flags that might have occurred (possibly from reaching the end of the file)
+	inFile.clear();
+	// Move file pointer to the beginning
+    inFile.seekg(0, std::ios::beg);
 
 	// Write to the temporary file, skipping the line to be deleted
 	while (std::getline(inFile, line)) {
@@ -104,8 +110,8 @@ void Response::deleteLineFromFile(std::string target) {
 	outFile.close();
 
 	// Delete the old file and rename the new one
-	//std::remove("/home/kali/Documents/ARP_Table.txt");
-	//std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
+	std::remove("/home/kali/Documents/ARP_Table.txt");
+	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
 void Response::execute(Response next_action, Sensor sensor) {
@@ -184,9 +190,11 @@ void Response::execute(Response next_action, Sensor sensor) {
 		for (const auto& pair : sensor.macAddresses) {
 			// Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
 			std::cerr << pair.first << ": " << pair.second << std::endl;
-			if (pair.second > 1) {
+			// pair.second is not a modifiable value, so I'll use an integer variable for this
+			macCount = pair.second;
+			if (macCount > 1) {
 				// pair.second is not a modifiable value, so I'll use an integer variable for this
-				macCount = pair.second;
+				// macCount = pair.second;
 				while (macCount > 0) {
 					// Locate IP address with the relevant MAC address and save it in a string
 					ipAddress = findIPFromMAC(pair.first);
@@ -199,8 +207,8 @@ void Response::execute(Response next_action, Sensor sensor) {
 					deleteLineFromFile(ipAddress);
 
 					// Using the string, block the IP address
-					command = "sudo iptables -A INPUT -s " + ipAddress + " -j DROP";
-					system(command.c_str());
+					//command = "sudo iptables -A INPUT -s " + ipAddress + " -j DROP";
+					//system(command.c_str());
 					// Subtract 1 from pair.second
 					macCount--;
 				}

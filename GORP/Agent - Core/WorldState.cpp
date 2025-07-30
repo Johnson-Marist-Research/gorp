@@ -195,8 +195,8 @@ std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a
 	//for (int key = 0; key < sizeof(b.properties); key++) {
 	// Iterate through each entry in b->properties
 	for (const auto& entry : b->properties){
-        std::cerr << "difference for loop" << std::endl;
-        std::cerr << "Entry: " << entry.first << std::endl;
+        //std::cerr << "difference for loop" << std::endl;
+        //std::cerr << "Entry: " << entry.first << std::endl;
 		std::string key = entry.first;
 		std::shared_ptr<WorldProperty> prop = a->get_property(key);
 		// Original is having trouble comparing WorldState to a boolean; need to fix this,

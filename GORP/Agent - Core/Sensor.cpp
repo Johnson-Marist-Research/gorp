@@ -1,6 +1,7 @@
 #include "Sensor.h"
 
 #include <iostream>
+#include <filesystem>
 
 /*Sensor::Sensor()
 {
@@ -36,6 +37,47 @@ Sensor::Sensor() {
         // Adding corresponding value to portVarsVector
         portVector.push_back(newPortValues);
     }
+
+    // ----------------------------- ARP Table -----------------------------
+    // Populate the ARP table file with the resources from ARP_Table_Ref.txt
+	std::ifstream inFile("/home/kali/Documents/ARP_Table_Ref.txt");
+
+	// Check if the file exists before we make a new one (delete old file if it already exists)
+	if (std::filesystem::exists("/home/kali/Documents/ARP_Table.txt")) {
+		std::remove("/home/kali/Documents/ARP_Table.txt");
+	}
+	std::ofstream outFile("/home/kali/Documents/ARP_Table.txt");
+
+
+	// Quick copy to see what outFile is receiving
+	// DELETE LATER
+	if (std::filesystem::exists("/home/kali/Documents/ARP_Table2.txt")) {
+		std::remove("/home/kali/Documents/ARP_Table2.txt");
+	}
+	std::ofstream outFile2("/home/kali/Documents/ARP_Table2.txt");
+
+	// Adding the first line (header)
+	//outFile << "IP Address 	HWType 	Flags 	MAC Address 		Mask 	Device" << std::endl;
+
+	// Need to find which line the IP address is on
+	std::string line;
+
+	// Found the line number! Now we know which line to delete
+	int currentLineNumber = 0;
+
+	// Write to the temporary file, skipping the line to be deleted
+	while (std::getline(inFile, line)) {
+		outFile << line << std::endl;
+		// DELETE LATER
+		outFile2 << line << std::endl;
+		currentLineNumber++;
+	}
+
+	// Can now close both files
+	inFile.close();
+	outFile.close();
+	// DELETE LATER
+	outFile2.close();
 }
 
 // Easier to do the parsing in a stand-alone function

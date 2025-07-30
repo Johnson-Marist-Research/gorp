@@ -3,9 +3,14 @@
 #include <iostream>
 
 /* TODO:
-		- make_plan() currently breaks after one loop. Should I keep this?
 		- Make run_agent() a loop
 		- Change the execute() argument to not Sensor
+		- PROBLEM: After stating that there is an ARP anomaly, the relevent pieces of knowledge, ARP_anomaly and ip_address_blocked,
+                   are not set from "true" and "false" (respectively) to "false" and "true".
+                   This causes GORP to enter an infinite loop of trying to solve an ARP anomaly that no longer exists.
+                   I'm running a brute force approach to reset it manually after fixing the ARP anomaly (this can be seen
+                   in run_agent()), but I don't think that is an elegant solution. It is simply a way to test the ports case as well.
+            - Update: yeah that was the problem. I don't know why its doing that.
 		*/
 
 // Runs all the initialization functions once GORP is started
@@ -35,7 +40,7 @@ void Agent::run_agent() {
         process_sensor(); // step 1
         update_knowledge(); // step 2
         //make_plan(); step 3 ( comprises 3a select_goal() and 3b devise_plan() )
-        //TODO Temporarily we can break if there is no plan either because every  goal is satisfied or cannot be
+        //TODO Temporarily we can break if there is no plan either because every goal is satisfied or cannot be
         //execute_plan(); step 4 ( maybe includes submit_plan() to write to the BlackBoard)
 
         std::cerr << "\n\n\n\n" << std::endl;
@@ -50,10 +55,14 @@ void Agent::run_agent() {
         else {
             std::cerr << "current_plan is empty; not executing" << std::endl;
         }
-    }
+        // Clears current_plan so we can make a new one if necessary
+        current_plan.clear();
 
-	// Clears current_plan so we can make a new one if necessary
-	current_plan.clear();
+        // FOR TESTING THE PORTS TOO
+        // DELETE LATER
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+    }
 }
 
 // Creates a new plan if there is not a current one
@@ -147,23 +156,11 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	}
 
 	// Time to check if there are any duplicate MAC addresses
-	std::cerr << "\n\n\n\n" << std::endl;
-	// DELETE LATER: IS JUST FOR DEBUGGING PURPOSES
-	bool alreadyDetected = false;
 	for (const auto& pair : sensor.macAddresses) {
 		if (pair.second > 1) {
-			std::cerr << "Duplicate MAC address found: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
-			// Get rid of this if statement later; it's jsut for printing the number of duplicates we found
-			if (!alreadyDetected){
-                knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
-                knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
-                alreadyDetected = true;
-			}
-			//break;
-		}
-		else {
-			// Just to check our bases
-			std::cerr << "MAC Address: " << pair.first << " (appears " << pair.second << " times)" << std::endl;
+            knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
+            knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+            break;
 		}
 	}
 
@@ -305,9 +302,10 @@ void Agent::make_plan() {
 
 		// Debugging
 		std::cerr << "Goal in goals: ";
-		for (auto const& goal2 : goals) {
+		std::cerr << "<" << goal->_to_string() << ">, " << std::endl;
+		/*for (auto const& goal2 : goals) {
 			std::cerr << "<" << goal2->_to_string() << ">, " << std::endl;
-		}
+		}*/
 
 		if (current_state->satisfies(goal)) {
 			continue;
@@ -327,7 +325,8 @@ void Agent::make_plan() {
 		current_plan = plan;
 
 		// DELETE LATER: Going to break out of this after the first loop for now
-		//break;
+		// Break out if we find a plan, otherwise we overwrite it with the next plan before executing it
+		break;
 		/*
 		// Optional diagnostic output
 		var plan_string:String = "Plan for " + str(goal.properties.keys()) + " is..."
