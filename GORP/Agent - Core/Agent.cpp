@@ -3,14 +3,20 @@
 #include <iostream>
 
 /* TODO:
-		- Make run_agent() a loop
 		- Change the execute() argument to not Sensor
-		- PROBLEM: After stating that there is an ARP anomaly, the relevent pieces of knowledge, ARP_anomaly and ip_address_blocked,
-                   are not set from "true" and "false" (respectively) to "false" and "true".
-                   This causes GORP to enter an infinite loop of trying to solve an ARP anomaly that no longer exists.
-                   I'm running a brute force approach to reset it manually after fixing the ARP anomaly (this can be seen
-                   in run_agent()), but I don't think that is an elegant solution. It is simply a way to test the ports case as well.
-            - Update: yeah that was the problem. I don't know why its doing that.
+        - Have the ports generate new random traffic every time process_sensor() is called
+        - Lower the chance of excess traffic occurring
+        - Add a delay to loop
+        - Move sensor maps to WorkingMemory
+            - Redo the detection of excess traffic in Agent.process_sensor(). It currently takes from WorkingMemory, but the response resets Sensor.ports
+                - Leads to messy detection, since the WorkingMemory information is never updated
+        - Move current_plan variable to Blackboard
+        - Move Agent.execute_plan() to Subsystem
+        - Check inside execute_plan() if current_plan() is empty instead of in run_agent()
+        - Revert knowledge after checking if the anomalies exist (if they do not, set it)
+        - IF TIME: Put ports in a file to read through and change instead of in the program itself
+        - Keep some of the cerr
+            - The onces that let us trace the execution (what initial state is, what current goal is, print final plan
 		*/
 
 // Runs all the initialization functions once GORP is started
@@ -50,6 +56,7 @@ void Agent::run_agent() {
 
         if (!current_plan.empty()) {
             std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
+            // Can check inside execute_plan() if current_plan is empty
             execute_plan();
         }
         else {
@@ -57,21 +64,13 @@ void Agent::run_agent() {
         }
         // Clears current_plan so we can make a new one if necessary
         current_plan.clear();
-
-        // FOR TESTING THE PORTS TOO
-        // DELETE LATER
-        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
-        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
     }
 }
 
 // Creates a new plan if there is not a current one
 // If there is a current plan, executes it
 // Will probably need a timer so that this isn't firing off at every opportunity
-std::shared_ptr<WorldState> Agent::process_sensor() {
-	// Placeholder WorldState to return
-	std::shared_ptr<WorldState> placeholder;
-
+void Agent::process_sensor() {
 	std::cout << "Running Agent.process_sensor()" << std::endl;
 
 	// Store sensor.ports in WorkingMemory
@@ -80,212 +79,49 @@ std::shared_ptr<WorldState> Agent::process_sensor() {
 	}
 
 	sensor.checkARPTable();
-
-	// What is the proper way to marry the declared WorldState in this function
-	// with the WorldStates that serve as goals and responses?
-	/*for (auto const& known_fact : workingMemory.known_facts) {
-		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
-			// Oh no! Unusual amounts of traffic!
-			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
-			if (current_plan.empty()) {
-				make_plan();
-			}
-			else {
-				execute_plan();
-			}
-		}
-		else {
-			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
-		}
-	}*/
-	// Need to figure out how to detect things from the console
-	// Can then turn that result into a WorldState
-	// if action_timer.is_stopped():
-	/*for (auto const& port : sensor.ports) {
-		if (port.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
-			// Oh no! Unusual amounts of traffic!
-			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
-			if (current_plan.empty()) {
-				make_plan();
-			}
-			else {
-				execute_plan();
-			}
-		}
-		else {
-			std::cerr << "Port " << port.first << " contains the expected amount of traffic" << std::endl;
-		}
-	}*/
-	return placeholder;
 }
 
 // Updates knowledge about the World States based on information from Sensors
 // Does this need to return a WorldState?
 std::shared_ptr<WorldState> Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
-	/* TODO:
-		- Sensor obtains data from host system (done)
-		- Store data in WorkingMemory
-		- When making plan, Agent creates a WorldState from the memory
-		- Said state becomes the current_state for Planner
-	*/
 
+	excessTraffic = false;
 	for (auto const& known_fact : workingMemory.known_facts) {
 		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
-			//std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
-			//make_plan();
-
-			/*if (!current_plan.empty()) {
-				std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
-				execute_plan();
-			}
-			else {
-				std::cerr << "current_plan is empty; not executing" << std::endl;
-			}
-
-			// Clears current_plan so we can make a new one if necessary
-			current_plan.clear();*/
+			excessTraffic = true;
 			break;
 		}
 		else {
 			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
 		}
 	}
+	// If there is no excess traffic
+	if (!excessTraffic){
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+	}
 
+
+    duplicateMAC = false;
 	// Time to check if there are any duplicate MAC addresses
 	for (const auto& pair : sensor.macAddresses) {
 		if (pair.second > 1) {
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+            duplicateMAC = true;
             break;
 		}
 	}
+    // If there is not a duplicate ARP address
+	if (!duplicateMAC){
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+    }
 
-	/*for (auto const& key : knowledge->properties) {
-		std::shared_ptr<WorldProperty> prop = knowledge->properties[key.first];
-		/*if (prop->value == true && prop->name == "normal_traffic") {
-			//WorldState port_is_unblocked;
-			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			//port_is_unblocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
-			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}*/
-		/*if (prop->value == true && prop->name == "port_open") {
-			//WorldState port_is_unblocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
-
-			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "excess_traffic_detected") {
-			//WorldState port_is_unblocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
-
-			//knowledge = (std::make_shared<WorldState>(port_is_unblocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "port_blocked") {
-			//WorldState port_is_blocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
-
-			//knowledge = (std::make_shared<WorldState>(port_is_blocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		/*else if (prop->value == true && prop->name == "no_ARP_anomalies") {
-			//WorldState ip_address_is_unblocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly_quarantined"), false));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
-
-			//knowledge = (std::make_shared<WorldState>(ip_address_is_unblocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}*/
-		/*else if (prop->value == true && prop->name == "ARP_anomaly") {
-			//WorldState ip_address_is_blocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
-
-			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "ip_address_blocked") {
-			//WorldState ip_address_is_blocked;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
-
-			//knowledge = (std::make_shared<WorldState>(ip_address_is_blocked));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "files_unchanged") {
-			//WorldState save_file;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
-
-			//knowledge = (std::make_shared<WorldState>(save_file));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "change_detected") {
-			//WorldState revert_file;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
-
-			//knowledge = (std::make_shared<WorldState>(revert_file));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		/*else if (prop->value == true && prop->name == "no_gaps") {
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "gap_detected") {
-			std::cout << prop->name << " is true" << std::endl;
-		}*/
-		/*else if (prop->value == true && prop->name == "general_mode") {
-			//WorldState gen_mode;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
-
-			//knowledge = (std::make_shared<WorldState>(gen_mode));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else if (prop->value == true && prop->name == "safe_mode") {
-			//WorldState safe_mode;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), true));
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), false));
-
-			//knowledge = (std::make_shared<WorldState>(safe_mode));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		/*else if (prop->value == true && prop->name == "dns_match") {
-			//WorldState good_dns_response;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
-
-			//knowledge = (std::make_shared<WorldState>(good_dns_response));
-			std::cout << prop->name << " is true" << std::endl;
-		}*/
-		/*else if (prop->value == true && prop->name == "dns_mismatch") {
-			//WorldState block_dns_response;
-			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), true));
-
-			//knowledge = (std::make_shared<WorldState>(block_dns_response));
-			std::cout << prop->name << " is true" << std::endl;
-		}
-		else {
-			if (prop->value) {
-				std::cout << "The knowledge " << prop->name << " is true and unrecognized." << std::endl;
-			}
-			else {
-				std::cout << "The knowledge " << prop->name << " is false and unrecognized." << std::endl;
-			}
-		}
-	}*/
 	return knowledge;
 }
 

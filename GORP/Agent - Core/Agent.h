@@ -33,6 +33,11 @@ public:
 	// This only works if the WorldState class has a zero-argument default constructor
 	std::shared_ptr<WorldState> knowledge;
 
+	// For checking if there is excess traffic
+	bool excessTraffic = false;
+	// For checking if there is at least one duplicate MAC address in the ARP table
+	bool duplicateMAC = false;
+
 	// ------------ Preconditions and Postconditions ------------
 	// Ports
 	//bool normal_traffic;
@@ -67,7 +72,7 @@ public:
 	// Runs through a loop of process, update, and execute (either continuously or tied to a timer?)
 	void run_agent();
 
-	std::shared_ptr<WorldState> process_sensor();
+	void process_sensor();
 	std::shared_ptr<WorldState> update_knowledge();
 	void make_plan();
 	void execute_plan();
