@@ -1,11 +1,5 @@
 #include "Response.h"
 
-#include <iostream>
-// Needed for using system calls
-#include <cstdlib>
-// Used for checking if a file exists
-#include <filesystem>
-
 // Initialize the Response variables
 Response::Response(std::string name, float cost, WorldState before, WorldState after) {
 	this->name = name;
@@ -39,13 +33,6 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 
 		// Parse the line according to the /proc/net/arp format
 		ss >> ipAddress >> hwType >> flags >> macAddress >> mask >> device;
-		/*std::cerr << "\nLine read from file: " <<
-			"\n\t- IP Address: " << ipAddress <<
-			"\n\t- HW Type: " << hwType <<
-			"\n\t- Flags: " << flags <<
-			"\n\t- MAC Address: " << macAddress <<
-			"\n\t- Mask: " << mask <<
-			"\n\t- Device: " << device << "\n" << std::endl;*/
 
 		// Return the IP address if we find the MAC address
 		if (macAddress == targetMAC) {
@@ -64,11 +51,6 @@ void Response::deleteLineFromFile(std::string target) {
 	std::ifstream inFile("/home/kali/Documents/ARP_Table.txt");
 	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
 	// Instead, we'll need to completely rewrite the file
-	// Check if the file exists before we make a new one (delete old file if it already exists)
-	/*if (std::filesystem::exists("/home/kali/Documents/temp.txt")) {
-		std::remove("/home/kali/Documents/temp.txt");
-	}*/
-
 	std::ofstream outFile("/home/kali/Documents/temp.txt");
 
 	// Need to find which line the IP address is on
@@ -77,7 +59,7 @@ void Response::deleteLineFromFile(std::string target) {
 
 	while (std::getline(inFile, line)) {
 		if (line.find(target) != std::string::npos) {
-			std::cout << "Found \"" << target << "\" on line: " << lineNumber << std::endl;
+			std::cerr << "Found \"" << target << "\" on line: " << lineNumber << std::endl;
 			break;
 		}
 		else {
@@ -87,7 +69,6 @@ void Response::deleteLineFromFile(std::string target) {
 	}
 
 	// Found the line number! Now we know which line to delete
-	// Starting on line 1 because line 0 is the header
 	int currentLineNumber = 0;
 	int lineNumberToDelete = lineNumber;
 
@@ -114,16 +95,10 @@ void Response::deleteLineFromFile(std::string target) {
 	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
-void Response::execute(Response next_action, Sensor sensor) {
-	// macAddresses will do nothing unless this is in relation to ARP Spoofing
+void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 	std::cout << "Running Response.execute()" << std::endl;
 
 	// procedure.call()
-
-	/* Execution Idea :
-		- Use next_action (from Agent) in if/else statements to determine relevent actions
-		- Utilize Linux commands to perform said actions
-	*/
 
 	/* Response names:
 		- block_port
@@ -141,22 +116,16 @@ void Response::execute(Response next_action, Sensor sensor) {
 		// Maybe keep a list of ports to block, then run through the list and block all of them
 		std::cerr << "GORP is going to block a port" << std::endl;
 
-		/*for (const auto& port : sensor.ports) {
-            if (port.second >= 90){
-                port.second = 0;
-            }
-		}*/
-
-		for (int i = 0; i < sensor.ports.size(); i++) {
-            if(sensor.ports[i] >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)){
-                sensor.ports[i] = 0;
+		for (int i = 0; i < workingMemory.ports.size(); i++) {
+            if(workingMemory.ports[i] >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)){
+                workingMemory.ports[i] = 0;
             }
         }
 
         // Debugging
         std::cerr << "Final Port Traffic: " << std::endl;
-        for (int i = 0; i < sensor.ports.size(); i++) {
-            std::cerr << i + 1 << ") " << sensor.ports[i] << std::endl;
+        for (int i = 0; i < workingMemory.ports.size(); i++) {
+            std::cerr << i + 1 << ") " << workingMemory.ports[i] << std::endl;
         }
 
 		/* System calls:
@@ -173,8 +142,6 @@ void Response::execute(Response next_action, Sensor sensor) {
 	}
 	else if (next_action.name == "unblock_port") {
 		std::cerr << "GORP is going to unblock a port" << std::endl;
-
-		// Process will be the opposite of above; check that it works before copying here
 	}
 	else if (next_action.name == "block_IP_address") {
 		std::cerr << "GORP is going to block an IP address" << std::endl;
@@ -186,10 +153,9 @@ void Response::execute(Response next_action, Sensor sensor) {
 		std::string command;
 		int macCount;
 
-		// Scan through sensor.macAddresses for > 1 entries
-		for (const auto& pair : sensor.macAddresses) {
+		// Scan through workingMemory.macAddresses for > 1 entries
+		for (auto pair : workingMemory.macAddresses) {
 			// Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
-			std::cerr << pair.first << ": " << pair.second << std::endl;
 			// pair.second is not a modifiable value, so I'll use an integer variable for this
 			macCount = pair.second;
 			if (macCount > 1) {

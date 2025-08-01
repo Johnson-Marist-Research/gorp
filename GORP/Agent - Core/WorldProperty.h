@@ -1,10 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 class WorldProperty {
 public:
-	// subject was originally a Node: See if std::string works for it
 	std::string subject;
 	std::string name;
 	bool value;

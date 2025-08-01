@@ -1,10 +1,16 @@
 #pragma once
 
+#include "Response.h"
+
+#include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 class Blackboard {
 public:
+    std::vector<Response> current_plan;
+
 	/* The examples I combed through gave the instructions in the form of a dictionary
 		As far as I can tell, C++ does not have a dictionary data type.
 		For now, I am using a key to refer to the instruction's position in the instructions array

@@ -1,15 +1,19 @@
 #pragma once
 
 #include "WorldState.h"
-#include "Sensor.h"
-#include <string>
+#include "WorkingMemory.h"
 
-// For system
-#include <cstdlib>
+#include <string>
 
 // Need these for the ARP table parts
 #include <fstream>
 #include <sstream>
+
+#include <iostream>
+// Needed for using system calls
+#include <cstdlib>
+// Used for checking if a file exists
+#include <filesystem>
 
 // For our current fake ARP file simulation
 #include <vector>
@@ -37,5 +41,5 @@ public:
 	// For our current fake ARP file testing method
 	void deleteLineFromFile(std::string target);
 	// This calls procedure, but again, C++ doesn't have Callables, so we'll have to figure that out
-	void execute(Response next_action, Sensor sensor);
+	void execute(Response next_action, WorkingMemory& workingMemory);
 };

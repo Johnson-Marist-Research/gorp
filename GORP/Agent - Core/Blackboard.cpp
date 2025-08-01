@@ -1,7 +1,5 @@
 #include "Blackboard.h"
 
-#include <iostream>
-
 /*Blackboard::Blackboard()
 {
     // Maybe we can set the size of instructions[] here

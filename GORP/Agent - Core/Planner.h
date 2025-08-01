@@ -3,6 +3,7 @@
 #include "WorldState.h"
 #include "Response.h"
 
+#include <iostream>
 #include <memory>
 #include <forward_list>
 #include <vector>

@@ -1,19 +1,6 @@
 #include "Agent.h"
 
-#include <iostream>
-
 /* TODO:
-		- Change the execute() argument to not Sensor
-        - Have the ports generate new random traffic every time process_sensor() is called
-        - Lower the chance of excess traffic occurring
-        - Add a delay to loop
-        - Move sensor maps to WorkingMemory
-            - Redo the detection of excess traffic in Agent.process_sensor(). It currently takes from WorkingMemory, but the response resets Sensor.ports
-                - Leads to messy detection, since the WorkingMemory information is never updated
-        - Move current_plan variable to Blackboard
-        - Move Agent.execute_plan() to Subsystem
-        - Check inside execute_plan() if current_plan() is empty instead of in run_agent()
-        - Revert knowledge after checking if the anomalies exist (if they do not, set it)
         - IF TIME: Put ports in a file to read through and change instead of in the program itself
         - Keep some of the cerr
             - The onces that let us trace the execution (what initial state is, what current goal is, print final plan
@@ -21,7 +8,6 @@
 
 // Runs all the initialization functions once GORP is started
 Agent::Agent() {
-
 	knowledge = std::make_shared<WorldState>(WorldState());
 	init_responses();
 	init_goals();
@@ -42,6 +28,9 @@ Agent::Agent() {
 // Runs the process_sensor() and update_knowledge() functions when called
 void Agent::run_agent() {
     while (true){
+        // Implements a brief pause (currently 1000 milliseconds, or 1 second)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
         // TODO Make this a loop with several steps...
         process_sensor(); // step 1
         update_knowledge(); // step 2
@@ -54,16 +43,11 @@ void Agent::run_agent() {
         std::cerr << "\n\n------------------------ Making plan ------------------------\n\n" << std::endl;
         make_plan();
 
-        if (!current_plan.empty()) {
-            std::cerr << "\n\n------------------------ Executing plan ------------------------\n\n" << std::endl;
-            // Can check inside execute_plan() if current_plan is empty
-            execute_plan();
-        }
-        else {
-            std::cerr << "current_plan is empty; not executing" << std::endl;
-        }
+        // Can check inside execute_plan() if current_plan is empty
+        subsystem.execute_plan(blackboard.current_plan, workingMemory);
+
         // Clears current_plan so we can make a new one if necessary
-        current_plan.clear();
+        blackboard.current_plan.clear();
     }
 }
 
@@ -73,12 +57,8 @@ void Agent::run_agent() {
 void Agent::process_sensor() {
 	std::cout << "Running Agent.process_sensor()" << std::endl;
 
-	// Store sensor.ports in WorkingMemory
-	for (auto const& port : sensor.ports) {
-		workingMemory.known_facts[port.first] = port.second;
-	}
-
-	sensor.checkARPTable();
+	sensor.randomizeTraffic(workingMemory.ports);
+	sensor.checkARPTable(workingMemory.macAddresses);
 }
 
 // Updates knowledge about the World States based on information from Sensors
@@ -87,27 +67,29 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
 
 	excessTraffic = false;
-	for (auto const& known_fact : workingMemory.known_facts) {
-		if (known_fact.second >= ((sensor.averageTraffic * 0.5) + sensor.averageTraffic)) {
+	for (auto port : workingMemory.ports) {
+		if (port.second >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
-			std::cerr << "Unusual amounts of traffic on port " << known_fact.first << std::endl;
+			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
 			excessTraffic = true;
 			break;
 		}
 		else {
-			std::cerr << "Port " << known_fact.first << " contains the expected amount of traffic" << std::endl;
+			std::cerr << "Port " << port.first << " contains the expected amount of traffic" << std::endl;
 		}
 	}
 	// If there is no excess traffic
 	if (!excessTraffic){
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 	}
 
 
     duplicateMAC = false;
 	// Time to check if there are any duplicate MAC addresses
-	for (const auto& pair : sensor.macAddresses) {
+	for (auto pair : workingMemory.macAddresses) {
 		if (pair.second > 1) {
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
@@ -135,21 +117,12 @@ void Agent::make_plan() {
 	// For goal in goals
 	// Found the problem! This runs through every goal we initialized in init_goals()
 	for (auto const& goal : goals) {
-
-		// Debugging
-		std::cerr << "Goal in goals: ";
-		std::cerr << "<" << goal->_to_string() << ">, " << std::endl;
-		/*for (auto const& goal2 : goals) {
-			std::cerr << "<" << goal2->_to_string() << ">, " << std::endl;
-		}*/
-
 		if (current_state->satisfies(goal)) {
 			continue;
 		}
 
 		// For debugging purposes
-		//std::cout << "Planning for goal " << goal.properties.begin()->first << std::endl;
-		std::cout << "Planning for goal " << goal->_to_string() << std::endl;
+		std::cout << "\nPlanning for goal " << goal->_to_string() << "\n" << std::endl;
 
 		std::vector<Response> plan = planner.devise_plan(current_state, goal, responses);
 		if (plan.empty()) {
@@ -158,43 +131,29 @@ void Agent::make_plan() {
 			continue;
 		}
 
-		current_plan = plan;
+		blackboard.current_plan = plan;
 
-		// DELETE LATER: Going to break out of this after the first loop for now
 		// Break out if we find a plan, otherwise we overwrite it with the next plan before executing it
 		break;
-		/*
-		// Optional diagnostic output
-		var plan_string:String = "Plan for " + str(goal.properties.keys()) + " is..."
-		for action in plan:
-			plan_string += action.name + " -> "
-		# Prints plan_string without final arrow (that points to nothing)
-		print(plan_string.substr(0, plan_string.length() - 4))
-
-		current_plan = plan
-		break
-		*/
 	}
 }
 
 // If there is a current plan, take the first element in current_plan (next_action) and executes it
 // Continues to execute the steps until there are no more remaining.
-void Agent::execute_plan() {
+/*void Agent::execute_plan() {
 	std::cout << "Running Agent.execute_plan()" << std::endl;
-	if (current_plan.empty()) {
+	if (blackboard.current_plan.empty()) {
 		return;
 	}
-	// Make current_plan into a vector of shared pointers?
-	//std::cout << "Size of the current plan is: " << std::to_string(sizeof(current_plan)) << std::endl;
-	Response next_action = current_plan.front();
-	// if next_action
-	next_action.execute(next_action, sensor);
+
+	Response next_action = blackboard.current_plan.front();
+	next_action.execute(next_action, workingMemory);
 
 	// Clear sensor.macAddresses so that GORP doesn't get confused with outdated information next time
-	sensor.macAddresses.clear();
+	workingMemory.macAddresses.clear();
 
 	std::cerr << "\n****************** COMPLETED PLAN EXECUTION ******************\n\n" << std::endl;
-}
+}*/
 
 // Initializes the response variables
 void Agent::init_responses() {
@@ -415,13 +374,6 @@ void Agent::init_goals() {
 	// Add to goals
 	goals.push_back(std::make_shared<WorldState>(port_is_blocked));
 
-	// Old code for reference
-	/*WorldState port_is_blocked({
-			std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false)
-			//WorldProperty(this, "excess_traffic_detected", false),
-			//WorldProperty(this, "port_blocked", true)
-		});
-	goals.push_back(std::make_shared<WorldState>(port_is_blocked));*/
 
 	// ------------------- Unblock a port on the device -------------------
 	/*WorldState port_is_unblocked;

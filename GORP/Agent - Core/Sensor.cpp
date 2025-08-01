@@ -1,42 +1,11 @@
 #include "Sensor.h"
 
-#include <iostream>
-#include <filesystem>
-
-/*Sensor::Sensor()
-{
-    // This can be the base class of sensor.
-    // It might be a good idea to make many different types of sensors
-    // Ex: Ports, files, processes, etc
-}*/
-
 Sensor::Sensor() {
     std::cout << "Running Sensor constructor" << std::endl;
-    // We fetch an instance of WorkingMemory (declared here as the variable "memory")
-    // Figure out later
 
     // For random numbers
+    // Need to do it here and not in the function, otherwise the "random" numbers will always be the same
     srand(time(0));
-
-    // ----------------------------- PORTS -----------------------------
-    std::cerr << "Ports:" << std::endl;
-    // Populate ports{} with some test cases
-    for (int i = 0; i < 10; i++) {
-        // Random number between 0 and 100
-        int randomNum = rand() % 101;
-        // i = port number / key, randomNum = traffic
-        ports.insert({ i, randomNum });
-        std::cerr << ports[i] << std::endl;
-
-        // Creating new entry in portVector to correspond to new entry in ports
-        PortVars newPortValues;
-        newPortValues.port_open = true;
-        newPortValues.port_blocked = false;
-        newPortValues.normal_traffic = true;
-        newPortValues.excess_traffic_detected = false;
-        // Adding corresponding value to portVarsVector
-        portVector.push_back(newPortValues);
-    }
 
     // ----------------------------- ARP Table -----------------------------
     // Populate the ARP table file with the resources from ARP_Table_Ref.txt
@@ -48,17 +17,6 @@ Sensor::Sensor() {
 	}
 	std::ofstream outFile("/home/kali/Documents/ARP_Table.txt");
 
-
-	// Quick copy to see what outFile is receiving
-	// DELETE LATER
-	if (std::filesystem::exists("/home/kali/Documents/ARP_Table2.txt")) {
-		std::remove("/home/kali/Documents/ARP_Table2.txt");
-	}
-	std::ofstream outFile2("/home/kali/Documents/ARP_Table2.txt");
-
-	// Adding the first line (header)
-	//outFile << "IP Address 	HWType 	Flags 	MAC Address 		Mask 	Device" << std::endl;
-
 	// Need to find which line the IP address is on
 	std::string line;
 
@@ -68,16 +26,35 @@ Sensor::Sensor() {
 	// Write to the temporary file, skipping the line to be deleted
 	while (std::getline(inFile, line)) {
 		outFile << line << std::endl;
-		// DELETE LATER
-		outFile2 << line << std::endl;
 		currentLineNumber++;
 	}
 
 	// Can now close both files
 	inFile.close();
 	outFile.close();
-	// DELETE LATER
-	outFile2.close();
+}
+
+void Sensor::randomizeTraffic(std::map<int, int>& ports){
+    // ----------------------------- PORTS -----------------------------
+    std::cerr << "\nNew Ports:" << std::endl;
+    // Populate ports{} with some test cases
+    for (int i = 0; i < 10; i++) {
+        // Random number between 0 and 100
+        int randomNum = rand() % 101;
+        // i = port number / key, randomNum = traffic
+        ports[i] = randomNum;
+        //ports.insert({ i, randomNum });
+        std::cerr << ports[i] << std::endl;
+
+        // Creating new entry in portVector to correspond to new entry in ports
+        /*PortVars newPortValues;
+        newPortValues.port_open = true;
+        newPortValues.port_blocked = false;
+        newPortValues.normal_traffic = true;
+        newPortValues.excess_traffic_detected = false;
+        // Adding corresponding value to portVarsVector
+        portVector.push_back(newPortValues);*/
+    }
 }
 
 // Easier to do the parsing in a stand-alone function
@@ -93,8 +70,12 @@ std::string Sensor::getMACAddress(std::string line) {
 }
 
 // ----------------------------- ARP Table -----------------------------
-int Sensor::checkARPTable() {
+int Sensor::checkARPTable(std::map<std::string, int>& macAddresses) {
     std::cerr << "\n\nChecking ARP Table\n\n" << std::endl;
+
+    // Clearing MAC addresses in case there is old data from a pervious scan
+    macAddresses.clear();
+
     // ARP Table on Linux can be read like a text file by using "/proc/net/arp"
     // We use ifstream to read it
     //std::ifstream arpFile("/proc/net/arp");
