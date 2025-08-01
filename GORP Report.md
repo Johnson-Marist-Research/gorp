@@ -1,28 +1,39 @@
 # GORP Summer Research Project
-### Presented by Cayleigh Goberman, Melissa Chodziutko, and Matthew Johnson
+### Presented by Melissa Chodziutko, Cayleigh Goberman, and Matthew Johnson
 
 ## Introduction
-- What GORP is
-- Why each person was recruited for the project
-
-## Background
-- Original idea of crossing GOAP and cybersecurity (refer to proposal)
+Goal-Oriented Response Planning (GORP) acts as an agent to protect against cyber threats. It utilizes Goal-Oriented Action Planning (GOAP), an algorithm often employed when programming non-player characters in video games, in order to create a variety of plans that can change depending on the requirements of the system. GOAP features a pre-set list of actions, but the order in which the actions are performed is determined by a planner algorithm. As such, this allows the program to display emergent behavior; for example, if a specific threat makes itself known, the program will prioritize the threat over, say, scanning files. The goal of this project is to adapt GORP into a cybersecurity setting in order to create an effective defense against cyber criminals, one which is constantly changing and thus hard for said criminals to predict. This should lead to a decreased likelihood that cyber criminals will be able to steal sensitive data from the targeted system.
 
 ## Problem that Research Addresses
-- Ability for GORP to switch between tasks on the fly and make dynamic decisions
+GORP employs GOAP strategies in order to execute dynamic plans when defending a device from cyber attacks. Numerous cyber defense programs run sequentially through a list of actions that they then perform to minimize a threat. GOAP features a set of pre-defined actions, but the sequence of actions is not predetermined and is instead determined by a planner algorithm. As such, this encourages emergent behavior, as the program executes a sequence of actions that the developer did not directly program. This allows GORP to create and undertake a variety of plans and actions in order to dynamically respond to a variety of threats.
 
 ## Objectives
-- Protect the device from malicious activity
-- Make it easier for users to implement cybersecurity actions
-- Allow the program to adapt dynamically to a variety of situations
+- Successfully protect a device from cybersecurity threats
+- Improve the ease with which users can implement cybersecurity actions
+- Perform defensive cybersecurity actions to mitigate the risk of a cyber attack on the device
 
-## Process
-- Timeline of the project
+## Test Scenarios
+GORP is currently able to respond to two different scenarios. With the streamlining of the planning process, further situations should be able to be added fairly easily as long as the coded response is sound. The two situations that GORP currently responds to are as follows:
+
+**DOS Attack**
+
+A denial of service (DOS) attack occurs when a malicious actor targets a specific server, service, or network. The actor floods the network with traffic from various sources, which in turn overwhelms the network, prevents it from performing critical services, and renders it unavailable to normal users.
+
+GORP attempts to address this form of attack by periodically scanning the incoming traffic on various ports. The program's test case creates ten different "ports", each with a random traffic value assigned to them. The program then takes a static "average" traffic value and compares it to each port. If a port's traffic value is more than 50% above the average, it is marked as having an unusual amount of traffic. GORP will begin to make a plan. Eventually, it will get to the set of variables that indicates that there may be a potential DOS attack occurring. GORP eventually concludes that it will have to shut down the affected port. In our test case, this occurs during the execution step, where the program resets the port's traffic value to zero. 
+
+Since this is a simple test case, it would obviously have to be modified for future applications. Most devices have far more than ten ports, and scanning all of them could be time-consuming and resource heavy. As such, it may be advantageous to focus on the ports that deal with the most amount of traffic, with all other ports only being scanned occassionally. Additionally, each port will need an individual average traffic value assigned to them. This value can be generated after regularly taking samples of the traffic amount over the course of an extended test period. The amount of expected traffic on ports can vary widely; one port could rarely be used, resulting in a low average traffic value, whereas another could be used regularly by multiple sources. As such, unlike in the test case, the average traffic value must be changeable across various ports instead of one static value applied to all ports, as is the case in the origianl teat scenario. If the user does not want to block all traffic to a port, we could instead set up firewalls that filter specific traffic. This would hopefully lower the amount of traffic traveling through the port while also allowing legitimate activity to continue.
+
+
+**ARP Spoofing**
+ARP spoofing occurs when an agent sends malicious Address Resolution Protocol (ARP) messages to a network. These messages aim to trick the device into associating the attacker's Media Acces Control (MAC) address with the legitimate Internet Protocol (IP) address of a host. This causes any traffic meant for that IP address to be sent to the attacker instead. 
+
+In Linux, the ARP table, or the table that keeps track of all IP addresses and their associated MAC addresses, can be accessed via the command */proc/net/arp*. This is a system file that can be read like a normal text file. As such, GORP's test scenario creates a fake ARP table file. It is formatted identically to the real ARP table, but we can modify it to add and remove different entries. 
+
+GORP's sensors start by scanning the ARP table and making a list of all MAC addresses. This list also includes a count of how many times the MAC address appeared. If a MAC address appears more than once, the program sets a few variables to indicate that there may be something wrong in the ARP table. Once GORP's planning algorithm decides to address this inconsistency, it proceeds to execute the solution code. In this test scenario, each entry with the repeating MAC address is removed, leaving only those with a MAC address that had originally occurred once. This is meant to simulate the program removing and blocking the entries from a real ARP table. 
+
+If we were to apply this outside of the test case, it might be useful to keep a list of blocked MAC and IP addresses. This would allow us to quickly reinstate a legitimate address that might have been blocked accidentally.
+
 
 ## Further Considerations
-- Things we weren't able to complete
-- Limitations
-
-## Conclusion
-- Review of the project
-- Considerations for possible future work
+GORP regrettably suffered from a series of bugs and logical errors that burned precious time while we searched for an effective solution. Since GORP's algorithm involves a series of careful calculations and pathfinding actions, a single error in one section of the code can have catastrophic effects further down the planning process. Not only did we have to solve these problems, but we also had to locate them in the first place, which could be slightly difficult given how many processes cascaded down into each other. As such, debugging soon became a time-consuming process. In the future, it might be wise to create built-in checks at the beginning of each step; therefore, if the program is crashing or getting lost at a specific point, we can immediately refer to the checks in order to hopefully narrow down its location in less time. We ultimately implemented checks that funciton similarly to this idea, but they are a bit disjointed since they were added at various points in development and without an overarching structure.
+Unfortunately, this project was limited by a few different factors that most likely negatively affected the final product. We were alotted 300 hours to develop GORP over the summer; while this proved to be ample time to cement the basic components, we were unfortunately forced to drop some of our more ambitious goals, such as adding more cybersecurity features. Additionally, the one constant programmer that was present for this project had experience in game programming, but not much in cybersecurity. This slowed down the process slightly as they had to check their work whenever they delved into more complex cybersecurity and internetworking tasks.
