@@ -26,6 +26,7 @@ Since this is a simple test case, it would obviously have to be modified for fut
 
 
 **ARP Spoofing**
+
 ARP spoofing occurs when an agent sends malicious Address Resolution Protocol (ARP) messages to a network. These messages aim to trick the device into associating the attacker's Media Acces Control (MAC) address with the legitimate Internet Protocol (IP) address of a host. This causes any traffic meant for that IP address to be sent to the attacker instead. 
 
 In Linux, the ARP table, or the table that keeps track of all IP addresses and their associated MAC addresses, can be accessed via the command */proc/net/arp*. This is a system file that can be read like a normal text file. As such, GORP's test scenario creates a fake ARP table file. It is formatted identically to the real ARP table, but we can modify it to add and remove different entries. 
