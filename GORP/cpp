@@ -1,0 +1,40 @@
+    139 Agent - Core/Agent - Core.cbp
+    128 Agent - Core/Agent - Core.depend
+     80 Agent - Core/Agent - Core.layout
+    157 Agent - Core/Agent - Core.vcxproj
+     83 Agent - Core/Agent - Core.vcxproj.filters
+      3 Agent - Core/Agent - Core.vcxproj.user
+    456 Agent - Core/Agent.cpp
+     82 Agent - Core/Agent.h
+     20 Agent - Core/Blackboard.cpp
+     25 Agent - Core/Blackboard.h
+      0 Agent - Core/Debug
+     88 Agent - Core/main.cpp
+    165 Agent - Core/Planner.cpp
+     19 Agent - Core/Planner.h
+    119 Agent - Core/PriorityQueue.cpp
+     54 Agent - Core/PriorityQueue.h
+    235 Agent - Core/Response.cpp
+     45 Agent - Core/Response.h
+    108 Agent - Core/Sensor.cpp
+     31 Agent - Core/Sensor.h
+     33 Agent - Core/Subsystem.cpp
+     20 Agent - Core/Subsystem.h
+     29 Agent - Core/WorkingMemory.cpp
+     72 Agent - Core/WorkingMemory.h
+     26 Agent - Core/WorldProperty.cpp
+     15 Agent - Core/WorldProperty.h
+    156 Agent - Core/WorldState.cpp
+     41 Agent - Core/WorldState.h
+      0 Agent - Core/x64
+   5945 Debug/AgentCore
+    210 Test Case 1/main.cpp
+    129 Test Case 1/Test Case 1.cbp
+    134 Test Case 1/Test Case 1.vcxproj
+     21 Test Case 1/Test Case 1.vcxproj.filters
+    139 Test Case 2/main.cpp
+    129 Test Case 2/Test Case 2.cbp
+    134 Test Case 2/Test Case 2.vcxproj
+     21 Test Case 2/Test Case 2.vcxproj.filters
+      0 x64/Debug
+   9291 total
