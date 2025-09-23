@@ -25,68 +25,54 @@ float Planner::distance(std::optional<WorldState> src, std::optional<WorldState>
 // If the goal state is a possible result of applying the action, then we return a minimal substate of all states in which this
 // action could have been applied to yield the goal state.
 // std::shared_ptr<WorldState> Planner::unify(Response const& response, std::shared_ptr<WorldState> goal) {
-std::optional<WorldState> Planner::unify(Response const& response, std::optional<WorldState> goal) {
+std::optional<WorldState> Planner::unify(Response const& response, WorldState const& goal) {
 	// Can check if a pointer is null, but not a class
-	// std::shared_ptr<WorldState> unsatisfied;
-	std::optional<WorldState> unsatisfied;
 	// Remove satisfied properties from a goal state, as long as no conflicts exist
 	// :: is how you call a STATIC function in C++
-	// unsatisfied = WorldState::reduce_by(goal, std::make_shared<WorldState>(response.effects), true);
-	unsatisfied = WorldState::reduce_by(goal, std::make_optional<WorldState>(response.effects), true);
-	if (unsatisfied == std::nullopt) {
+	std::optional<WorldState> unsatisfied = WorldState::reduce_by(goal, response.effects, true);
+	if (not unsatisfied.has_value() or unsatisfied->equals(goal)) {
 		return std::nullopt;
 	}
-	if (unsatisfied->equals(goal)) {
-		return std::nullopt;
-	}
-	// std::shared_ptr<WorldState> new_goal;
-	std::optional<WorldState> new_goal;
-	new_goal = WorldState::expand_by(unsatisfied, response.preconditions);
+
+	auto new_goal = WorldState::expand_by(unsatisfied.value(), response.preconditions);
 	return new_goal;
 };
 
 // We devise a plan to address the current goal.
 // std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_state, std::shared_ptr<WorldState> goal, std::vector<Response> const& responses) {
-std::vector<Response> Planner::devise_plan(std::optional<WorldState> current_state, std::optional<WorldState> goal, std::vector<Response> const& responses) {
-	if (current_state->size() <= 0) {
-		std::cerr << "\ncurrent_state is empty\n" << std::endl;
-	}
-	else {
-		std::cerr << "\ncurrent_state is not empty\n" << std::endl;
-	}
-
-
+std::vector<Response> Planner::devise_plan(WorldState const& current_state, WorldState const& goal, std::vector<Response> const& responses) {
 	std::vector<Response> plan;
 
 	// Only run the rest of devise_plan() if current_state is not empty
-	if (current_state->size() <= 0) {
+	if (current_state.size() <= 0) {
+		std::cerr << "\ncurrent_state is empty\n" << std::endl;
 		std::cerr << "\nplan is empty\n" << std::endl;
 		return plan;
 	}
+	std::cerr << "\ncurrent_state is not empty\n" << std::endl;
+
 
 	// First, we take note of where we came from and the current cost to get from there (goal) to here (came from).
-	/*std::map<std::shared_ptr<WorldState>, std::shared_ptr<std::pair<std::shared_ptr<WorldState>, Response>>> came_from = {};
-	std::map<std::shared_ptr<WorldState>, float> cost_so_far = {};*/
-	std::unordered_map<std::optional<WorldState>, std::optional<std::pair<std::optional<WorldState>, Response>>> came_from = {};
+	std::map<std::optional<WorldState>, std::optional<std::pair<std::optional<WorldState>, Response>>> came_from;
 	std::map<std::optional<WorldState>, float> cost_so_far = {};
 
-	std::cerr << "\ngoal: " << goal->_to_string() << std::endl;
-	std::cerr << "\ncurrent_state: \n" << current_state->_to_string() << std::endl;
+	std::cerr << "\ngoal: " << goal._to_string() << std::endl;
+	std::cerr << "\ncurrent_state: \n" << current_state._to_string() << std::endl;
 
 	// Calculate the distance (difference()) between the goal and the current_state
-	goal = WorldState::difference(goal, current_state); // Only need to satisfy the unsatisfied
+	auto remaining_goal = WorldState::difference(goal, current_state); // Only need to satisfy the unsatisfied
 
 
 	// Since goal is the start, it does not "come from" anything. Therefore, goal's came_from is null.
-	came_from[goal] = std::nullopt;
+	came_from[remaining_goal] = std::nullopt;
 	// Since we have not started any calculations yet, the current cost to get from the goal to the destinaton is 0.
-	cost_so_far[goal] = 0;
+	cost_so_far[remaining_goal] = 0;
 
 	// Need to implement PriorityQueue class
 	PriorityQueue frontier;
 	// Use insert() from the PriorityQueue class to set the initial value of the frontier PriorityQueue
 	// The second argument was originally listed as an integer in the first version of insert()
-	frontier.insert(goal, cost_so_far[goal]);
+	frontier.insert(goal, cost_so_far[remaining_goal]);
 
 	// Here, we set the value of the "start" WorldState.
 	// We will go from start to goal, but since we need to figure out where start is, we will initalize it with no value for now.
@@ -94,7 +80,7 @@ std::vector<Response> Planner::devise_plan(std::optional<WorldState> current_sta
 	std::optional<WorldState> start = current_state;
 
 	// Print current state
-	std::cerr << "\ncurrent_state: " << current_state->_to_string() << std::endl;
+	std::cerr << "\ncurrent_state: " << current_state._to_string() << std::endl;
 	std::cerr << "\nstart: " << start->_to_string() << "\n" << std::endl;
 
 	// We need to iterate through each entry in frontier.
@@ -104,12 +90,14 @@ std::vector<Response> Planner::devise_plan(std::optional<WorldState> current_sta
 		// that we are tracing to make it back to start.
 		// As such, we are determining the next sub-goal by extracting the next entry in frontier.
 		// std::shared_ptr<WorldState> current_goal = frontier.extract();
-		std::optional<WorldState> current_goal = frontier.extract();
+		auto current_goal = frontier.extract().value();
+		std::cerr << "Remaining goal: " << current_goal._to_string() << std::endl;
 
 		// If the current_goal is the same as the current_state, then we have reached our starting state.
 		// Since A* Search works backwards from the goal, this means that we have found a path from the goal to the start.
 		// We can set the start equal to the current sub-goal, then break the while loop.
-		if (current_state->satisfies(current_goal)) {
+		if (current_state.satisfies(current_goal)) {
+			std::cerr << "Satisfied: " << current_state._to_string() << " == " << current_goal._to_string() << std::endl;
 			start = current_goal;
 			break;
 		}
@@ -135,9 +123,10 @@ std::vector<Response> Planner::devise_plan(std::optional<WorldState> current_sta
 				cost_so_far[next] = g_cost;
 				float h_cost = distance(next, current_state);
 				float priority = g_cost + h_cost;
-				frontier.insert(next, priority);
+				frontier.insert(next.value(), priority);
 
 				//std::cerr << "Inserting " << next.get() << std::endl;
+				std::cerr << "Possible response '" << response.name << "': " << next->_to_string() << std::endl;
 
 				// came_from[next] = std::make_shared<std::pair<std::shared_ptr<WorldState>, Response>>(std::make_pair(current_goal, response));
 				came_from[next] = std::pair<std::optional<WorldState>, Response>(std::make_pair(current_goal, response));
@@ -145,21 +134,29 @@ std::vector<Response> Planner::devise_plan(std::optional<WorldState> current_sta
 		}
 
 		rep += "}";
-		std::cerr  << "\nCalculated Path of Responses (rep): \n" << rep << "\n" << std::endl;
+		//std::cerr  << "\nCalculated Path of Responses (rep): \n" << rep << "\n" << std::endl;
 		std::cerr << std::endl;
 	}
 
 	// Construct a plan from the start state to the goal state, if possible
 	// Turn from plain WorldState to shared pointer
 	// std::shared_ptr<WorldState> n = start;
+	std::cerr << "\nCame-From Map: " << std::endl;
+	for (auto n : came_from) {
+		std::cerr << "    " << n.first->_to_string() << std::endl;
+
+	}
+
 	std::optional<WorldState> n = start;
-	while (&(*n) != &(*goal)) {
+	std::cerr << "Start: " << n->_to_string() << std::endl;
+	while (not n->equals(goal)) {
 		if (n->size() <= 0) {
 			std::cerr << "\nn is empty; cannot complete the while loop\n" << std::endl;
 			break;
 		}
 
 		if(!came_from.contains(n)){
+			std::cerr << "Cannot find " << n->_to_string() << std::endl;
 			std::cerr << "Breaking" << std::endl;
 			break;
 		}

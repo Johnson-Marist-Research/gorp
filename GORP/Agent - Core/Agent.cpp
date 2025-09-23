@@ -25,16 +25,16 @@ Agent::Agent() {
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));*/
 
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
-	knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), true));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("change_detected"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
+	knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
 }
 
 // Runs the process_sensor() and update_knowledge() functions when called
@@ -45,7 +45,7 @@ void Agent::run_agent() {
 
         // TODO Make this a loop with several steps...
         process_sensor(); // step 1
-        update_knowledge(); // step 2
+		update_knowledge(); // step 2
         //make_plan(); step 3 ( comprises 3a select_goal() and 3b devise_plan() )
         //TODO Temporarily we can break if there is no plan either because every goal is satisfied or cannot be
         //execute_plan(); step 4 ( maybe includes submit_plan() to write to the BlackBoard)
@@ -76,7 +76,7 @@ void Agent::process_sensor() {
 // Updates knowledge about the World States based on information from Sensors
 // Does this need to return a WorldState?
 // std::shared_ptr<WorldState> Agent::update_knowledge() {
-std::optional<WorldState> Agent::update_knowledge() {
+WorldState Agent::update_knowledge() {
 	std::cout << "Running Agent.update_knowledge()" << std::endl;
 
 	excessTraffic = false;
@@ -85,7 +85,7 @@ std::optional<WorldState> Agent::update_knowledge() {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
 			// knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
-			knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
+			knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
 			excessTraffic = true;
 			break;
 		}
@@ -100,9 +100,9 @@ std::optional<WorldState> Agent::update_knowledge() {
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
         */
-        knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
-        knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
-        knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
+		knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+		knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+		knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 	}
 
 
@@ -114,8 +114,8 @@ std::optional<WorldState> Agent::update_knowledge() {
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
             */
-            knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
-            knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
+			knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
+			knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
             duplicateMAC = true;
             break;
 		}
@@ -126,8 +126,8 @@ std::optional<WorldState> Agent::update_knowledge() {
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
         */
-        knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
-        knowledge->insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
+		knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
+		knowledge.insert(std::make_optional<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
     }
 
 
@@ -141,21 +141,21 @@ std::optional<WorldState> Agent::update_knowledge() {
 void Agent::make_plan() {
 	std::cout << "Running Agent.make_plan()" << std::endl;
 	// std::shared_ptr<WorldState> current_state = update_knowledge();
-	std::optional<WorldState> current_state = update_knowledge();
+	auto current_state = update_knowledge();
 	// For goal in goals
 	// Found the problem! This runs through every goal we initialized in init_goals()
 	for (auto const& goal : goals) {
-		if (current_state->satisfies(goal)) {
+		if (current_state.satisfies(goal)) {
 			continue;
 		}
 
 		// For debugging purposes
-		std::cout << "\nPlanning for goal " << goal->_to_string() << "\n" << std::endl;
+		std::cout << "\nPlanning for goal " << goal._to_string() << "\n" << std::endl;
 
 		std::vector<Response> plan = planner.devise_plan(current_state, goal, responses);
 		if (plan.empty()) {
 			// Debugging message
-			std::cout << "Unable to satisfy goal " << goal->_to_string() << std::endl;
+			std::cout << "Unable to satisfy goal " << goal._to_string() << std::endl;
 			continue;
 		}
 
@@ -453,7 +453,7 @@ void Agent::init_goals() {
 
 	// Add to goals
 	// goals.push_back(std::make_shared<WorldState>(ip_address_is_blocked));
-	goals.push_back(std::make_optional<WorldState>(ip_address_is_blocked));
+	goals.push_back(WorldState(ip_address_is_blocked));
 
 
 	// ------------------- Block a port on the device -------------------
@@ -469,7 +469,7 @@ void Agent::init_goals() {
 
 	// Add to goals
 	// goals.push_back(std::make_shared<WorldState>(port_is_blocked));
-	goals.push_back(std::make_optional<WorldState>(port_is_blocked));
+	goals.push_back(WorldState(port_is_blocked));
 
 
 	// ------------------- Unblock a port on the device -------------------
@@ -547,7 +547,7 @@ void Agent::init_goals() {
 	// DEBUGGING
 	std::cout << "\nGoals: " << std::endl;
 	for (auto const& goal : goals) {
-		std::cout << goal->_to_string() << std::endl;
+		std::cout << goal._to_string() << std::endl;
 	}
 	std::cout << std::endl;
 }

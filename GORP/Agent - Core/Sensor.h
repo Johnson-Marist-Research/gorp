@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WorkingMemory.h";
+#include "WorkingMemory.h"
 
 #include <map>
 #include <vector>

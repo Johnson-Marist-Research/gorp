@@ -148,6 +148,7 @@
     <ClCompile Include="Response.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Subsystem.cpp" />
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="WorkingMemory.cpp" />
     <ClCompile Include="WorldProperty.cpp" />
     <ClCompile Include="WorldState.cpp" />

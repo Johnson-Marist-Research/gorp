@@ -2,7 +2,6 @@
 
 WorldState::WorldState(){}
 
-// WorldState::WorldState(std::map<std::string, std::shared_ptr<WorldProperty>> props){
 WorldState::WorldState(std::map<std::string, std::optional<WorldProperty>> props){
 	this->properties = props;
 }
@@ -23,33 +22,27 @@ std::string WorldState::_to_string() const {
 	return rep;
 }
 
-// bool WorldState::equals(std::shared_ptr<WorldState> b){
-bool WorldState::equals(std::optional<WorldState> b){
-    WorldState* a = this;
-    if (a->size() != b->size()){
+bool WorldState::equals(WorldState const& b) const {
+    if (this->size() != b.size()){
         return false;
     }
-    for (const auto& entry : b->properties){
+    for (const auto& entry : b.properties){
 		std::string key = entry.first;
-		// std::shared_ptr<WorldProperty> prop = a->get_property(key);
-		std::optional<WorldProperty> prop = a->get_property(key);
-		if ((prop) && ((prop->value) == b->get_property(key)->value)) {
+		std::optional<WorldProperty> prop = this->get_property(key);
+		if ((prop) && ((prop->value) == b.get_property(key)->value)) {
 			continue;
 		}
 		else {
-            return false;
+			return false;
 		}
 	}
 	return true;
 }
 
-// std::shared_ptr<WorldState> WorldState::duplicate() {
-std::optional<WorldState> WorldState::duplicate() {
-    // std::shared_ptr<WorldState> newState = std::make_shared<WorldState>();
-	std::optional<WorldState> newState = std::make_optional<WorldState>();
+WorldState WorldState::duplicate() const {
+	WorldState newState;
 	for (auto& prop : properties) {
-        // newState->add_property(prop.first, std::make_shared<WorldProperty>(
-		newState->add_property(prop.first, std::make_optional<WorldProperty>(
+		newState.add_property(prop.first, std::make_optional<WorldProperty>(
 			prop.second->subject,
 			prop.second->name,
 			prop.second->value
@@ -58,11 +51,11 @@ std::optional<WorldState> WorldState::duplicate() {
 	return newState;
 }
 
-int WorldState::size() {
+int WorldState::size() const {
 	return properties.size();
 }
 
-bool WorldState::has(std::string key) {
+bool WorldState::has(std::string key) const {
 	if (properties.empty()) {
 		return false;
 	}
@@ -75,21 +68,18 @@ bool WorldState::has(std::string key) {
 	}
 }
 
-// bool WorldState::insert(std::shared_ptr<WorldProperty> prop) {
 bool WorldState::insert(std::optional<WorldProperty> prop) {
 	properties[prop->to_key()] = prop;
 	return true;
 }
 
 // Adds a property to this world state or overwrites it if already present
-// bool WorldState::add_property(std::string key, std::shared_ptr<WorldProperty> prop) {
 bool WorldState::add_property(std::string key, std::optional<WorldProperty> prop) {
 	properties[key] = prop;
 	return true;
 }
 
-// std::shared_ptr<WorldProperty> WorldState::get_property(std::string key) {
-std::optional<WorldProperty> WorldState::get_property(std::string key) {
+std::optional<WorldProperty> WorldState::get_property(std::string key) const {
 	auto it = properties.find(key);
 	if(it == properties.end()){
         return std::nullopt;
@@ -103,13 +93,12 @@ void WorldState::drop_property(std::string key) {
 }
 
 // Determine whether all properties of a goal state are present in this state with their required values
-// bool WorldState::satisfies(std::shared_ptr<WorldState> goal) {
-bool WorldState::satisfies(std::optional<WorldState> goal) {
+bool WorldState::satisfies(WorldState const& goal) const {
 	// Iterate through each entry in goal->properties
-	for (const auto& entry : goal->properties){
+	for (const auto& entry : goal.properties){
 		std::string key = entry.first;
 		// Have to check this one over too :/
-		if ((this->has(key) == false) or (this->get_property(key)->value != goal->get_property(key)->value)) {
+		if ((this->has(key) == false) or (this->get_property(key)->value != goal.get_property(key)->value)) {
 			return false;
 		}
 	}
@@ -118,34 +107,30 @@ bool WorldState::satisfies(std::optional<WorldState> goal) {
 
 // Return a substate of the first state containing only those properties that are not satisfied (i.e., same in) the second state
 // std::shared_ptr<WorldState> WorldState::difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b) {
-std::optional<WorldState> WorldState::difference(std::optional<WorldState> a, std::optional<WorldState> b) {
-	// std::shared_ptr<WorldState> c = a->duplicate();
-	std::optional<WorldState> c = a->duplicate();
+WorldState WorldState::difference(WorldState const& a, WorldState const& b) {
+	WorldState c = a.duplicate();
 	// Iterate through each entry in b->properties
-	for (const auto& entry : b->properties){
+	for (const auto& entry : b.properties){
 		std::string key = entry.first;
-		// std::shared_ptr<WorldProperty> prop = a->get_property(key);
-		std::optional<WorldProperty> prop = a->get_property(key);
+		std::optional<WorldProperty> prop = a.get_property(key);
 
-		if ((prop) && ((prop->value) == b->get_property(key)->value)) {
-			c->drop_property(key);
+		if ((prop) && ((prop->value) == b.get_property(key)->value)) {
+			c.drop_property(key);
 		}
 	}
 	return c;
 }
 
 // Remove satisfied properties from a goal state, as long as no conflicts exist
-// std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflict = true) {
-std::optional<WorldState> WorldState::reduce_by(std::optional<WorldState> goal, std::optional<WorldState> effects, bool forbid_conflict = true) {
+std::optional<WorldState> WorldState::reduce_by(WorldState const& goal, WorldState const& effects, bool forbid_conflict = true) {
 	// Duplicate doesn't work so I'm ignoring it for now
-	// std::shared_ptr<WorldState> new_goal = goal->duplicate();
-	std::optional<WorldState> new_goal = goal->duplicate();
+	WorldState new_goal = goal.duplicate();
 	// Iterate through each entry in goal->properties
-	for (const auto& entry : goal->properties){
+	for (const auto& entry : goal.properties){
 		std::string key = entry.first;
-		if (effects->has(key)) {
-			if (effects->get_property(key)->value == goal->get_property(key)->value) {
-				new_goal->drop_property(key);
+		if (effects.has(key)) {
+			if (effects.get_property(key)->value == goal.get_property(key)->value) {
+				new_goal.drop_property(key);
 			}
 			else if (forbid_conflict) {
 				return std::nullopt;
@@ -155,19 +140,32 @@ std::optional<WorldState> WorldState::reduce_by(std::optional<WorldState> goal, 
 	return new_goal;
 }
 // Adds a new goal to the list of possible goals
-// std::shared_ptr<WorldState> WorldState::expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions) {
-std::optional<WorldState> WorldState::expand_by(std::optional<WorldState> goal, WorldState preconditions) {
-    //std::shared_ptr<WorldState> new_goal = goal->duplicate();
-	std::optional<WorldState> new_goal = goal->duplicate();
+std::optional<WorldState> WorldState::expand_by(WorldState const& goal, WorldState const& preconditions) {
+	WorldState new_goal = goal.duplicate();
 	// Iterate through each entry in preconditions->properties
 	for (const auto& entry : preconditions.properties){
 		std::string key = entry.first;
-		if (goal->has(key) == false) {
-			new_goal->add_property(key, preconditions.get_property(key));
+		if (goal.has(key) == false) {
+			new_goal.add_property(key, preconditions.get_property(key));
 		}
-		else if (goal->get_property(key)->value != preconditions.get_property(key)->value) {
+		else if (goal.get_property(key)->value != preconditions.get_property(key)->value) {
 			return std::nullopt;
 		}
 	}
 	return new_goal;
+}
+
+bool operator==(WorldState const& a, WorldState const& b)
+{
+	return a.equals(b);
+}
+
+bool operator<(WorldState const& a, WorldState const& b)
+{
+	for (auto i = a.properties.begin(), j = b.properties.begin(); i != a.properties.end() && j != b.properties.end(); ) {
+		if (i->first < j->first) return true;
+		if (i->first > j->first) return false;
+        ++i; ++j;
+	}
+	return a.size() < b.size();
 }

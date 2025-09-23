@@ -10,6 +10,6 @@ public:
 	bool value;
 
 	WorldProperty(std::string subject, std::string name, bool value);
-	std::string _to_string();
-	std::string to_key();
+	std::string _to_string() const;
+	std::string to_key() const;
 };

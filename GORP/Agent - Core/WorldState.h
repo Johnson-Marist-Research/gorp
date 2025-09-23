@@ -11,43 +11,40 @@
 
 class WorldState {
 public:
-	//std::map<std::string, std::shared_ptr<WorldProperty>> properties{};
 	std::map<std::string, std::optional<WorldProperty>> properties{};
 
 	// Zero-Argument Constructor
 	WorldState();
 
-	//WorldState(std::map<std::string, std::shared_ptr<WorldProperty>> props);
 	WorldState(std::map<std::string, std::optional<WorldProperty>> props);
 
 	std::string _to_string() const;
 
-    //bool equals(std::shared_ptr<WorldState> b);
-    bool equals(std::optional<WorldState> b);
+    bool equals(WorldState const& b) const;
 
-	//std::shared_ptr<WorldState> duplicate();
-	std::optional<WorldState> duplicate();
+	WorldState duplicate() const;
 
-	int size();
+	int size() const;
 
-	bool has(std::string key);
-	//bool insert(std::shared_ptr<WorldProperty> prop);
+	bool has(std::string key) const;
+
 	bool insert(std::optional<WorldProperty> prop);
 
-	//bool add_property(std::string key, std::shared_ptr<WorldProperty> prop);
 	bool add_property(std::string key, std::optional<WorldProperty> prop);
-	//std::shared_ptr<WorldProperty> get_property(std::string key);
-	std::optional<WorldProperty> get_property(std::string key);
+
+	std::optional<WorldProperty> get_property(std::string key) const;
 
 	void drop_property(std::string key);
 
-	//bool satisfies(std::shared_ptr<WorldState> goal);
-	bool satisfies(std::optional<WorldState> goal);
+	bool satisfies(WorldState const& goal) const;
 
-	/*static std::shared_ptr<WorldState> difference(std::shared_ptr<WorldState> a, std::shared_ptr<WorldState> b);
-	static std::shared_ptr<WorldState> reduce_by(std::shared_ptr<WorldState> goal, std::shared_ptr<WorldState> effects, bool forbid_conflicts);
-	static std::shared_ptr<WorldState> expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions);*/
-	static std::optional<WorldState> difference(std::optional<WorldState> a, std::optional<WorldState> b);
-	static std::optional<WorldState> reduce_by(std::optional<WorldState> goal, std::optional<WorldState> effects, bool forbid_conflicts);
-	static std::optional<WorldState> expand_by(std::optional<WorldState> goal, WorldState preconditions);
+	static WorldState difference(WorldState const& a, WorldState const& b);
+	static std::optional<WorldState> reduce_by(WorldState const& goal, WorldState const& effects, bool forbid_conflicts);
+	static std::optional<WorldState> expand_by(WorldState const& goal, WorldState const& preconditions);
+
+	friend bool operator==(WorldState const& a, WorldState const& b);
+	friend bool operator<(WorldState const& a, WorldState const& b);
 };
+
+bool operator==(WorldState const& a, WorldState const& b);
+bool operator<(WorldState const& a, WorldState const& b);

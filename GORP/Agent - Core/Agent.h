@@ -28,12 +28,12 @@ public:
 
 	std::vector<Response> responses;
 	//std::vector<std::shared_ptr<WorldState>> goals;
-	std::vector<std::optional<WorldState>> goals;
+	std::vector<WorldState> goals;
 
 	// Changed this from a shared pointer because I was having trouble with update_knowledge()
 	// This only works if the WorldState class has a zero-argument default constructor
 	// std::shared_ptr<WorldState> knowledge;
-	std::optional<WorldState> knowledge;
+	WorldState knowledge;
 
 	// For checking if there is excess traffic
 	bool excessTraffic = false;
@@ -76,7 +76,7 @@ public:
 
 	void process_sensor();
 	//std::shared_ptr<WorldState> update_knowledge();
-	std::optional<WorldState> update_knowledge();
+	WorldState update_knowledge();
 	void make_plan();
 	void execute_plan();
 

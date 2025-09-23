@@ -3,12 +3,6 @@
 // Default Constructor
 PriorityQueue::PriorityQueue() {};
 
-// Initializes the key and value variables
-/*PriorityQueue::PriorityQueue(std::string k, std::shared_ptr<WorldState> v) {
-	key = k;
-	value = v;
-}*/
-
 int PriorityQueue::size() {
 	return heapSize;
 }
@@ -24,7 +18,7 @@ bool PriorityQueue::is_empty() {
 };
 
 // Returns the first position in the heap
-Element PriorityQueue::front() {
+std::optional<Element> PriorityQueue::front() const {
 	return heap[0];
 };
 
@@ -44,7 +38,7 @@ int PriorityQueue::right(int i) {
 
 // Inserts a value into heap
 // void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
-void PriorityQueue::insert(std::optional<WorldState> x, int priority) {
+void PriorityQueue::insert(WorldState const& x, int priority) {
 	if (heapSize == heap.size()) {
 		std::cerr << "No more room in the heap!" << std::endl;
 		// Kill the program for now
@@ -66,8 +60,8 @@ std::optional<WorldState> PriorityQueue::extract() {
 	if (heapSize < 1){
 		return std::nullopt; // error “heap underflow”
 	}
-	// std::shared_ptr<WorldState> extremum = heap[0].value;
-	std::optional<WorldState> extremum = heap[0].value;
+
+	auto extremum = heap[0].value().value;
 	heap[0] = heap[heapSize - 1];
 	heapSize--;
 	heapify(0);
@@ -79,17 +73,17 @@ void PriorityQueue::heapify(int i) {
 	int l = left(i);
 	int r = right(i);
 	int extremum;
-	if ((l < heapSize) && (heap[l].key < heap[i].key)) {
+	if ((l < heapSize) && (heap[l].value().key < heap[i].value().key)) {
 		extremum = l;
 	}
 	else {
 		extremum = i;
 	}
-	if ((r < heapSize) && (heap[r].key < heap[extremum].key)) {
+	if ((r < heapSize) && (heap[r].value().key < heap[extremum].value().key)) {
 		extremum = r;
 	}
 	if (extremum != i) {
-		Element tmp = heap[i];
+		auto tmp = heap[i];
 		heap[i] = heap[extremum];
 		heap[extremum] = tmp;
 		heapify(extremum);
@@ -100,7 +94,7 @@ void PriorityQueue::heapify(int i) {
 void PriorityQueue::update_key(int i, Element elem) {
 	int prev_key;
 	if (0 <= i && i < heapSize) {
-		prev_key = heap[i].key;
+		prev_key = heap[i].value().key;
 	}
 	else {
 		// This should be the C++ code corresponding to infinity...
@@ -112,8 +106,8 @@ void PriorityQueue::update_key(int i, Element elem) {
 		return;
 	}
 	int j = parent(i);
-	while ((i > 0) && (heap[i].key < heap[j].key)) {
-		Element tmp = heap[i];
+	while ((i > 0) && (heap[i].value().key < heap[j].value().key)) {
+		auto tmp = heap[i];
 		heap[i] = heap[j];
 		heap[j] = tmp;
 		i = j;

@@ -124,7 +124,7 @@ void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 
         // Debugging
         std::cerr << "Final Port Traffic: " << std::endl;
-        for (int i = 0; i < workingMemory.ports.size(); i++) {
+		for (int i = 0; i < workingMemory.ports.size(); i++) {
             std::cerr << i + 1 << ") " << workingMemory.ports[i] << std::endl;
         }
 

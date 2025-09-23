@@ -6,7 +6,7 @@ WorldProperty::WorldProperty(std::string subject, std::string name, bool value) 
 	this->value = value;
 }
 
-std::string WorldProperty::_to_string() {
+std::string WorldProperty::_to_string() const {
 	// Printing value as true or false
 	std::string valueTrueOrFalse = "";
 	if (value) {
@@ -21,6 +21,6 @@ std::string WorldProperty::_to_string() {
 // Need to return an int
 // Individual key for each property (enum in WorldProperties.h)
 // Or change the key in properties to a string
-std::string WorldProperty::to_key() {
+std::string WorldProperty::to_key() const {
 	return subject + ": " + name;
 }
