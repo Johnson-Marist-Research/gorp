@@ -27,13 +27,11 @@ public:
 	WorkingMemory workingMemory;
 
 	std::vector<Response> responses;
-	//std::vector<std::shared_ptr<WorldState>> goals;
-	std::vector<std::optional<WorldState>> goals;
+	std::vector<std::shared_ptr<WorldState>> goals;
 
 	// Changed this from a shared pointer because I was having trouble with update_knowledge()
 	// This only works if the WorldState class has a zero-argument default constructor
-	// std::shared_ptr<WorldState> knowledge;
-	std::optional<WorldState> knowledge;
+	std::shared_ptr<WorldState> knowledge;
 
 	// For checking if there is excess traffic
 	bool excessTraffic = false;
@@ -75,8 +73,7 @@ public:
 	void run_agent();
 
 	void process_sensor();
-	//std::shared_ptr<WorldState> update_knowledge();
-	std::optional<WorldState> update_knowledge();
+	std::shared_ptr<WorldState> update_knowledge();
 	void make_plan();
 	void execute_plan();
 

@@ -43,8 +43,7 @@ int PriorityQueue::right(int i) {
 };
 
 // Inserts a value into heap
-// void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
-void PriorityQueue::insert(std::optional<WorldState> x, int priority) {
+void PriorityQueue::insert(std::shared_ptr<WorldState> x, int priority) {
 	if (heapSize == heap.size()) {
 		std::cerr << "No more room in the heap!" << std::endl;
 		// Kill the program for now
@@ -61,13 +60,11 @@ void PriorityQueue::insert(std::optional<WorldState> x, int priority) {
 };
 
 // Takes a value out of heap
-// std::shared_ptr<WorldState> PriorityQueue::extract() {
-std::optional<WorldState> PriorityQueue::extract() {
+std::shared_ptr<WorldState> PriorityQueue::extract() {
 	if (heapSize < 1){
-		return std::nullopt; // error “heap underflow”
+		return nullptr; // error “heap underflow”
 	}
-	// std::shared_ptr<WorldState> extremum = heap[0].value;
-	std::optional<WorldState> extremum = heap[0].value;
+    std::shared_ptr<WorldState> extremum = heap[0].value;
 	heap[0] = heap[heapSize - 1];
 	heapSize--;
 	heapify(0);
