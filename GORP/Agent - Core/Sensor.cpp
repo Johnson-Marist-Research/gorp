@@ -1,7 +1,9 @@
 #include "Sensor.h"
 
-Sensor::Sensor() {
+Sensor::Sensor(std::string selectedName) {
     std::cout << "Running Sensor constructor" << std::endl;
+
+    sensorName = selectedName;
 
     // For random numbers
     // Need to do it here and not in the function, otherwise the "random" numbers will always be the same
@@ -32,6 +34,15 @@ Sensor::Sensor() {
 	// Can now close both files
 	inFile.close();
 	outFile.close();
+}
+
+void Sensor::sense(Sensor currentSensor, std::map<int, int>& ports, std::map<std::string, int>& macAddresses){
+    if (currentSensor.sensorName == "port_sensor"){
+        randomizeTraffic(ports);
+    }
+    else if (currentSensor.sensorName == "ARP_sensor"){
+        checkARPTable(macAddresses);
+    }
 }
 
 void Sensor::randomizeTraffic(std::map<int, int>& ports){

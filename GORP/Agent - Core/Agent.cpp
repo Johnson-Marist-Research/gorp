@@ -57,9 +57,12 @@ void Agent::run_agent() {
 // Will probably need a timer so that this isn't firing off at every opportunity
 void Agent::process_sensor() {
 	std::cout << "Running Agent.process_sensor()" << std::endl;
+	for (auto sensor : sensors){
+        sensor.sense(sensor, workingMemory.ports, workingMemory.macAddresses);
+	}
 
-	sensor.randomizeTraffic(workingMemory.ports);
-	sensor.checkARPTable(workingMemory.macAddresses);
+	//sensor.randomizeTraffic(workingMemory.ports);
+	//sensor.checkARPTable(workingMemory.macAddresses);
 }
 
 // Updates knowledge about the World States based on information from Sensors
