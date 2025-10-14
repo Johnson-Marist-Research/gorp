@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 // For the ARP Table
 #include <fstream>
@@ -17,8 +18,8 @@ public:
 
 class ARPData {
 public:
-	std::string ip_address;
-	std::string mac_address;
+	std::vector<std::string> ip_addresses;
+	int count() const {return ip_addresses.size()}
 };
 
 class WorkingMemory {
@@ -81,7 +82,7 @@ public:
 	std::map<int, int> known_facts{};
 
 	WorkingMemory();
-	void store(int key, int fact);
+	void store(int key, std::string fact);
 	void forget(int key);
 	int recall(int key);
 };

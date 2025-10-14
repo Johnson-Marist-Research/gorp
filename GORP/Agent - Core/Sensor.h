@@ -24,10 +24,12 @@ public:
 
 class Sensor {
 public:
+    WorkingMemory& memory;
     std::string sensorName;
 
 	Sensor(std::string selectedName);
-	void sense(Sensor currentSensor, std::map<int, int>& ports, std::map<std::string, int>& macAddresses);
+	#void sense(Sensor currentSensor, std::map<int, int>& ports, std::map<std::string, int>& macAddresses);
+	void sense();
 	void randomizeTraffic(std::map<int, int>& ports);
 	int checkARPTable(std::map<std::string, int>& macAddresses);
 	std::string getMACAddress(std::string line);

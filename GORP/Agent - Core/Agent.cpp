@@ -57,7 +57,7 @@ void Agent::run_agent() {
 // Will probably need a timer so that this isn't firing off at every opportunity
 void Agent::process_sensor() {
 	std::cout << "Running Agent.process_sensor()" << std::endl;
-	for (auto sensor : sensors){
+	for (auto& sensor : sensors){
         sensor.sense(sensor, workingMemory.ports, workingMemory.macAddresses);
 	}
 
@@ -72,7 +72,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 
 	excessTraffic = false;
 	for (auto port : workingMemory.ports) {
-		if (port.second >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)) {
+		if (port.second.traffic >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
 			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
@@ -93,8 +93,10 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 
     duplicateMAC = false;
 	// Time to check if there are any duplicate MAC addresses
+	// for (auto pair : workingMemory.ARP_facts) {
 	for (auto pair : workingMemory.macAddresses) {
-		if (pair.second > 1) {
+
+		if (pair.second.count() > 1) {
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
             knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
             duplicateMAC = true;

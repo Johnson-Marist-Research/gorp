@@ -23,7 +23,7 @@ public:
 	// Agent Components
 	Blackboard blackboard;
 	Planner planner;
-	std::list<Sensor> sensors = {Sensor("port_sensor"), Sensor("ARP_sensor")};
+	std::list<Sensor> sensors = { Sensor(“port_sensor”, workingMemory), Sensor(“ARP_sensor”, workingMemory) };
 	Subsystem subsystem;
 	WorkingMemory workingMemory;
 
