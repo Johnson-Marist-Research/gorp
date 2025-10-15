@@ -11,6 +11,7 @@
 #include <memory>
 #include <forward_list>
 #include <vector>
+#include <list>
 
 // Timer
 #include <thread>
@@ -22,9 +23,10 @@ public:
 	// Agent Components
 	Blackboard blackboard;
 	Planner planner;
-	Sensor sensor;
+    WorkingMemory workingMemory;
+	//Sensor::Sensor(std::string selectedName, WorkingMemory& mem) : memory(mem)
+	std::list<Sensor> sensors = { Sensor("port_sensor", workingMemory), Sensor("ARP_sensor", workingMemory) };
 	Subsystem subsystem;
-	WorkingMemory workingMemory;
 
 	std::vector<Response> responses;
 	std::vector<std::shared_ptr<WorldState>> goals;

@@ -64,7 +64,7 @@ std::shared_ptr<WorldState> PriorityQueue::extract() {
 	if (heapSize < 1){
 		return nullptr; // error “heap underflow”
 	}
-	std::shared_ptr<WorldState> extremum = heap[0].value;
+    std::shared_ptr<WorldState> extremum = heap[0].value;
 	heap[0] = heap[heapSize - 1];
 	heapSize--;
 	heapify(0);

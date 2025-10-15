@@ -1,6 +1,6 @@
 #include "Planner.h"
 #include "PriorityQueue.h"
-
+#include <unordered_map>
 // Calculates the distance between two states by iterating through each entry in properties.
 // If the source WorldState does not have the current key, we add one to the distance.
 // Otherwise, if the current source WorldState's value (as retrieved by get_property()) does not equal the destination WorldState's value,
@@ -109,7 +109,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 		std::string rep = "{";
 		for (const auto& response : responses){
             // Creating a path by using response to connect us to current_goal
-			std::shared_ptr<WorldState> next = unify(response, current_goal);
+            std::shared_ptr<WorldState> next = unify(response, current_goal);
 
 			// If a path is not found, just continue. We'll address that later.
 			if (next == nullptr) { continue; }
@@ -126,7 +126,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 				float priority = g_cost + h_cost;
 				frontier.insert(next, priority);
 
-				std::cerr << "Inserting " << next.get() << std::endl;
+				//std::cerr << "Inserting " << next.get() << std::endl;
 
 				came_from[next] = std::make_shared<std::pair<std::shared_ptr<WorldState>, Response>>(std::make_pair(current_goal, response));
 			}
@@ -140,7 +140,7 @@ std::vector<Response> Planner::devise_plan(std::shared_ptr<WorldState> current_s
 	// Construct a plan from the start state to the goal state, if possible
 	// Turn from plain WorldState to shared pointer
 	std::shared_ptr<WorldState> n = start;
-	while (n != goal) {
+	while (&(*n) != &(*goal)) {
 		if (n->size() <= 0) {
 			std::cerr << "\nn is empty; cannot complete the while loop\n" << std::endl;
 			break;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WorkingMemory.h";
+#include "WorkingMemory.h"
 
 #include <map>
 #include <vector>
@@ -24,8 +24,24 @@ public:
 
 class Sensor {
 public:
-	Sensor();
+    WorkingMemory& memory;
+    std::string sensorName;
+
+	Sensor(std::string selectedName, WorkingMemory& mem);
+	//void sense(Sensor currentSensor, std::map<int, int>& ports, std::map<std::string, int>& macAddresses);
+	void sense();
 	void randomizeTraffic(std::map<int, int>& ports);
 	int checkARPTable(std::map<std::string, int>& macAddresses);
 	std::string getMACAddress(std::string line);
 };
+
+/*class PortSensor {
+public:
+    void randomizeTraffic(std::map<int, int>& ports);
+};
+
+class ARPSensor {
+public:
+    int checkARPTable(std::map<std::string, int>& macAddresses);
+	std::string getMACAddress(std::string line);
+}*/

@@ -10,7 +10,7 @@ Response::Response(std::string name, float cost, WorldState before, WorldState a
 };
 
 // Locate IP address with the relevant MAC address
-std::string Response::findIPFromMAC(std::string targetMAC) {
+/*std::string Response::findIPFromMAC(std::string targetMAC) {
 	// Opens the ARP table as a readable file
 	//std::ifstream arpFile("/proc/net/arp");
 	std::ifstream arpFile("/home/kali/Documents/ARP_Table.txt");
@@ -93,9 +93,9 @@ void Response::deleteLineFromFile(std::string target) {
 	// Delete the old file and rename the new one
 	std::remove("/home/kali/Documents/ARP_Table.txt");
 	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
-}
+}*/
 
-void Response::execute(Response next_action, WorkingMemory& workingMemory) {
+/*void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 	std::cout << "Running Response.execute()" << std::endl;
 
 	// procedure.call()
@@ -112,7 +112,7 @@ void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 		- block_dns_response
 	*/
 
-	if (next_action.name == "block_port") {
+	/*if (next_action.name == "block_port") {
 		// Maybe keep a list of ports to block, then run through the list and block all of them
 		std::cerr << "GORP is going to block a port" << std::endl;
 
@@ -139,7 +139,7 @@ void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 
 		// NOTE: Might have to adjust this if we decide to make a list of ports to be blocked
 
-	}
+	/*}
 	else if (next_action.name == "unblock_port") {
 		std::cerr << "GORP is going to unblock a port" << std::endl;
 	}
@@ -202,7 +202,7 @@ void Response::execute(Response next_action, WorkingMemory& workingMemory) {
 	else {
 		std::cerr << "The name of the desired next action is not recognized" << std::endl;
 	}
-}
+}*/
 
 /*
 TEST CASES:

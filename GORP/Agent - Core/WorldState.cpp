@@ -41,9 +41,9 @@ bool WorldState::equals(std::shared_ptr<WorldState> b){
 }
 
 std::shared_ptr<WorldState> WorldState::duplicate() {
-	std::shared_ptr<WorldState> newState = std::make_shared<WorldState>();
+    std::shared_ptr<WorldState> newState = std::make_shared<WorldState>();
 	for (auto& prop : properties) {
-		newState->add_property(prop.first, std::make_shared<WorldProperty>(
+        newState->add_property(prop.first, std::make_shared<WorldProperty>(
 			prop.second->subject,
 			prop.second->name,
 			prop.second->value
@@ -141,7 +141,7 @@ std::shared_ptr<WorldState> WorldState::reduce_by(std::shared_ptr<WorldState> go
 }
 // Adds a new goal to the list of possible goals
 std::shared_ptr<WorldState> WorldState::expand_by(std::shared_ptr<WorldState> goal, WorldState preconditions) {
-	std::shared_ptr<WorldState> new_goal = goal->duplicate();
+    std::shared_ptr<WorldState> new_goal = goal->duplicate();
 	// Iterate through each entry in preconditions->properties
 	for (const auto& entry : preconditions.properties){
 		std::string key = entry.first;

@@ -10,6 +10,8 @@
 // Focusing on connecting the Subsystems to the Blackboard
 class Subsystem {
 public:
+    std::string subsystemName;
+
 	void _ready();
 	// Think this function is for checking the blackboard
 	void _on_posted(int key);

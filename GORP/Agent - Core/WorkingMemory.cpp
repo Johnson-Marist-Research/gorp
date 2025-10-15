@@ -6,7 +6,7 @@ WorkingMemory::WorkingMemory(){
 }
 
 // Store information from sensors in WorkingMemory
-void WorkingMemory::store(int key, int fact) {
+void WorkingMemory::store(int key, std::string fact) {
     std::cout << "Running WorkingMemory.store()" << std::endl;
     known_facts[key] = fact;
 }

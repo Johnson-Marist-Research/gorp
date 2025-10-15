@@ -25,8 +25,8 @@ int main() {
 
 	// Could connect the two of them by having memory store the input in blackboard at the same time
 	// But these are supposed to be connected through Planner, so will hold off and try to get Planner working
-	memory.store(0, 1);
-	blackboard.post(0, "Keeping you posted :D");
+	//memory.store(0, 1);
+	//blackboard.post(0, "Keeping you posted :D");
 
 	std::string input;
 
