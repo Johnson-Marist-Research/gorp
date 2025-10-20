@@ -14,7 +14,7 @@ void Subsystem::_on_posted(int key) {
 }
 
 // Locate IP address with the relevant MAC address
-std::string Response::findIPFromMAC(std::string targetMAC) {
+std::string Subsystem::findIPFromMAC(std::string targetMAC) {
 	// Opens the ARP table as a readable file
 	//std::ifstream arpFile("/proc/net/arp");
 	std::ifstream arpFile("/home/kali/Documents/ARP_Table.txt");
@@ -50,7 +50,7 @@ std::string Response::findIPFromMAC(std::string targetMAC) {
 	return "";
 }
 
-void Response::deleteLineFromFile(std::string target) {
+void Subsystem::deleteLineFromFile(std::string target) {
 	// Change this to the location of the file in Documents
 	std::ifstream inFile("/home/kali/Documents/ARP_Table.txt");
 	// Need a temporary file. C++ won't let us simply move all lines up one after we delete the offending line
@@ -125,16 +125,16 @@ void Subsystem::execute_plan(std::vector<Response>& current_plan, WorkingMemory&
 		// Maybe keep a list of ports to block, then run through the list and block all of them
 		std::cerr << "GORP is going to block a port" << std::endl;
 
-		for (int i = 0; i < workingMemory.ports.size(); i++) {
-            if(workingMemory.ports[i] >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)){
-                workingMemory.ports[i] = 0;
+		for (int i = 0; i < workingMemory.port_facts.size(); i++) {
+            if(workingMemory.port_facts[i].traffic >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)){
+                workingMemory.port_facts[i].traffic = 0;
             }
         }
 
         // Debugging
         std::cerr << "Final Port Traffic: " << std::endl;
-        for (int i = 0; i < workingMemory.ports.size(); i++) {
-            std::cerr << i + 1 << ") " << workingMemory.ports[i] << std::endl;
+        for (int i = 0; i < workingMemory.port_facts.size(); i++) {
+            std::cerr << i + 1 << ") " << workingMemory.port_facts[i].traffic << std::endl;
         }
 
 		/* System calls:
@@ -163,10 +163,10 @@ void Subsystem::execute_plan(std::vector<Response>& current_plan, WorkingMemory&
 		int macCount;
 
 		// Scan through workingMemory.macAddresses for > 1 entries
-		for (auto pair : workingMemory.macAddresses) {
+		for (auto pair : workingMemory.ARP_facts) {
 			// Use methods similar to what is used in Sensor to scan through the ARP table for IP addresses that have that MAC address
 			// pair.second is not a modifiable value, so I'll use an integer variable for this
-			macCount = pair.second;
+			macCount = pair.second.count();
 			if (macCount > 1) {
 				// pair.second is not a modifiable value, so I'll use an integer variable for this
 				// macCount = pair.second;

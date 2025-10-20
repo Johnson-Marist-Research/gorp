@@ -30,9 +30,10 @@ public:
 	Sensor(std::string selectedName, WorkingMemory& mem);
 	//void sense(Sensor currentSensor, std::map<int, int>& ports, std::map<std::string, int>& macAddresses);
 	void sense();
-	void randomizeTraffic(std::map<int, int>& ports);
-	int checkARPTable(std::map<std::string, int>& macAddresses);
+	void randomizeTraffic();
+	int checkARPTable();
 	std::string getMACAddress(std::string line);
+	std::string getIPAddress(std::string line);
 };
 
 /*class PortSensor {

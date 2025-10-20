@@ -15,6 +15,8 @@ public:
 	void _ready();
 	// Think this function is for checking the blackboard
 	void _on_posted(int key);
+	std::string findIPFromMAC(std::string targetMAC);
+	void deleteLineFromFile(std::string target);
 	void execute_plan(std::vector<Response>& current_plan, WorkingMemory& workingMemory);
 private:
 	Blackboard blackboard;

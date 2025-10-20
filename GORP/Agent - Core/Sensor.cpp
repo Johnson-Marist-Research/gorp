@@ -37,11 +37,14 @@ Sensor::Sensor(std::string selectedName, WorkingMemory& mem) : memory(mem){
 }
 
 void Sensor::sense(){
-    if (currentSensor.sensorName == "port_sensor"){
-        randomizeTraffic(memory.ports);
+    if (this->sensorName == "port_sensor"){
+        randomizeTraffic();
     }
-    else if (currentSensor.sensorName == "ARP_sensor"){
-        checkARPTable(memory.macAddresses);
+    else if (this->sensorName == "ARP_sensor"){
+        checkARPTable();
+    }
+    else {
+        std::cout << "Unknown sensor" << std::endl;
     }
 }
 
@@ -56,7 +59,7 @@ void Sensor::randomizeTraffic(){
         // ports[i] = randomNum;
         //ports.insert({ i, randomNum });
         memory.port_facts[i] = PortData(randomNum, true);
-        std::cerr << memory.port_facts[i].traffic << std::edl;
+        std::cerr << memory.port_facts[i].traffic << std::endl;
 
         // Creating new entry in portVector to correspond to new entry in ports
         /*PortVars newPortValues;
@@ -98,9 +101,7 @@ int Sensor::checkARPTable() {
 
     // Clearing MAC addresses in case there is old data from a previous scan
     // macAddresses.clear();
-    ARP_facts.clear();
-
-    std::string ip = getIPAddress(line);
+    memory.ARP_facts.clear();
 
     // ARP Table on Linux can be read like a text file by using "/proc/net/arp"
     // We use ifstream to read it
@@ -119,12 +120,13 @@ int Sensor::checkARPTable() {
 
     while (std::getline(arpFile, line)) {
         std::string mac = getMACAddress(line);
+        std::string ip = getIPAddress(line);
         // 00:00:00:00:00:00 is for broadcast MAC addresses, so they can happen more than once and be fine
         // Other than that, just avoid adding empty/invalid MAC addresses to our list
         if (!memory.ARP_facts.contains(mac)){
-            memory.ARP_facts[mac] = ARPData(ip, mac);
+            memory.ARP_facts.insert(std::make_pair(mac, ARPData()));
         }
-        memory.ARP_facts[mac] = ip_addresses.push_back(ip)
+        memory.ARP_facts[mac].ip_addresses.push_back(ip);
     }
 
     // Done with the file, so we can close it

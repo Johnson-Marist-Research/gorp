@@ -185,14 +185,14 @@ void Agent::init_responses() {
 	// ------------------- Block a port on the device -------------------
 	// Preconditions
 	WorldState block_port_preconds;
-	block_port_preconds.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(workingMemory.port_facts.first), std::string("port_open"), true));
-	block_port_preconds.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(workingMemory.port_facts.first), std::string("excess_traffic_detected"), true));
+	block_port_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+	block_port_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
 
 	// Effects
 	WorldState block_port_effects;
-	block_port_effects.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_open"), false));
-	block_port_effects.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("excess_traffic_detected"), false));
-	block_port_effects.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_blocked"), true));
+	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
+	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+	block_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
 	/*
 	Commands to return:
 		- findstr :<PORT NUMBER> - Locate process ID of process occurring on the port
@@ -209,13 +209,13 @@ void Agent::init_responses() {
 	// ------------------- Unblock a port on the device -------------------
 	// Preconditions
 	WorldState unblock_port_preconds;
-	unblock_port_preconds.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_open"), false));
-	unblock_port_preconds.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_blocked"), true));
+	unblock_port_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
+	unblock_port_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
 
 	// Effects
 	WorldState unblock_port_effects;
-	unblock_port_effects.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_open"), true));
-	unblock_port_effects.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_blocked"), false));
+	unblock_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), true));
+	unblock_port_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), false));
 
 	// Add to responses
 	Response unblock_port(std::string("unblock_port"), 1, unblock_port_preconds, unblock_port_effects);
@@ -377,9 +377,9 @@ void Agent::init_goals() {
 
 	// ------------------- Block a port on the device -------------------
 	WorldState port_is_blocked;
-	port_is_blocked.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_open"), false));
-	port_is_blocked.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("excess_traffic_detected"), false));
-	port_is_blocked.insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("port_blocked"), true));
+	port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_open"), false));
+	port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), false));
+	port_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("port_blocked"), true));
 
 	// Add to goals
 	goals.push_back(std::make_shared<WorldState>(port_is_blocked));
