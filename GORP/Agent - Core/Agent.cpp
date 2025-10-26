@@ -24,6 +24,8 @@ Agent::Agent() {
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("general_mode"), true));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("safe_mode"), false));
 	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("dns_mismatch"), false));
+
+	knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
 }
 
 // Runs the process_sensor() and update_knowledge() functions when called
@@ -75,7 +77,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 		if (port.second.traffic >= ((workingMemory.averageTraffic * 0.5) + workingMemory.averageTraffic)) {
 			// Oh no! Unusual amounts of traffic!
 			std::cerr << "Unusual amounts of traffic on port " << port.first << std::endl;
-			knowledge->insert(std::make_shared<WorldProperty>("Port-" + std::to_string(port.first), std::string("excess_traffic_detected"), true));
+			knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
 			// knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("excess_traffic_detected"), true));
 			excessTraffic = true;
 			break;
@@ -101,16 +103,16 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	for (auto pair : workingMemory.ARP_facts) {
 
 		if (pair.second.count() > 1) {
-            knowledge->insert(std::make_shared<WorldProperty>(std::string("ARP"), std::string("ARP_anomaly"), true));
-            knowledge->insert(std::make_shared<WorldProperty>(std::string("ARP"), std::string("ip_address_blocked"), false));
+            knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), true));
+            knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), false));
             duplicateMAC = true;
             break;
 		}
 	}
     // If there is not a duplicate ARP address
 	if (!duplicateMAC){
-        knowledge->insert(std::make_shared<WorldProperty>(std::string("ARP"), std::string("ARP_anomaly"), false));
-        knowledge->insert(std::make_shared<WorldProperty>(std::string("ARP"), std::string("ip_address_blocked"), true));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ip_address_blocked"), true));
     }
 
 
@@ -268,6 +270,29 @@ void Agent::init_responses() {
 	*/
 
 
+
+
+
+	// ------------------- Detected a suspicious executable file in the Working Directory-------------------
+	// Preconditions
+	WorldState quarantine_file_preconds;
+	 quarantine_file_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
+
+	// Effects
+	WorldState quarantine_file_effects;
+	quarantine_file_effects.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), true));
+
+	// Add to responses
+	Response quarantine_file(std::string("quarantine_file"), 1, quarantine_file_preconds, quarantine_file_effects);
+	responses.push_back(quarantine_file);
+
+
+
+
+
+
+
+
 	// ------------------- If a file has been changed, revert it back to its last saved version -------------------
 	WorldState revert_file_preconds;
 	revert_file_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("files_unchanged"), false));
@@ -383,6 +408,14 @@ void Agent::init_goals() {
 
 	// Add to goals
 	goals.push_back(std::make_shared<WorldState>(port_is_blocked));
+
+
+	// ------------------- Quarantine a file on the device -------------------
+	WorldState file_is_quarantined;
+	file_is_quarantined.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
+
+	// Add to goals
+	goals.push_back(std::make_shared<WorldState>(file_is_quarantined));
 
 
 	// ------------------- Unblock a port on the device -------------------

@@ -29,12 +29,16 @@ public:
 	WorldState preconditions;
 	// A set of properties that result from performing this response
 	WorldState effects;
-	// This was of type "Callable". Not sure how to transfer that to C++
-	// Going to leave it as string for now
-	//std::string procedure;
+
+	// Procedural Precondition
+	// Function that takes in WorldState and does whatever comparison we want on the WorldState
+	// bool (*proc_precond)(WorldState const& s);
 
 	// "proc" was shorthand for procedure, which is changed to string instead of Callable
 	//void _init(std::string name, float cost, WorldState before, WorldState after, std::string proc);
+
+	// Make a seconds constructor that is the exact same, but adds "bool (*proc)(WorldState const&)"
+
 	Response(std::string name, float cost, WorldState before, WorldState after);
 	// Used if we need to delete IP addresses from the ARP table
 	std::string findIPFromMAC(std::string targetMAC);
