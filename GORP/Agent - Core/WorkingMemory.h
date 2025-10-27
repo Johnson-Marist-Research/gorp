@@ -22,6 +22,14 @@ public:
 	int count() const {return ip_addresses.size();}
 };
 
+class fileData {
+public:
+	std::vector<std::string> bin_files;
+	std::vector<std::string> directory_files;
+	std::vector<std::string> duplicate_file_names;
+	int count() const {return duplicate_file_names.size();}
+};
+
 class WorkingMemory {
 public:
 	/*
@@ -78,6 +86,7 @@ public:
 
 	std::map<int, PortData> port_facts;
 	std::map<std::string, ARPData> ARP_facts;
+	fileData file_facts;
 
 	std::map<int, int> known_facts{};
 

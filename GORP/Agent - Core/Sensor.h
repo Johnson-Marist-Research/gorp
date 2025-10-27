@@ -34,6 +34,9 @@ public:
 	int checkARPTable();
 	std::string getMACAddress(std::string line);
 	std::string getIPAddress(std::string line);
+
+	void getBinFiles();
+    void getDirectoryFiles();
 };
 
 /*class PortSensor {

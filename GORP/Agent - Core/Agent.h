@@ -25,7 +25,7 @@ public:
 	Planner planner;
     WorkingMemory workingMemory;
 	//Sensor::Sensor(std::string selectedName, WorkingMemory& mem) : memory(mem)
-	std::list<Sensor> sensors = { Sensor("port_sensor", workingMemory), Sensor("ARP_sensor", workingMemory) };
+	std::list<Sensor> sensors = { Sensor("port_sensor", workingMemory), Sensor("ARP_sensor", workingMemory), Sensor("file_sensor", workingMemory) };
 	Subsystem subsystem;
 
 	std::vector<Response> responses;

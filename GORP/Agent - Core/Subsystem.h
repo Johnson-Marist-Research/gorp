@@ -7,6 +7,9 @@
 #include <iostream>
 #include <vector>
 
+// Will need for chmod and mode_t for turning off executable privileges in files
+#include <sys/stat.h>
+
 // Focusing on connecting the Subsystems to the Blackboard
 class Subsystem {
 public:
@@ -17,6 +20,7 @@ public:
 	void _on_posted(int key);
 	std::string findIPFromMAC(std::string targetMAC);
 	void deleteLineFromFile(std::string target);
+	int quarantineFile(WorkingMemory& workingMemory);
 	void execute_plan(std::vector<Response>& current_plan, WorkingMemory& workingMemory);
 private:
 	Blackboard blackboard;

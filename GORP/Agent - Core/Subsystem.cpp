@@ -99,6 +99,78 @@ void Subsystem::deleteLineFromFile(std::string target) {
 	std::rename("/home/kali/Documents/temp.txt", "/home/kali/Documents/ARP_Table.txt");
 }
 
+// Using "int" in case we run into an error and need to terminate the process
+int Subsystem::quarantineFile(WorkingMemory& workingMemory){
+    for (auto file : workingMemory.file_facts.duplicate_file_names) {
+        // Get current permissions (can delete later, just checking now)
+        struct stat fileStat;
+        if (stat(file.c_str(), &fileStat) == -1){
+            std::cerr << "Error getting file status for " << file << std::endl;
+            return 1;
+        }
+
+        mode_t current_mode = fileStat.st_mode;
+        std::cerr << "Current permissions for " << file << ": " << std::oct << current_mode << std::endl;
+        // ---------------------------------------------------
+
+
+
+        // Remove executable permissions
+        // S_IXUSR, S_IXGRP, S_IXOTH represent execute permissions for user, group, and others
+        mode_t new_mode = current_mode & ~(S_IXUSR | S_IXGRP | S_IXOTH);
+
+        if (chmod(file.c_str(), new_mode) == -1) {
+            std::cerr << "Error changing permissions for " << file << std::endl;
+            return 1;
+        }
+
+        std::cerr << "Executable permissions removed for " << file << std::endl;
+
+
+
+        // Verify new permissions (can delete later, just checking for now)
+        if (stat(file.c_str(), &fileStat) == -1) {
+            std::cerr << "Error getting file status after chmod for " << file << std::endl;
+            return 1;
+        }
+        std::cerr << "New permissions for " << file << ": " << std::oct << fileStat.st_mode << std::endl;
+        // ---------------------------------------------------
+
+
+        // Now that the executable privileges are turned off, we can move the file to a quarantine folder
+        std::string folderName = "Quarantine_Folder";
+        try {
+            if (std::filesystem::create_directory(folderName)) {
+                std::cout << "Folder '" << folderName << "' created successfully." << std::endl;
+            } else {
+                std::cout << "Folder '" << folderName << "' already exists or could not be created." << std::endl;
+            }
+        } catch (const std::filesystem::filesystem_error& e) {
+            std::cerr << "Error creating directory: " << e.what() << std::endl;
+        }
+
+        // Move the file
+        try {
+            // Ensure the directory exists before attempting to move
+            if (!std::filesystem::exists(folderName)) {
+                std::filesystem::create_directory(folderName);
+            }
+
+            // rename (source path, destination path)
+            std::filesystem::rename(file, folderName + "/" + file);
+            std::cerr << "File '" << file << "' moved to '" << folderName << "' successfully." << std::endl;
+        } catch (const std::filesystem::filesystem_error& e) {
+            std::cerr << "Error moving file: " << e.what() << std::endl;
+        }
+
+        return 0;
+	}
+
+
+	// Clear duplicate_file_names
+	workingMemory.file_facts.duplicate_file_names.clear();
+}
+
 // If there is a current plan, take the first element in current_plan (next_action) and executes it
 // Continues to execute the steps until there are no more remaining.
 void Subsystem::execute_plan(std::vector<Response>& current_plan, WorkingMemory& workingMemory) {
@@ -189,6 +261,10 @@ void Subsystem::execute_plan(std::vector<Response>& current_plan, WorkingMemory&
 				}
 			}
 		}
+	}
+	else if (next_action.name == "quarantining_file"){
+        std::cerr << "GORP is quarantining a file" << std::endl;
+        quarantineFile(workingMemory);
 	}
 	else if (next_action.name == "unblock_IP_address") {
 		std::cerr << "GORP is going to unblock an IP address" << std::endl;

@@ -116,6 +116,25 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
     }
 
 
+    // Check for duplicate files
+    for (auto file : workingMemory.file_facts.directory_files) {
+        std::cerr << "Checking for duplicate file names" << std::endl;
+        for (int i = 0; i < workingMemory.file_facts.bin_files.size(); i++){
+            if (file == workingMemory.file_facts.bin_files[i]){
+                std::cerr << "Duplicate file '" << file << "' found!" << std::endl;
+                workingMemory.file_facts.duplicate_file_names.push_back(file);
+            }
+        }
+	}
+
+	if (workingMemory.file_facts.count() > 0){
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
+	}
+	else {
+        knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), true));
+	}
+
+
 	return knowledge;
 }
 
@@ -276,7 +295,7 @@ void Agent::init_responses() {
 	// ------------------- Detected a suspicious executable file in the Working Directory-------------------
 	// Preconditions
 	WorldState quarantine_file_preconds;
-	 quarantine_file_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
+    quarantine_file_preconds.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
 
 	// Effects
 	WorldState quarantine_file_effects;

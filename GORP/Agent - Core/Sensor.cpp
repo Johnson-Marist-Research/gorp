@@ -43,6 +43,10 @@ void Sensor::sense(){
     else if (this->sensorName == "ARP_sensor"){
         checkARPTable();
     }
+    else if (this->sensorName == "file_sensor"){
+        getBinFiles();
+        getDirectoryFiles();
+    }
     else {
         std::cout << "Unknown sensor" << std::endl;
     }
@@ -133,4 +137,54 @@ int Sensor::checkARPTable() {
     // We'll check if there are duplicate MAC addresses when we pivot to Agent.cpp
     arpFile.close();
     return 0;
+}
+
+void Sensor::getBinFiles(){
+    // Clear the vector first, just in case there are leftover files from last time
+    memory.file_facts.bin_files.clear();
+
+    std::string path = "/bin";
+
+    // Using "try" and "catch" to handle any possible exceptions that might occur
+    // We are digging through system files, after all.
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(path)){
+            // Check if the entry is a regular file
+            if (std::filesystem::is_regular_file(entry.status())){
+                // Store the filename, but not the full path
+                memory.file_facts.bin_files.push_back(entry.path().filename().string());
+            }
+        }
+
+        // Print the file names
+        /*std::cerr << "Files in " << path << ":" << std::endl;
+        for (const std::string& name : memory.file_facts.bin_files){
+            std::cerr << name << std::endl;
+        }*/
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "Error accessing directory " << path << ": " << e.what() << std::endl;
+    }
+}
+
+void Sensor::getDirectoryFiles(){
+    // Clear the vector first, just in case there are leftover files from last time
+    memory.file_facts.directory_files.clear();
+
+    // Using "try" and "catch" again (see above)
+    try {
+        // Iterates through current directory
+        for (const auto& entry : std::filesystem::directory_iterator(".")){
+            // Check if the file is a regular file
+            if (std::filesystem::is_regular_file(entry.status())){
+                memory.file_facts.directory_files.push_back(entry.path().filename().string());
+            }
+        }
+
+        std::cerr << "Files in current directory:" << std::endl;
+        for (const std::string& name : memory.file_facts.directory_files){
+            std::cerr << name << std::endl;
+        }
+    } catch (const std::filesystem::filesystem_error& e){
+        std::cerr << "Filesystem error: " << e.what() << std::endl;
+    }
 }
