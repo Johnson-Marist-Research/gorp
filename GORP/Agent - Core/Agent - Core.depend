@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1761582016 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Agent.cpp
+1762747471 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Agent.cpp
 	"Agent.h"
 
 1761581668 /home/kali/Downloads/gorp/GORP/Agent - Core/Agent.h
@@ -56,7 +56,7 @@
 	<vector>
 	<cstdio>
 
-1761578477 /home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.h
+1762749108 /home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.h
 	"WorkingMemory.h"
 	<map>
 	<vector>
@@ -66,6 +66,9 @@
 	<sstream>
 	<iostream>
 	<filesystem>
+	<fstream>
+	<cstdlib>
+	<ctime>
 
 1761578514 /home/kali/Downloads/gorp/GORP/Agent - Core/WorkingMemory.h
 	<iostream>
@@ -115,10 +118,10 @@
 1760470220 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Response.cpp
 	"Response.h"
 
-1761583251 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.cpp
+1762747190 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Sensor.cpp
 	"Sensor.h"
 
-1761582690 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Subsystem.cpp
+1762747676 source:/home/kali/Downloads/gorp/GORP/Agent - Core/Subsystem.cpp
 	"Subsystem.h"
 
 1761001736 source:/home/kali/Downloads/gorp/GORP/Agent - Core/WorkingMemory.cpp

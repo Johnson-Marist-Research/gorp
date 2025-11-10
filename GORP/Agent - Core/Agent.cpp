@@ -116,6 +116,9 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
     }
 
 
+    // First, clear any old entries in duplicate_file_names before we look for new ones
+    workingMemory.file_facts.duplicate_file_names.clear();
+
     // Check for duplicate files
     for (auto file : workingMemory.file_facts.directory_files) {
         std::cerr << "Checking for duplicate file names" << std::endl;
@@ -128,6 +131,7 @@ std::shared_ptr<WorldState> Agent::update_knowledge() {
 	}
 
 	if (workingMemory.file_facts.count() > 0){
+        std::cerr << "file_facts count: " << workingMemory.file_facts.count() << std::endl;
         knowledge->insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
 	}
 	else {
@@ -410,6 +414,13 @@ void Agent::init_responses() {
 void Agent::init_goals() {
 	std::cout << "Running Agent.init_goals()" << std::endl;
 
+	// ------------------- Quarantine a file on the device -------------------
+	WorldState file_is_quarantined;
+	file_is_quarantined.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), true));
+
+	// Add to goals
+	goals.push_back(std::make_shared<WorldState>(file_is_quarantined));
+
 	// ------------------- Block an IP address in the ARP table -------------------
 	WorldState ip_address_is_blocked;
 	ip_address_is_blocked.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("ARP_anomaly"), false));
@@ -427,14 +438,6 @@ void Agent::init_goals() {
 
 	// Add to goals
 	goals.push_back(std::make_shared<WorldState>(port_is_blocked));
-
-
-	// ------------------- Quarantine a file on the device -------------------
-	WorldState file_is_quarantined;
-	file_is_quarantined.insert(std::make_shared<WorldProperty>(std::string("Agent"), std::string("quarantining_file"), false));
-
-	// Add to goals
-	goals.push_back(std::make_shared<WorldState>(file_is_quarantined));
 
 
 	// ------------------- Unblock a port on the device -------------------

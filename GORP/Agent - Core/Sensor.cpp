@@ -44,7 +44,17 @@ void Sensor::sense(){
         checkARPTable();
     }
     else if (this->sensorName == "file_sensor"){
-        getBinFiles();
+        // Seed the random number generator once
+        srand(time(0));
+        // Flip a coin to decide if we will generate random files this time (0 - 2)
+        int num = rand() % 3;
+        if (num == 0){
+            generateFiles();
+        }
+        // Only need to find the bin files once; they shouldn't change
+        if (memory.file_facts.bin_files.size() == 0) {
+            getBinFiles();
+        }
         getDirectoryFiles();
     }
     else {
@@ -138,6 +148,79 @@ int Sensor::checkARPTable() {
     arpFile.close();
     return 0;
 }
+
+// ------------ Create random files to test ------------
+void Sensor::generateFiles(){
+    std::string filename = "";
+    std::filesystem::path file_path;
+    // Generate a random number between 0 and 9
+    int num = rand() % 10;
+
+    // Depending on which number is chosen, generate a file name
+    while (true){
+        if (num == 0) {
+            filename = "ls";
+        }
+        else if (num == 1){
+            filename = "cp";
+        }
+        else if (num == 2){
+            filename = "mv";
+        }
+        else if (num == 3){
+            filename = "netstat";
+        }
+        else if (num == 4){
+            filename = "ping";
+        }
+        else if (num == 5){
+            filename = "cat";
+        }
+        else if (num == 6){
+            filename = "gzip";
+        }
+        else if (num == 7){
+            filename = "ed";
+        }
+        else if (num == 8){
+            filename = "rm";
+        }
+        else if (num == 9){
+            filename = "mkdir";
+        }
+        else {
+            std::cerr << "Unrecognized number while generating file names" << std::endl;
+        }
+
+        // Check to see if the file name already exists
+        // If it does not exist, continue. Otherwise, reassign the random number and file name.
+        file_path = filename;
+        if (!std::filesystem::exists(file_path)) {
+            std::cout << "File '" << filename << "' does not exist in the current directory." << std::endl;
+            break;
+        }
+        else {
+            std::cout << "File '" << filename << "' exists in the current directory." << std::endl;
+            num = rand() % 10;
+        }
+    }
+
+    // Create an ofstream object to open the file
+    // std::ios::out ensures the file is opened for writing, creating it if it doesn't exist
+    // If the file already exists, it will be truncated (emptied)
+    std::ofstream outfile(filename, std::ios::out);
+
+    if (outfile.is_open()) {
+        // File successfully opened and created/truncated
+        std::cout << "Empty file '" << filename << "' created successfully." << std::endl;
+        outfile.close(); // Close the file stream
+    } else {
+        // Error opening or creating the file
+        std::cerr << "Error: Could not create file '" << filename << "'." << std::endl;
+    }
+}
+
+
 
 void Sensor::getBinFiles(){
     // Clear the vector first, just in case there are leftover files from last time

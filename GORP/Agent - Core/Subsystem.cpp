@@ -104,10 +104,10 @@ int Subsystem::quarantineFile(WorkingMemory& workingMemory){
     for (auto file : workingMemory.file_facts.duplicate_file_names) {
         // Get current permissions (can delete later, just checking now)
         struct stat fileStat;
-        if (stat(file.c_str(), &fileStat) == -1){
+        /*if (stat(file.c_str(), &fileStat) == -1){
             std::cerr << "Error getting file status for " << file << std::endl;
             return 1;
-        }
+        }*/
 
         mode_t current_mode = fileStat.st_mode;
         std::cerr << "Current permissions for " << file << ": " << std::oct << current_mode << std::endl;
@@ -168,7 +168,11 @@ int Subsystem::quarantineFile(WorkingMemory& workingMemory){
 
 
 	// Clear duplicate_file_names
-	workingMemory.file_facts.duplicate_file_names.clear();
+	// workingMemory.file_facts.duplicate_file_names.clear();
+	// std::cerr << "duplicate_file_names size after clearing: " << workingMemory.file_facts.duplicate_file_names.size() << std::endl;
+	// Clear directory files as well, or else we will just keep adding duplicates to it every time the check is run
+	workingMemory.file_facts.directory_files.clear();
+	std::cerr << "directory_files size after clearing: " << workingMemory.file_facts.directory_files.size() << std::endl;
 }
 
 // If there is a current plan, take the first element in current_plan (next_action) and executes it
@@ -262,7 +266,7 @@ void Subsystem::execute_plan(std::vector<Response>& current_plan, WorkingMemory&
 			}
 		}
 	}
-	else if (next_action.name == "quarantining_file"){
+	else if (next_action.name == "quarantine_file"){
         std::cerr << "GORP is quarantining a file" << std::endl;
         quarantineFile(workingMemory);
 	}
